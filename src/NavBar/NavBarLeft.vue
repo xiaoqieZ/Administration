@@ -7,9 +7,9 @@
                 :class="[ isShow?'tr-nav':'tr-nav-alt' ]"
                 style="height:100%;"
             >
-                <div class="nav-bar-title">
-                    <transition name="fade">
-                        <span class="title-txt" v-show="!isShow">COINRISE后台管理</span>
+                <div class="nav-bar-title" onselectstart="return false;">
+                    <transition name="fade" >
+                        <span class="title-txt" v-show="!isShow" >COINRISE后台管理</span>
                     </transition>
                     <span
                         class="title-ico"
@@ -37,7 +37,7 @@
                         onselectstart="return false;"
                         >{{ !isShow?'系统环境':'系统' }}</div>
                             <!-- 币种资料与参数配置 -->
-                            <el-submenu index="CParameter" >
+                            <el-submenu index="CParameter" onselectstart="return false;">
                             <template slot="title">
                                 <i
                                 class="nav-open-icon"
@@ -51,7 +51,7 @@
                                 <i
                                 class="nav-bar-comicon"
                                 v-show="!isShow"
-                                :class="[ unfold.CCParameter ? 'nav-bar-bArrowsicon' : 'nav-bar-rArrowsicon' ] "
+                                :class="[ High.CParameter ? 'nav-bar-bArrowsicon' : 'nav-bar-rArrowsicon' ] "
                                 ></i>
                             </template>
                             <div v-show="!isShow">
@@ -70,7 +70,7 @@
                             </div>
                             </el-submenu>
                             <!-- 数据字典 -->
-                            <el-submenu index="DataDitionary">
+                            <el-submenu index="DataDitionary" onselectstart="return false;">
                               <template slot="title">
                                 <i 
                                 class="nav-open-icon"
@@ -83,7 +83,7 @@
                                 <i
                                 class="nav-bar-comicon"
                                 v-show="!isShow"
-                                :class="[ unfold.CDataDitionary ? 'nav-bar-bArrowsicon' : 'nav-bar-rArrowsicon' ] "
+                                :class="[High.DataDitionary ? 'nav-bar-bArrowsicon' : 'nav-bar-rArrowsicon' ] "
                                 ></i>
                               </template>
                               <div v-show="!isShow">
@@ -95,10 +95,10 @@
                             </el-submenu>
 
                     <!-- 业务相关 -->
-                          <div class="grou-title" onselectstart="return false;">{{ !isShow?'业务相关':'业务' }}</div>
+                          <div class="grou-title" onselectstart="return false;">{{ isShow?'业务':'业务相关' }}</div>
 
                           <!-- 用户管理 -->
-                          <el-submenu index="UserManage">
+                          <el-submenu index="UserManage" onselectstart="return false;">
                             <template slot="title">
                               <i
                               class="nav-open-icon"
@@ -111,7 +111,7 @@
                               <i
                                 class="nav-bar-comicon"
                                 v-show="!isShow"
-                                :class="[ unfold.CUserManage ? 'nav-bar-bArrowsicon' : 'nav-bar-rArrowsicon' ] "
+                                :class="[ High.UserManage ? 'nav-bar-bArrowsicon' : 'nav-bar-rArrowsicon' ] "
                                 ></i>
                             </template>
                               <div v-show="!isShow">
@@ -134,7 +134,7 @@
                             </div>
                           </el-submenu>
                           <!-- 推荐会员管理 -->
-                          <el-submenu index="MemberManage">
+                          <el-submenu index="MemberManage" onselectstart="return false;">
                             <template slot="title">
                               <i
                               class="nav-open-icon"
@@ -147,7 +147,7 @@
                               <i
                               class="nav-bar-comicon"
                               v-show="!isShow"
-                              :class="[ unfold.CMemberManage ? 'nav-bar-bArrowsicon' : 'nav-bar-rArrowsicon' ] "
+                              :class="[ High.MemberManage ? 'nav-bar-bArrowsicon' : 'nav-bar-rArrowsicon' ] "
                               ></i>
                             </template>
                              <div v-show="!isShow">
@@ -194,7 +194,6 @@ export default {
                 Notice: true, //公告管理
                 Risk: true //风险
             },
-            unfold: {},
             isUnfold: {
                 //是否展开
                 up: new Set()
@@ -218,8 +217,6 @@ export default {
     },
     //导航收起的回调
     handleClose(index, indexPath) {
-      let hashIndex = "C" + index;
-      this.$set(this.unfold, "C" + index, false);
       for (let HighKey in this.High) {
         if (HighKey == index) {
           this.isUnfold.up.delete(HighKey);
@@ -232,7 +229,6 @@ export default {
      //导航展开的回调
     handleOpen(index, indexPath) {
       let openIndex = index.split("/")[2] ? index.split("/")[2] : indexPath;
-      this.$set(this.unfold, "C" + openIndex, true);
       for (let HighKey in this.High) {
         if (openIndex == HighKey) {
           this.High[HighKey] = false;
@@ -377,13 +373,13 @@ export default {
     display: block;
     float: right;
   }
-    .nav-bar-rArrowsicon {
+    .nav-bar-bArrowsicon {
     margin-top: 14px;
     width: 6px;
     height: 12px;
     background: url(../../static/img/rArrows.png) no-repeat;
   }
-  .nav-bar-bArrowsicon {
+  .nav-bar-rArrowsicon {
     margin-right: 0;
     width: 12px;
     height: 6px;
