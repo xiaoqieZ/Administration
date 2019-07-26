@@ -151,15 +151,15 @@
                               ></i>
                             </template>
                              <div v-show="!isShow">
-                                <el-menu-item index="/MainHeader/MemberManage/AccountManage">
+                                <el-menu-item index="/MainHeader/MemberManage/Aparameters">
                                   <span class="mr-right-18">·</span>
                                   佣金参数配置
                                 </el-menu-item>
-                                <el-menu-item index="/MainHeader/MemberManage/UserFun">
+                                <el-menu-item index="/MainHeader/MemberManage/Uinquiry">
                                   <span class="mr-right-18">·</span>
                                   用户佣金查询
                                 </el-menu-item>
-                                <el-menu-item index="/MainHeader/MemberManage/UserInfo">
+                                <el-menu-item index="/MainHeader/MemberManage/Udetails">
                                   <span class="mr-right-18">·</span>
                                   用户明细查询
                                 </el-menu-item>
@@ -341,7 +341,7 @@ export default {
     margin-top: 47px;
     padding-left: 25px;
     margin-bottom: 9px;
-    // width:47px;
+    width:70px;
     // height:12px;
     font-size: 12px;
     font-family: PingFang-SC-Medium;
@@ -432,6 +432,7 @@ export default {
 /deep/.el-menu--inline{
   padding-left: 20px;
 }
+
 </style>
 
 

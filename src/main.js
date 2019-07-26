@@ -6,7 +6,10 @@ import router from './router'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import Vuex from 'vuex'
+import VueResource from 'vue-resource'//导入vue-resource
 
+
+Vue.use(VueResource)//安装vue-resource
 Vue.use(Vuex)
 Vue.config.productionTip = false
 Vue.use(ElementUI);

@@ -11,18 +11,20 @@ import AccountManage from '@/pages/UserManage/AccountManage'
 import UserFun from '@/pages/UserManage/UserFun'
 import UserRecord from '@/pages/UserManage/UserRecord'
 import UserInfo from '@/pages/UserManage/UserInfo'
+import Aparameters from '@/pages/MemberManage/Aparameters'
+import Uinquiry from '@/pages/MemberManage/Uinquiry'
+import Udetails from '@/pages/MemberManage/Udetails'
 
 Vue.use(Router)
 
 export default new Router({
   routes: [
-    
     {
       path: '/',
       name: 'NavBar',
+      redirect: '/MainHeader/CParameter/CurrencyData',
       component: NavBar,
-      children:[
-        {path:'/', redirect: '/MainHeader/CParameter/CurrencyData'},
+      children:[   
         {
           path:'MainHeader',
           name:'MainHeader',
@@ -37,6 +39,9 @@ export default new Router({
                 {
                   path:"/MainHeader/CParameter/CurrencyData",
                   name:'CurrencyData',
+                  meta:{
+                    title:'币种资料管理'
+                  },
                   component:CurrencyData
                 },
                 {
@@ -99,27 +104,26 @@ export default new Router({
               component:Null,
               children:[
                 {
-                  path:'/MainHeader/MemberManage/AccountManage',
-                  name:'AccountManage',
-                  component:AccountManage
+                  path:'/MainHeader/MemberManage/Aparameters',
+                  name:'Aparameters',
+                  component:Aparameters
                 },
                 {
-                  path:'/MainHeader/MemberManage/UserFun',
-                  name:'UserFun',
-                  component:UserFun
+                  path:'/MainHeader/MemberManage/Uinquiry',
+                  name:'Uinquiry',
+                  component:Uinquiry
                 },
                 {
-                  path:'/MainHeader/MemberManage/UserInfo',
-                  name:'UserInfo',
-                  component:UserRecord
+                  path:'/MainHeader/MemberManage/Udetails',
+                  name:'Udetails',
+                  component:Udetails
                 },
               ]
             }
           ]
-        }
+        },
+        // {path:'/', redirect: '/MainHeader/CParameter/CurrencyData'},
       ]
-      
-    },
-    
+    }, 
   ]
 })
