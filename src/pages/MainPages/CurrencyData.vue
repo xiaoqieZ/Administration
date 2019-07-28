@@ -92,27 +92,17 @@
         navs:1,
         username:'',
         address:'',
-        
+        num:7,
+        page:1
       }
     },
     methods:{
-        // //每页显示数据量变更
-        //         handleSizeChange: function(val) {
-        //             this.pagesize = val;
-        //             this.loadData(this.criteria, this.currentPage, this.pagesize);
-        //         },
-
-        //         //页码变更
-        //         handleCurrentChange: function(val) {
-        //             this.navs = val;
-        //             this.loadData(this.criteria, this.navs, this.pagesize);
-        //         },     
         getAllList() {//获取数据  
-                    this.$http.get('http://mx.maplegg.com/api/vue/getwz?num=6&page='+ this.navs).then(res => {
-                        console.log(res);
+            let list={num:this.num,page:this.page};
+                this.$http.get('http://mx.maplegg.com/api/vue/getwz',{params:list}).then(res => {
+                    console.log(res);
                         if (res.status === 200) {
                             this.tableData = res.data;
-                            console.log(this.tableData);
                         } else {
                             alert('请求数据失败')
                         }
@@ -136,12 +126,12 @@
                 },
                 // 删除
                 del(index, row){
-                    var array = [];
-                    array.push(row.id);
-                    this.$http.post('http://mx.maplegg.com/api/vue/delwz',{"array":array},{emulateJSON: true}).then(res=>{
+                    console.log(index);
+                    console.log(row);
+                    this.$http.post('http://mx.maplegg.com/api/vue/delwz',{emulateJSON: true,id: row.id}).then(res=>{
                     console.log(res);
                     if(res.status==200){
-                        this.getAllList()
+                        this.getAllList();
                     }else {
                          alert('删除失败')
                     }
