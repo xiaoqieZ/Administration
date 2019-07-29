@@ -168,7 +168,7 @@
                  </el-menu>
             </el-col>
         </div>
-        <router-view style="padding-left:68px;font-size:16px;box-sizing:border-box;"></router-view>
+        <router-view style="padding:0 20px 0 68px;font-size:16px;box-sizing:border-box;"></router-view>
     </div>
 </template>
 

@@ -14,11 +14,16 @@ import UserInfo from '@/pages/UserManage/UserInfo'
 import Aparameters from '@/pages/MemberManage/Aparameters'
 import Uinquiry from '@/pages/MemberManage/Uinquiry'
 import Udetails from '@/pages/MemberManage/Udetails'
+import Login from '@/login/Login/'
 
 Vue.use(Router)
 
 export default new Router({
   routes: [
+    {path:'/Login', 
+        name:'Login',
+        component:Login
+      },
     {
       path: '/',
       name: 'NavBar',
@@ -122,7 +127,6 @@ export default new Router({
             }
           ]
         },
-        // {path:'/', redirect: '/MainHeader/CParameter/CurrencyData'},
       ]
     }, 
   ]
