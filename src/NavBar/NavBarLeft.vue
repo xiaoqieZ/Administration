@@ -95,7 +95,7 @@
                             </el-submenu>
 
                     <!-- 业务相关 -->
-                          <div class="grou-title" onselectstart="return false;">{{ isShow?'业务':'业务相关' }}</div>
+                          <div class="grou-title" onselectstart="return false;">{{ isShow ? '业务':'业务相关' }}</div>
 
                           <!-- 用户管理 -->
                           <el-submenu index="UserManage" onselectstart="return false;">
@@ -168,7 +168,7 @@
                  </el-menu>
             </el-col>
         </div>
-        <router-view style="padding:0 20px 0 68px;font-size:16px;box-sizing:border-box;"></router-view>
+        <router-view style="padding:0 20px 0 88px;font-size:16px;box-sizing:border-box;"></router-view>
     </div>
 </template>
 

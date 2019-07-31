@@ -18,17 +18,32 @@
 </template>
 
 <script>
+import { setCookie,getCookie,delCookie } from '../assets/js/cookie.js'
 export default {
     data(){
         return{
-           
+           name:''
     }
     },
     methods:{
+        // login(){
+        //     this.$router.push({path:'/login'})
+        // },
         login(){
-            this.$router.push({path:'/login'})
-        }
-    }
+                /*删除cookie*/
+                delCookie('username');
+                this.$router.push({path:'/login'})
+            }
+    },
+    mounted(){
+            /*页面挂载获取保存的cookie值，渲染到页面上*/
+            let uname = getCookie('username')
+            this.name = uname
+            /*如果cookie不存在，则自动跳转到登录页*/
+            if(uname == ""){
+                this.$router.push('/')
+            }
+        },
 }
 </script>
 
@@ -40,7 +55,7 @@ export default {
         width: 50px;
         height: 40px;
         padding-top: 10px;
-        margin-left: 95%;
+        margin-left: 90%;
         display: flex;
         justify-content: center;
         align-items: center;
