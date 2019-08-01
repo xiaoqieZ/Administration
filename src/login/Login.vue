@@ -8,7 +8,7 @@
             <input type="password" placeholder="请输入密码" v-model="password">
             <button @click="golist">登录</button>
             <span v-on:click="ToRegister">没有账号？马上注册</span>
-            <button @click="requrey">接口暂时没用,可用茄子专用通道</button>
+            <button class="jiek" @click="requrey">接口暂时没用,可用茄子专用通道></button>
             </div>
             <div class="backs"></div>
         </div>
@@ -148,7 +148,7 @@ import {setCookie,getCookie} from '../assets/js/cookie.js'
                     }
                     input{
                         display:block; 
-                        width:250px; 
+                        width:300px; 
                         height:40px; 
                         line-height:40px; 
                         margin:0 auto; 
@@ -164,13 +164,29 @@ import {setCookie,getCookie} from '../assets/js/cookie.js'
                         }
                     button{
                         display:block; 
-                        width:250px; height:40px; 
-                        line-height: 40px; margin:0 auto; 
-                        border:none; background-color:#40a1e2; 
+                        width:250px; 
+                        height:35px; 
+                        line-height: 35px; 
+                        margin:0 auto; 
+                        border:none; 
+                        background-color:#46a6ff; 
                         color:#fff; 
                         font-size:16px; 
                         margin-bottom:5px;
                         border-radius: 5px;
+                        }
+                        .jiek{
+                            display:block; 
+                            width:250px; 
+                            height:40px; 
+                            line-height: 40px; 
+                            margin:0 auto; 
+                            border:none; 
+                            background-color:#dc256b;
+                            color:#fff; 
+                            font-size:16px; 
+                            margin-bottom:5px;
+                            border-radius: 5px;
                         }
                     span{
                         cursor:pointer;
@@ -180,7 +196,7 @@ import {setCookie,getCookie} from '../assets/js/cookie.js'
                         }
                         }
             .backs{
-                    width: 300px;
+                    width: 500px;
                     height: 300px;
                     position: absolute;
                     background-color: #000;
@@ -189,36 +205,4 @@ import {setCookie,getCookie} from '../assets/js/cookie.js'
             }
     }
     
-    // input{
-    //     display:block; 
-    //     width:250px; 
-    //     height:40px; 
-    //     line-height:40px; 
-    //     margin:0 auto; 
-    //     margin-bottom: 10px; 
-    //     outline:none; 
-    //     border:1px solid #888; 
-    //     padding:10px; 
-    //     border-radius: 5px;
-    //     box-sizing:border-box;
-    // }
-    // p{
-    //     color:red;
-    //     }
-    // button{
-    //     display:block; 
-    //     width:250px; height:40px; 
-    //     line-height: 40px; margin:0 auto; 
-    //     border:none; background-color:#40a1e2; 
-    //     color:#fff; 
-    //     font-size:16px; 
-    //     margin-bottom:5px;
-    //     border-radius: 5px;
-    //     }
-    // span{
-    //     cursor:pointer;
-    //     }
-    // span:hover{
-    //     color:#40a1e2; 
-    //     }
 </style>

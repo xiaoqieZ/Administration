@@ -1,8 +1,8 @@
 <template>
     <div class="rights">      
-            <!-- <img src="../../static/img/youliya.jpg" alt="尤利娅"> -->
             <el-dropdown trigger="click">
                    <img src="../../static/img/youliya.jpg" alt="尤利娅">
+                   <span>{{name}}</span>
                 <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item icon="el-icon-plus">个人信息</el-dropdown-item>
                     <el-dropdown-item  icon="el-icon-circle-plus" 
@@ -26,9 +26,6 @@ export default {
     }
     },
     methods:{
-        // login(){
-        //     this.$router.push({path:'/login'})
-        // },
         login(){
                 /*删除cookie*/
                 delCookie('username');
@@ -38,7 +35,7 @@ export default {
     mounted(){
             /*页面挂载获取保存的cookie值，渲染到页面上*/
             let uname = getCookie('username')
-            this.name = uname
+            this.name = uname;
             /*如果cookie不存在，则自动跳转到登录页*/
             if(uname == ""){
                 this.$router.push('/')
@@ -51,7 +48,7 @@ export default {
 
 .rights{
     width: 100%;
-    /deep/.el-dropdown{
+     .el-dropdown{
         width: 50px;
         height: 40px;
         padding-top: 10px;

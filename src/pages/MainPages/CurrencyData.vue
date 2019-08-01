@@ -12,12 +12,14 @@
           <el-button type="primary" @click='getAdd'>添加</el-button>
           &nbsp;&nbsp;
           <el-button type="primary" @click="exportExcel">导出</el-button>
+
         </div>
         <div class="searchright">
           <el-input v-model="search" placeholder="输入搜索内容"  prefix-icon="el-icon-search"></el-input>
         </div>
     </div>
     <!-- 表格数据操作 -->
+    
   <el-table
     :data="tableData.filter(data => !search || data.title.toLowerCase().includes(search.toLowerCase()))"
     stripe
@@ -72,7 +74,7 @@
       align="center" 
       width="280"
       label="操作">
-         <template slot-scope="scope">
+      <template slot-scope="scope">
             <el-button type="primary" icon="el-icon-edit" size="mini" @click="handleEdit(scope.$index,scope.row)" circle></el-button>
             <el-button type="danger" icon="el-icon-delete" size="mini" @click.prevent="del(scope.$index, scope.row)" circle></el-button>
             <el-button type="primary" icon="el-icon-view" size="mini" @click="checkDetail(scope.$index,scope.row)"  circle></el-button>
@@ -93,6 +95,7 @@
               <el-button type="primary" @click.native="editSubmit" >提交</el-button>
             </div>
           </el-dialog>
+          
   </el-table>
 
   <!-- 页码 -->
@@ -145,6 +148,7 @@ import { Toast } from 'mint-ui';
         diz:'',
         times:'',
         hide:false,
+        radio:'1'
       }
     },
     methods:{
@@ -263,15 +267,15 @@ import { Toast } from 'mint-ui';
                         if (typeof console !== "undefined") console.log(e, wbout);
                     }
                     return wbout;
-                    }
+                    },
     },
     created(){
         this. getAllList()
-    }
+    },
   }
 </script>
  
- <style lang="less">
+ <style lang="less" >
     .currenminput{
         height: 80px;
         display: flex;
