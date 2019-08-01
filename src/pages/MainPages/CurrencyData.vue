@@ -70,41 +70,32 @@
     </el-table-column>
     <el-table-column
       align="center" 
-      width="180"
+      width="280"
       label="操作">
          <template slot-scope="scope">
-            <el-button
-            size="mini"
-             @click="handleEdit(scope.$index,scope.row)"
-            >编辑</el-button>
-            <el-button
-            size="mini"
-            type="danger"
-            @click.prevent="del(scope.$index, scope.row)"
-            >删除
-            </el-button>
+            <el-button type="primary" icon="el-icon-edit" size="mini" @click="handleEdit(scope.$index,scope.row)" circle></el-button>
+            <el-button type="danger" icon="el-icon-delete" size="mini" @click.prevent="del(scope.$index, scope.row)" circle></el-button>
+            <el-button type="primary" icon="el-icon-view" size="mini" @click="checkDetail(scope.$index,scope.row)"  circle></el-button>
       </template>
           </el-table-column>
-
           <el-dialog title="编辑" :visible.sync="editFormVisible" :close-on-click-modal="true" :append-to-body="true">
-      <!--//editForm表单提交的数据-->
-      <el-form :model="editForm" label-width="80px"  ref="editForm">
-        <el-form-item label="姓名" prop="name">
-          <el-input v-model="editForm.name" placeholder="请输入姓名"></el-input>
-        </el-form-item>
-        <el-form-item label="地址" prop="address">
-          <el-input v-model="editForm.address" placeholder="请输入地址"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-				<el-button @click.native="editFormVisible = false">取消</el-button>
-				<el-button type="primary" @click.native="editSubmit" >提交</el-button>
-			</div>
-    </el-dialog>
-
-
-    <!-- 页码 -->
+              <!--//editForm表单提交的数据-->
+            <el-form :model="editForm" label-width="80px"  ref="editForm">
+              <el-form-item label="姓名" prop="name">
+                <el-input v-model="editForm.name" placeholder="请输入姓名"></el-input>
+              </el-form-item>
+              <el-form-item label="地址" prop="addres">
+                <el-input v-model="editForm.addres" placeholder="请输入地址"></el-input>
+              </el-form-item>
+            </el-form>           
+            <div slot="footer" class="dialog-footer">
+              <el-button @click.native="editFormVisible = false">取消</el-button>
+              <el-button type="primary" @click.native="editSubmit" >提交</el-button>
+            </div>
+          </el-dialog>
   </el-table>
+
+  <!-- 页码 -->
   <div align="center">
   <el-pagination
         background
@@ -116,6 +107,15 @@
         :total="totalCount"
         >
     </el-pagination>
+    </div>
+    <div class="details" v-show="hide">
+       <div class="details_list">
+         <i class="el-icon-close" @click="cha"></i>
+         <p>姓名：{{guid}}</p>
+         <p>地址： {{diz}}</p>
+         <p>填表时间：{{times}}</p>
+
+       </div>
     </div>
   </div>
 </template>
@@ -139,11 +139,26 @@ import { Toast } from 'mint-ui';
         editFormVisible: false,   //设置默认弹出框  为false
         editForm: {
           name:'',
-          address:'',
-        },
+          addres:'',
+        }, 
+        guid:'',
+        diz:'',
+        times:'',
+        hide:false,
       }
     },
     methods:{
+      // 查看详情
+       checkDetail(index, row){
+                console.log(index, row);
+                this.guid=row.title;
+                this.diz=row.content;
+                this.times=row.created_at;
+                this.hide=true;
+            },
+            cha(){
+              this.hide=false;
+            },
         getAllList() {//获取数据  
             let list={num:this.num,page:this.page};
                 this.$http.get('http://mx.maplegg.com/api/vue/getwz',{params:list}).then(res => {
@@ -209,41 +224,20 @@ import { Toast } from 'mint-ui';
                     this.page = val;
                     this.getAllList(this.search, this.page, this.num);
                 },
-                // 编辑  
-                // handleEdit: function(index, row) {
-                //     this.$prompt('请输入新名称', '提示','地址', {
-                //           confirmButtonText: '确定',
-                //           cancelButtonText: '取消',
-                //         }).then(({ value }) => {
-                //             if(value==''||value==null)
-                //                 return;
-                //             this.$http.post('newstu/update',{"id":row.id,"title":value,'content':value},{emulateJSON: true}).then(function(res){
-                //                 this.loadData(this.search, this.page, this.num);                              
-                //             },function(){
-                //             });
-                //         }).catch(() => {
-
-                //     });
-                // },
                 // 编辑
                 handleEdit:function (index, row) {
                   this.editFormVisible = true;
                   this.editForm = Object.assign({}, row);   //拿到数据
-                  // let obj=this.editForm;
-                  // var modify={
-                  //   title=obj.username,
-                  //   content=obj.address
-                  // }
-                  // this.name=obj.username;
-                  // this.username=obj.address;
                   console.log(this.editForm);
+                  // let prolist={
+                  //   title:this.editForm.neme,
+                  //   content:this.editForm.address
+                  // }             
                 },
                 // 确认编辑
                 editSubmit(){
                   console.log('发送成功');
                   this.editFormVisible = false
-                  // this.editForm;
-                  // console.log(this.editForm);
                 },
                    //定义导出Excel表格事件
                     exportExcel() {
@@ -270,7 +264,7 @@ import { Toast } from 'mint-ui';
                     }
                     return wbout;
                     }
-                        },
+    },
     created(){
         this. getAllList()
     }
@@ -294,5 +288,28 @@ import { Toast } from 'mint-ui';
           height: 40px;
         }
     }
+    .details{
+          width: 100%;
+          height: 100%;
+          position: absolute;
+          top: 0%;
+          left: 0%;
+          background-color:rgba(0,0,0,0.5);
+          z-index: 999;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          .details_list{
+            width: 400px;
+            height: 260px;
+            background: #fff;
+            i{
+              padding-left:95%; 
+            }
+          p{
+              padding-left: 10px;
+          }
+          }
+        }
  </style>
  
