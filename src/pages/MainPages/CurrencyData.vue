@@ -148,7 +148,6 @@ import { Toast } from 'mint-ui';
         diz:'',
         times:'',
         hide:false,
-        radio:'1'
       }
     },
     methods:{
