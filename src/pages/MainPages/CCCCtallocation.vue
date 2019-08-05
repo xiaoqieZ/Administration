@@ -1,6 +1,6 @@
 <template>
     <div>
-        产品列表
+        理财顾问
     </div>
 </template>
 

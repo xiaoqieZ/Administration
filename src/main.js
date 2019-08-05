@@ -6,15 +6,19 @@ import router from './router'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import Vuex from 'vuex'
-import VueResource from 'vue-resource'//导入vue-resource
-import Mint from 'mint-ui';
+import VueResource from 'vue-resource'// 导入vue-resource
+import Mint from 'mint-ui'
 import 'mint-ui/lib/style.css'
 
-Vue.use(Mint);
-Vue.use(VueResource)//安装vue-resource
+import vuescroll from 'vuescroll/dist/vuescroll-native'
+import 'vuescroll/dist/vuescroll.css'
+
+Vue.use(vuescroll)
+Vue.use(Mint)
+Vue.use(VueResource)// 安装vue-resource
 Vue.use(Vuex)
 Vue.config.productionTip = false
-Vue.use(ElementUI);
+Vue.use(ElementUI)
 
 /* eslint-disable no-new */
 new Vue({

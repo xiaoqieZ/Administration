@@ -1,6 +1,6 @@
 <template>
     <div>
-        产品列表
+        投资者导入
     </div>
 </template>
 

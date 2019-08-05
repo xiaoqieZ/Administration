@@ -1,6 +1,6 @@
 <template>
     <div>
-        产品列表
+        权限管理
     </div>
 </template>
 

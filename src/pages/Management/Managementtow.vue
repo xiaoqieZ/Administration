@@ -1,6 +1,6 @@
 <template>
     <div>
-        用户明细查询
+        投资者统计
     </div>
 </template>
 

@@ -1,5 +1,5 @@
 <template>
-    <div>货币账户管理页面</div>
+    <div>账户设置</div>
 </template>
 
 <script>

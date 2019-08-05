@@ -1,5 +1,5 @@
 <template>
-    <div>币币交易参数配置页面</div>
+    <div>投资者份额</div>
 </template>
 
 <script>

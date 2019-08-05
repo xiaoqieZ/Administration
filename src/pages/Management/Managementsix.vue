@@ -1,6 +1,6 @@
 <template>
     <div>
-        用户佣金查询
+        同步设置
     </div>
 </template>
 

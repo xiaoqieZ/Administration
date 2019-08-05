@@ -1,6 +1,6 @@
 <template>
     <div>
-        佣金参数配置
+        下载中心
     </div>
 </template>
 

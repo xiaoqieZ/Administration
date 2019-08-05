@@ -1,6 +1,9 @@
 <template>
     <div>
-        产品列表
+        首页
+        <span>
+            首页内容
+        </span>
     </div>
 </template>
 
@@ -10,6 +13,6 @@ export default {
 }
 </script>
 
-<style>
+<style lang="less">
 
 </style>

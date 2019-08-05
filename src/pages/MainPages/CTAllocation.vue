@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div>币种交易参数配置</div>
+        <div>客户审核</div>
     <template>
            <span>性别：</span>
             <el-radio-group v-model="radio">

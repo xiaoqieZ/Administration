@@ -1,6 +1,6 @@
 <template>
     <div>
-        产品列表
+        接收信息
     </div>
 </template>
 

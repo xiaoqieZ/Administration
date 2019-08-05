@@ -1,6 +1,6 @@
 <template>
     <div>
-        产品列表
+        认证管理
     </div>
 </template>
 

@@ -1,5 +1,5 @@
 <template>
-    <div>用户记录查询页面</div>
+    <div>基金合同</div>
 </template>
 
 <script>

@@ -1,6 +1,6 @@
 <template>
     <div>
-        产品列表
+        智能自查
     </div>
 </template>
 

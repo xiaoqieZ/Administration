@@ -1,5 +1,5 @@
 <template>
-    <div>用户功能管理页面</div>
+    <div>公文文件</div>
 </template>
 
 <script>

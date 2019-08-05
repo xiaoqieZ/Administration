@@ -1,13 +1,13 @@
  <template>
  <div id="app">
      <div slot="币种资料管理">
-         币种资料管理
+         客户信息
      </div>
     <div class="currenminput">
         <div class="left">
           <el-input v-model="username" placeholder="请输入姓名"></el-input>
           &nbsp;&nbsp;
-          <el-input v-model="address" placeholder="请输入地址"></el-input>
+          <el-input v-model="address" placeholder="请输入地址" @keyup.native.enter='getAdd'></el-input>
           &nbsp;&nbsp;
           <el-button type="primary" @click='getAdd'>添加</el-button>
           &nbsp;&nbsp;
@@ -111,6 +111,7 @@
         >
     </el-pagination>
     </div>
+    <!-- 查看详情 -->
     <div class="details" v-show="hide">
        <div class="details_list">
          <i class="el-icon-close" @click="cha"></i>

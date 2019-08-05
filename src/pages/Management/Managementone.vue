@@ -1,6 +1,6 @@
 <template>
     <div>
-        产品列表
+        页面设置
     </div>
 </template>
 

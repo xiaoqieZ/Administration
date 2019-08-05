@@ -1,5 +1,5 @@
 <template>
-    <div>用户信息管理页面页面</div>
+    <div>去签约</div>
 </template>
 
 <script>

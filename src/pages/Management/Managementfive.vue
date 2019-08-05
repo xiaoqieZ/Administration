@@ -1,6 +1,6 @@
 <template>
     <div>
-        产品列表
+        使用统计
     </div>
 </template>
 
