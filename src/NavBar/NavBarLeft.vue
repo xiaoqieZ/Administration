@@ -277,7 +277,9 @@
 </template>
 
 <script>
+import vuescroll from 'vuescroll';
 export default {
+  
   data() {
     return {
       isShow: false,
