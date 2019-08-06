@@ -98,11 +98,11 @@ import {setCookie,getCookie} from '../assets/js/cookie.js'
                     })
                 }
             },
-    // 注册卡片
-    ToRegister(){
-                this.showLogin=false;
-                this.showRegister=true;
-            },
+            // 注册卡片
+            ToRegister(){
+                        this.showLogin=false;
+                        this.showRegister=true;
+                    },
             // 登录卡片
             ToLogin(){
                 this.showLogin=true;

@@ -164,22 +164,22 @@ export default new Router({
             },
             // 信息推送
             {
-              path: 'Pushmessage',
-              name: 'Pushmessage',
+              path: 'Pushmessages',
+              name: 'Pushmessages',
               component: Null,
               children: [
                 {
-                  path: '/MainHeader/Pushmessage/Pushmessage',
+                  path: '/MainHeader/Pushmessages/Pushmessage',
                   name: 'Pushmessage',
                   component: Pushmessage
                 },
                 {
-                  path: '/MainHeader/Pushmessage/Pushmessagetow',
+                  path: '/MainHeader/Pushmessages/Pushmessagetow',
                   name: 'Pushmessagetow',
                   component: Pushmessagetow
                 },
                 {
-                  path: '/MainHeader/Pushmessage/Pushmessagethree',
+                  path: '/MainHeader/Pushmessages/Pushmessagethree',
                   name: 'Pushmessagethree',
                   component: Pushmessagethree
                 }
@@ -187,42 +187,42 @@ export default new Router({
             },
             // 系统管理
             {
-              path: 'Management',
-              name: 'Management',
+              path: 'Managements',
+              name: 'Managements',
               component: Null,
               children: [
                 {
-                  path: '/MainHeader/Management/Managementone',
-                  name: 'Pushmessage',
+                  path: '/MainHeader/Managements/Managementone',
+                  name: 'Management',
                   component: Managementone
                 },
                 {
-                  path: '/MainHeader/Management/Managementtow',
+                  path: '/MainHeader/Managements/Managementtow',
                   name: 'Managementtow',
                   component: Managementtow
                 },
                 {
-                  path: '/MainHeader/Management/Managementthree',
+                  path: '/MainHeader/Managements/Managementthree',
                   name: 'Managementfour',
                   component: Managementfour
                 },
                 {
-                  path: '/MainHeader/Management/Managementfour',
+                  path: '/MainHeader/Managements/Managementfour',
                   name: 'Managementthree',
                   component: Managementthree
                 },
                 {
-                  path: '/MainHeader/Management/Managementfive',
+                  path: '/MainHeader/Managements/Managementfive',
                   name: 'Managementfive',
                   component: Managementfive
                 },
                 {
-                  path: '/MainHeader/Management/Managementsix',
+                  path: '/MainHeader/Managements/Managementsix',
                   name: 'Managementsix',
                   component: Managementsix
                 },
                 {
-                  path: '/MainHeader/Management/Managementseven',
+                  path: '/MainHeader/Managements/Managementseven',
                   name: 'Managementseven',
                   component: Managementseven
                 }

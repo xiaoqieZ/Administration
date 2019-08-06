@@ -65,6 +65,7 @@
                 :style="{ 'color' : High.CParameter ? '#9A9AB0': '#FFFFFF' }"
               >适当性管理</span>
               <i
+                v-show="!isShow"
                 class="nav-bar-comicon"
                 :class="[ High.CParameter ? 'nav-bar-bArrowsicon' : 'nav-bar-rArrowsicon' ] "
               ></i>
@@ -141,6 +142,7 @@
               >
               电子签约</span>
               <i
+                v-show="!isShow"
                 class="nav-bar-comicon"
                 :class="[ High.UserManage ? 'nav-bar-bArrowsicon' : 'nav-bar-rArrowsicon' ] "
               ></i>
@@ -189,80 +191,80 @@
             </div>
           </el-submenu>
           <!-- 推送信息 -->
-          <el-submenu index="Pushmessage" onselectstart="return false;">
+          <el-submenu index="Pushmessages" onselectstart="return false;">
             <template slot="title">
               <i
                 class="nav-open-icon"
-                :style="{'background' : High.Pushmessage ? 'url(../../static/img/member.png)' : 'url(../../static/img/memberxz.png)'}"
+                :style="{'background' : High.Pushmessages ? 'url(../../static/img/c2c.png)' : 'url(../../static/img/c2cxz.png)'}"
               ></i>
               <span
                 v-show="!isShow"
-                :style="{'color':High.Pushmessage ?  '#9A9AB0': '#FFFFFF'}"
+                :style="{'color':High.Pushmessages ?  '#9A9AB0': '#FFFFFF'}"
               >推送消息</span>
               <i
                 class="nav-bar-comicon"
                 v-show="!isShow"
-                :class="[ High.Pushmessage ? 'nav-bar-bArrowsicon' : 'nav-bar-rArrowsicon' ] "
+                :class="[ High.Pushmessages ? 'nav-bar-bArrowsicon' : 'nav-bar-rArrowsicon' ] "
               ></i>
             </template>
             <div v-show="!isShow">
-              <el-menu-item index="/MainHeader/Pushmessage/Pushmessage">
+              <el-menu-item index="/MainHeader/Pushmessages/Pushmessage">
                 <span class="mr-right-18">·</span>
                 发送信息
               </el-menu-item>
-              <el-menu-item index="/MainHeader/Pushmessage/Pushmessagetow">
+              <el-menu-item index="/MainHeader/Pushmessages/Pushmessagetow">
                 <span class="mr-right-18">·</span>
                 接收信息
               </el-menu-item>
-              <el-menu-item index="/MainHeader/Pushmessage/Pushmessagethree">
+              <el-menu-item index="/MainHeader/Pushmessages/Pushmessagethree">
                 <span class="mr-right-18">·</span>
                 模板信息
               </el-menu-item>
             </div>
           </el-submenu>
           <!-- 系统管理 -->
-          <el-submenu index="Management" onselectstart="return false;">
+          <el-submenu index="Managements" onselectstart="return false;">
             <template slot="title">
               <i
                 class="nav-open-icon"
-                :style="{'background' : High.Management ? 'url(../../static/img/member.png)' : 'url(../../static/img/memberxz.png)'}"
+                :style="{'background' : High.Managements ? 'url(../../static/img/book.png)' : 'url(../../static/img/bookxz.png)'}"
               ></i>
               <span
                 v-show="!isShow"
-                :style="{'color':High.Management ?  '#9A9AB0': '#FFFFFF'}"
+                :style="{'color':High.Managements ?  '#9A9AB0': '#FFFFFF'}"
               >系统管理</span>
               <i
                 class="nav-bar-comicon"
                 v-show="!isShow"
-                :class="[ High.Management ? 'nav-bar-bArrowsicon' : 'nav-bar-rArrowsicon' ] "
+                :class="[ High.Managements ? 'nav-bar-bArrowsicon' : 'nav-bar-rArrowsicon' ] "
               ></i>
             </template>
             <div v-show="!isShow">
-              <el-menu-item index="/MainHeader/Management/Managementone">
+              <el-menu-item index="/MainHeader/Managements/Managementone">
                 <span class="mr-right-18">·</span>
                 页面设置
               </el-menu-item>
-              <el-menu-item index="/MainHeader/Management/Managementtow">
+              <el-menu-item index="/MainHeader/Managements/Managementtow">
                 <span class="mr-right-18">·</span>
                 投资者统计
               </el-menu-item>
-              <el-menu-item index="/MainHeader/Management/Managementthree">
+              <el-menu-item index="/MainHeader/Managements/Managementthree">
                 <span class="mr-right-18">·</span>
                 问卷管理
               </el-menu-item>
-              <el-menu-item index="/MainHeader/Management/Managementfour">
+              <el-menu-item index="/MainHeader/Managements/Managementfour">
                 <span class="mr-right-18">·</span>
                 权限管理
               </el-menu-item>
-              <el-menu-item index="/MainHeader/Management/Managementfive">
+              <el-menu-item index="/MainHeader/Managements/Managementfive">
                 <span class="mr-right-18">·</span>
                 使用统计
               </el-menu-item>
-              <el-menu-item index="/MainHeader/Management/Managementsix">
+              <el-menu-item index="/MainHeader/Managements/Managementsix">
                 <span class="mr-right-18">·</span>
                 同步设置
               </el-menu-item>
-              <el-menu-item index="/MainHeader/Management/Managementseven">
+              <el-menu-item index="/MainHeader/Managements/Managementseven">
                 <span class="mr-right-18">·</span>
                 认证管理
               </el-menu-item>
@@ -270,6 +272,18 @@
           </el-submenu>
         </vue-scroll>
         </el-menu>
+        <div class="listtitle">
+        <div
+        :class="[isShow?'lFFF':'listtime']"
+        >
+          <i class="el-icon-phone"></i>
+          <span>{{isShow?'咨询':'联系电话(工作时间：9：30-16：30)'}}</span>
+          <p v-show="!isShow">020-3463706-1111</p>
+        </div>
+        <div class="listname">
+          <span>碳链科技</span>
+        </div>
+      </div>
       </el-col>
     </div>
     <router-view :class="[isShow?'bossyone':'bossytow']"></router-view>
@@ -289,8 +303,8 @@ export default {
         DataDitionary: true, //信息披露
         UserManage: true, //电子签约
         MemberManage: true, //备案材料
-        Management: true, //系统管理
-        Pushmessage: true, //推送消息
+        Managements: true, //系统管理
+        Pushmessages: true, //推送消息
         Homepage: true, //首页
       },
       singleMenu: ["Homepage"], //不需要展开的菜单
@@ -301,7 +315,7 @@ export default {
       ops: {
         bar: {
           size: "4px",
-          background: "#444867"
+          background: "#ffffff"
         }
       },
     }
@@ -397,7 +411,41 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-// style="padding:0 20px 0 88px;font-size:16px;box-sizing:border-box;"
+.lFFF{
+  height: 54px;
+  line-height: 25px;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.listtitle{
+  font-size: 14px;
+  color: #fff;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  .listtime{
+    height: 54px;
+    line-height: 25px;
+    background: rgba(0, 0, 0, 0.3);
+    p{
+      text-align: center;
+      margin: 0;
+    }
+  }
+  .listname{
+    height: 35px;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+.el-submenu{
+  padding-top: 20px;
+}
 .bossyone {
   padding: 0 20px 0 88px;
   font-size: 16px;
@@ -501,7 +549,7 @@ export default {
     float: right;
   }
   .nav-bar-bArrowsicon {
-    margin-top: 14px;
+    margin-top: 10px;
     width: 6px;
     height: 12px;
     background: url(../../static/img/rArrows.png) no-repeat;
@@ -554,8 +602,17 @@ export default {
     width: 265px;
   }
 }
-/deep/.el-menu--inline {
+.c-nav-show/deep/.el-menu--inline {
   padding-left: 20px;
+}
+.c-nav-show/deep/.__vuescroll {
+  height: 85% !important;
+}
+.c-nav-show/deep/.__panel{
+  margin:0 !important; 
+}
+/deep/.el-menu{
+  height: 88%;
 }
 </style>
 
