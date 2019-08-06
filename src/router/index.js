@@ -28,13 +28,43 @@ import Managementfive from '@/pages/Management/Managementfive'
 import Managementsix from '@/pages/Management/Managementsix'
 import Managementseven from '@/pages/Management/Managementseven'
 
+// APP
+import Publicfore from '@/PublicNumber/Publicfore/Publicfore.vue'
+import Publicone from '@/PublicNumber/Publicone/Publicone.vue'
+import Publicthree from '@/PublicNumber/Publicthree/Publicthree.vue'
+import Publictow from '@/PublicNumber/Publictow/Publictow.vue'
+
+
 import Login from '@/login/Login/'
 
 Vue.use(Router)
 
 export default new Router({
   routes: [
-    {path: '/Login',
+    {
+      path: '/Publicfore',
+      name: 'Publicfore',
+      component: Publicfore
+    },
+    {
+      path: '/Publicone',
+      name: 'Publicone',
+      component: Publicone
+    },
+    {
+      path: '/Publicthree',
+      name: 'Publicthree',
+      component: Publicthree
+    },
+    {
+      path: '/Publictow',
+      name: 'Publictow',
+      component: Publictow
+    },
+
+
+    {
+      path: '/Login',
       name: 'Login',
       component: Login
     },
