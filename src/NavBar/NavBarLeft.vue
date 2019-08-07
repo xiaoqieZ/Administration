@@ -510,7 +510,7 @@ export default {
     margin-top: 47px;
     padding-left: 25px;
     margin-bottom: 9px;
-    width: 70px;
+    width: 80px;
     // height:12px;
     font-size: 12px;
     font-family: PingFang-SC-Medium;

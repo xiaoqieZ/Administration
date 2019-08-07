@@ -4,11 +4,16 @@
                    <img src="../../static/img/youliya.jpg" alt="尤利娅">
                    <span>{{name}}</span>
                 <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item icon="el-icon-plus">个人信息</el-dropdown-item>
+                    <el-dropdown-item icon="el-icon-plus"
+                    divided
+                    @click.native="fanhui"
+                    >返回前台
+                    </el-dropdown-item>
                     <el-dropdown-item  icon="el-icon-circle-plus" 
                     divided
                     @click.native="login"
-                    >退出登录</el-dropdown-item>
+                    >退出登录
+                    </el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
         
@@ -31,6 +36,9 @@ export default {
                 /*删除cookie*/
                 delCookie('username');
                 this.$router.push({path:'/login'})
+            },
+            fanhui(){
+                this.$router.push({path:'/Publicfore'})
             }
     },
     mounted(){

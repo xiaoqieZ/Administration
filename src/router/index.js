@@ -41,15 +41,16 @@ Vue.use(Router)
 
 export default new Router({
   routes: [
-    {
-      path: '/Publicfore',
-      name: 'Publicfore',
-      component: Publicfore
-    },
+    // 前台
     {
       path: '/Publicone',
       name: 'Publicone',
       component: Publicone
+    },
+    {
+      path: '/Publictow',
+      name: 'Publictow',
+      component: Publictow
     },
     {
       path: '/Publicthree',
@@ -57,12 +58,13 @@ export default new Router({
       component: Publicthree
     },
     {
-      path: '/Publictow',
-      name: 'Publictow',
-      component: Publictow
+      path: '/Publicfore',
+      name: 'Publicfore',
+      component: Publicfore
     },
+    
 
-
+// 后台
     {
       path: '/Login',
       name: 'Login',
@@ -71,13 +73,13 @@ export default new Router({
     {
       path: '/',
       name: 'NavBar',
-      redirect: '/MainHeader/CParameter/CurrencyData',
-      component: NavBar,
+      redirect: '/MainHeader/Homepage/Homepage',
+      component: NavBar,         //公共导航栏
       children: [
         {
           path: 'MainHeader',
           name: 'MainHeader',
-          component: MainHeader,
+          component: MainHeader, //公共头部登录
           children: [
             // 首页
             {
@@ -262,5 +264,6 @@ export default new Router({
         }
       ]
     }
-  ]
+  ],
+  linkActiveClass:'mui-active'//覆盖默认路由的高亮
 })

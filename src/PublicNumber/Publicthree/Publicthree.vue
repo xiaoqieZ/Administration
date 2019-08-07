@@ -1,6 +1,8 @@
 <template>
-    <div>
-        私募产品
+    <div class="Privates">
+        <div class="Privatetitle">
+            私募产品
+        </div>
         <tabbar-home></tabbar-home>
     </div>
     
@@ -21,6 +23,17 @@ export default {
 </script>
 
 
-<style>
+<style lang="less">
+.Privates{
+    text-align: center;
+    .Privatetitle{
+        height: 36px;
+        color: #fff;
+        background: #5aa8fb;   
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
 
 </style>

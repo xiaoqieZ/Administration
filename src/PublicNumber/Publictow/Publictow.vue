@@ -1,6 +1,12 @@
 <template>
-    <div>
-        关于我们
+    <div class="About-us">
+        <div class="Aboutitle">
+            关于我们
+        </div>
+        <div class="Aboutcenter">
+            <p>Hello 碳链科技</p>
+        </div>
+        
         <tabbar-home></tabbar-home>
     </div>
     
@@ -20,6 +26,23 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang="less">
+.About-us{
+    text-align: center;
+    .Aboutitle{
+        height: 36px;
+        color: #fff;
+        background: #5aa8fb;   
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .Aboutcenter{
+        width: 100%;
+        height: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
 </style>

@@ -1,6 +1,56 @@
 <template>
-    <div>
-        首页
+    <div class="home-page">
+        <div class="hometitle">
+            首页
+        </div>
+        <!-- 轮播图 -->
+        <template>
+            <div class="block">
+                <el-carousel height="150px" :interval="2000">
+                <el-carousel-item v-for="item in 4" :key="item">
+                    <h3 class="small">{{ item }}</h3>
+                </el-carousel-item>
+                </el-carousel>
+            </div>
+        </template>
+        <!-- 中间内容 -->
+        <div class="hometlist">
+            <div class="hometadd">
+                <span>热门产品</span>
+                <span>更多</span>
+            </div>
+            <div class="hometnav">
+                <div class="hometswrip">
+                    <div class="homeopesion">
+                    <P class="title">润达3号私募证券投资</P>
+                    <p>累计收益：<span>41.38%</span></p>
+                    <p>最新净值：<span>104265</span></p>
+                </div>
+                <el-divider direction="vertical"></el-divider>
+                <div class="homeopesion">
+                    <p class="title">润达4号私募证券投资</p>
+                    <p>累计收益：<span>41.38%</span></p>
+                    <p>最新净值：<span>104265</span></p>
+                </div>
+                <el-divider direction="vertical"></el-divider>
+                <div class="homeopesion">
+                    <p class="title">润达5号私募证券投资</p>
+                    <p>累计收益：<span>41.38%</span></p>
+                    <p>最新净值：<span>104265</span></p>
+                </div>
+                <el-divider direction="vertical"></el-divider>
+                <div class="homeopesion">
+                    <p class="title">润达6号私募证券投资</p>
+                    <p>累计收益：<span>41.38%</span></p>
+                    <p>最新净值：<span>104265</span></p>
+                </div>
+                </div>
+            </div>
+        </div>
+        <div class="Information">
+                <span>热门资讯</span>
+                <span>更多</span>
+            </div>
         <tabbar-home></tabbar-home>
     </div>
     
@@ -20,6 +70,86 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang="less">
+.home-page{
+    background: #dde1e6;
+    .hometitle{
+        height: 36px;
+        color: #fff;
+        background: #5aa8fb;   
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .el-carousel__item h3 {
+        color: #475669;
+        font-size: 18px;
+        opacity: 0.75;
+        line-height: 150px;
+        margin: 0;
+  }
+  
+  .el-carousel__item:nth-child(2n) {
+    background-color: #99a9bf;
+  }
+  
+  .el-carousel__item:nth-child(2n+1) {
+    background-color: #d3dce6;
+  }
+  .hometlist{
+      width: 100%;
+      margin-top: 10px;
+      background: #fff;
+      padding: 0 8px;
+      border-bottom:1px solid #666; 
+      .hometadd{
+          height: 40px;
+          display: flex;
+          border-bottom: 1px solid #666;
+          align-items: center;
+          justify-content: space-between;
+      }
+      .hometnav::-webkit-scrollbar {
+          display: none;
+      }
+      .hometnav{
+          width: 100%;
+          height: 120px;
+          position: relative;
+          overflow-x: scroll;
+          .hometswrip{
+              width: 200%;
+              height: 120px;
+              position: absolute;
+              display: flex;
+              align-items: center;
+              .el-divider--vertical{
+                  height: 4em;
+                  margin: 0px 30px;
+              }
+              .homeopesion{
+                  width: 48%;
+                  .title{
+                     color: #000;
+                     font-weight: 600
+                  }
+                  span{
+                      color: red;
+                      font-weight: 600;
+                  }
+              }
+          }
+      }
+  }
+.Information{
+      height: 40px;
+      margin-top: 10px;
+      background: #fff;
+      padding: 0 8px;
+      display: flex;
+      border-bottom: 1px solid #666;
+      align-items: center;
+      justify-content: space-between;
+  }
+}
 </style>
