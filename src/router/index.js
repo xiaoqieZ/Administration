@@ -69,7 +69,7 @@ export default new Router({
       component: Publicfore,
     },
     {
-      path: '/Identification',
+      path: '/Publicfore/Identification',
       name: 'Identification',
       component: Identification
     },

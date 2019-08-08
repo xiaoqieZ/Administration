@@ -29,7 +29,7 @@
         </div>
         <!-- 信息列表 -->
         <div class="myhometcenter">
-            <router-link to="/Identification" >
+            <router-link to="/Publicfore/Identification" >
                 <div class="myhometupdey" >
                         <p>
                         <i class="el-icon-s-check"></i>
