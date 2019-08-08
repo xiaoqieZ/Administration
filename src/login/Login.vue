@@ -110,13 +110,13 @@ import {setCookie,getCookie} from '../assets/js/cookie.js'
             },
             // 接口没用，直接跳转按钮
             requrey(){
-                this.$router.push({path:'/MainHeader/CParameter/CurrencyData'})
+                this.$router.push({path:'/NavBar/Homepage/Homepage'})
             },
   },
         mounted(){
         /*页面挂载获取cookie，如果存在username的cookie，则跳转到主页，不需登录*/
             if(getCookie('username')){
-                this.$router.push('/MainHeader/CParameter/CurrencyData')
+                this.$router.push('/NavBar/Homepage/Homepage')
     }
   },
     }

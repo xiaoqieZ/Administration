@@ -34,7 +34,7 @@
         <!-- 遇到的坑：1.不配置路由的话，不会有高亮。2.配置类名时，类名必须与路由名一致，图标才能有高亮。3.不需要展开的导航菜单需要再methods里面重新配置。 -->
           <!-- 首页 -->         
            <el-menu-item
-              index="/MainHeader/Homepage/Homepage"
+              index="/NavBar/Homepage/Homepage"
               class="issingleMenu"
               style="user-select:none"
             >
@@ -71,27 +71,27 @@
               ></i>
             </template>
             <div v-show="!isShow">
-              <el-menu-item index="/MainHeader/CParameter/CurrencyData">
+              <el-menu-item index="/NavBar/CParameter/CurrencyData">
                 <span class="mr-right-18">·</span>
                 客户信息
               </el-menu-item>
-              <el-menu-item index="/MainHeader/CParameter/CTAllocation">
+              <el-menu-item index="/NavBar/CParameter/CTAllocation">
                 <span class="mr-right-18">·</span>
                 客户审核
               </el-menu-item>
-              <el-menu-item index="/MainHeader/CParameter/CCTAllocation">
+              <el-menu-item index="/NavBar/CParameter/CCTAllocation">
                 <span class="mr-right-18">·</span>
                 投资者份额
               </el-menu-item>
-              <el-menu-item index="/MainHeader/CParameter/CCCtallocation">
+              <el-menu-item index="/NavBar/CParameter/CCCtallocation">
                 <span class="mr-right-18">·</span>
                 投资者导入
               </el-menu-item>
-              <el-menu-item index="/MainHeader/CParameter/CCCCtallocation">
+              <el-menu-item index="/NavBar/CParameter/CCCCtallocation">
                 <span class="mr-right-18">·</span>
                 理财顾问
               </el-menu-item>
-              <el-menu-item index="/MainHeader/CParameter/CCCCCtallocation">
+              <el-menu-item index="/NavBar/CParameter/CCCCCtallocation">
                 <span class="mr-right-18">·</span>
                 智能自查
               </el-menu-item>
@@ -115,11 +115,11 @@
               ></i>
             </template>
             <div v-show="!isShow">
-              <el-menu-item index="/MainHeader/DataDitionary/BankData">
+              <el-menu-item index="/NavBar/DataDitionary/BankData">
                 <span class="mr-right-18">.</span>
                 产品列表
               </el-menu-item>
-              <el-menu-item index="/MainHeader/DataDitionary/BbankData">
+              <el-menu-item index="/NavBar/DataDitionary/BbankData">
                 <span class="mr-right-18">.</span>
                 日历提醒
               </el-menu-item>
@@ -148,19 +148,19 @@
               ></i>
             </template>
             <div v-show="!isShow">
-              <el-menu-item index="/MainHeader/UserManage/AccountManage">
+              <el-menu-item index="/NavBar/UserManage/AccountManage">
                 <span class="mr-right-18">·</span>
                 去签约
               </el-menu-item>
-              <el-menu-item index="/MainHeader/UserManage/UserFun">
+              <el-menu-item index="/NavBar/UserManage/UserFun">
                 <span class="mr-right-18">·</span>
                 基金合同
               </el-menu-item>
-              <el-menu-item index="/MainHeader/UserManage/UserInfo">
+              <el-menu-item index="/NavBar/UserManage/UserRecord">
                 <span class="mr-right-18">·</span>
                 公文文件
               </el-menu-item>
-              <el-menu-item index="/MainHeader/UserManage/UserRecord">
+              <el-menu-item index="/NavBar/UserManage/UserInfo">
                 <span class="mr-right-18">·</span>
                 账户设置
               </el-menu-item>
@@ -184,7 +184,7 @@
               ></i>
             </template>
             <div v-show="!isShow">
-              <el-menu-item index="/MainHeader/MemberManage/Aparameters">
+              <el-menu-item index="/NavBar/MemberManage/Aparameters">
                 <span class="mr-right-18">·</span>
                 下载中心
               </el-menu-item>
@@ -208,15 +208,15 @@
               ></i>
             </template>
             <div v-show="!isShow">
-              <el-menu-item index="/MainHeader/Pushmessages/Pushmessage">
+              <el-menu-item index="/NavBar/Pushmessages/Pushmessage">
                 <span class="mr-right-18">·</span>
                 发送信息
               </el-menu-item>
-              <el-menu-item index="/MainHeader/Pushmessages/Pushmessagetow">
+              <el-menu-item index="/NavBar/Pushmessages/Pushmessagetow">
                 <span class="mr-right-18">·</span>
                 接收信息
               </el-menu-item>
-              <el-menu-item index="/MainHeader/Pushmessages/Pushmessagethree">
+              <el-menu-item index="/NavBar/Pushmessages/Pushmessagethree">
                 <span class="mr-right-18">·</span>
                 模板信息
               </el-menu-item>
@@ -240,31 +240,31 @@
               ></i>
             </template>
             <div v-show="!isShow">
-              <el-menu-item index="/MainHeader/Managements/Managementone">
+              <el-menu-item index="/NavBar/Managements/Managementone">
                 <span class="mr-right-18">·</span>
                 页面设置
               </el-menu-item>
-              <el-menu-item index="/MainHeader/Managements/Managementtow">
+              <el-menu-item index="/NavBar/Managements/Managementtow">
                 <span class="mr-right-18">·</span>
                 投资者统计
               </el-menu-item>
-              <el-menu-item index="/MainHeader/Managements/Managementthree">
+              <el-menu-item index="/NavBar/Managements/Managementthree">
                 <span class="mr-right-18">·</span>
                 问卷管理
               </el-menu-item>
-              <el-menu-item index="/MainHeader/Managements/Managementfour">
+              <el-menu-item index="/NavBar/Managements/Managementfour">
                 <span class="mr-right-18">·</span>
                 权限管理
               </el-menu-item>
-              <el-menu-item index="/MainHeader/Managements/Managementfive">
+              <el-menu-item index="/NavBar/Managements/Managementfive">
                 <span class="mr-right-18">·</span>
                 使用统计
               </el-menu-item>
-              <el-menu-item index="/MainHeader/Managements/Managementsix">
+              <el-menu-item index="/NavBar/Managements/Managementsix">
                 <span class="mr-right-18">·</span>
                 同步设置
               </el-menu-item>
-              <el-menu-item index="/MainHeader/Managements/Managementseven">
+              <el-menu-item index="/NavBar/Managements/Managementseven">
                 <span class="mr-right-18">·</span>
                 认证管理
               </el-menu-item>
@@ -286,11 +286,37 @@
       </div>
       </el-col>
     </div>
+
+    <!-- 登录与退出 -->
+    <div class="rights">  
+            <div class="fundcenter">
+              <div style="line-height: 60px;text-align: center;">基金募集后台管理系统</div> 
+              <el-dropdown trigger="click">
+                   <img src="../../static/img/youliya.jpg" alt="尤利娅">
+                   <span>{{name}}</span>
+                <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item icon="el-icon-plus"
+                    divided
+                    @click.native="fanhui"
+                    >返回前台
+                    </el-dropdown-item>
+                    <el-dropdown-item  icon="el-icon-circle-plus" 
+                    divided
+                    @click.native="login"
+                    >退出登录
+                    </el-dropdown-item>
+                </el-dropdown-menu>
+            </el-dropdown>
+            </div>    
+            
+    </div>
+    <div style="height: 10px;background: #d6d2d2;margin: 10px 0"></div>
     <router-view :class="[isShow?'bossyone':'bossytow']"></router-view>
   </div>
 </template>
 
 <script>
+import { setCookie,getCookie,delCookie } from '../assets/js/cookie.js'
 import vuescroll from 'vuescroll';
 export default {
   data() {
@@ -318,9 +344,30 @@ export default {
           background: "#ffffff"
         }
       },
+      name:''
     }
   },
   methods: {
+    login(){
+        /*删除cookie*/
+        delCookie('username');
+        this.$router.push({path:'/login'})
+            },
+    fanhui(){
+        this.$router.push({path:'/Publicfore'})
+            },
+        mounted(){
+        /*页面挂载获取保存的cookie值，渲染到页面上*/
+        let uname = getCookie('username')
+        this.name = uname;
+        /*如果cookie不存在，则自动跳转到登录页*/
+        if(uname == ""){
+             this.$router.push('/')
+            }
+        },
+
+
+
     //鼠标进入
     hoverNav() {
       this.isShow = false;
@@ -411,6 +458,26 @@ export default {
 };
 </script>
 <style lang="less" scoped>
+.rights{
+    width: 100%;
+    padding-top: 10px;
+     .el-dropdown{
+        width: 50px;
+        height: 50px;
+        margin-left: 90%;
+        position: absolute;
+        bottom: 4px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        img{
+            width: 100%;
+            height: 100%;
+            border: 1px solid;
+            border-radius: 50%;
+        }
+    }
+}
 .lFFF{
   height: 54px;
   line-height: 25px;
@@ -601,6 +668,10 @@ export default {
   100% {
     width: 265px;
   }
+}
+.fundcenter{
+  height: 60px;
+  position: relative;
 }
 .c-nav-show/deep/.el-menu--inline {
   padding-left: 20px;

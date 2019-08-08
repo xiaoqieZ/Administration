@@ -27,14 +27,17 @@
             style="width:100%"
             ><i class="el-icon-menu"></i>&nbsp;进入后台系统</el-button>
         </div>
+        <!-- 信息列表 -->
         <div class="myhometcenter">
-            <div class="myhometupdey">
-                <p>
-                    <i class="el-icon-s-check"></i>
-                    <span>投资者认定</span>
-                </p>
-                <el-button type="warning" size="mini">路演清单</el-button> 
-            </div>
+            <router-link to="/Identification" >
+                <div class="myhometupdey" >
+                        <p>
+                        <i class="el-icon-s-check"></i>
+                        <span>投资者认定</span>
+                    </p>
+                    <el-button type="warning" size="mini">路演清单</el-button> 
+                </div>
+            </router-link>
             <div class="myhometupdey">
                 <p>
                     <i class="el-icon-user"></i>
@@ -133,8 +136,11 @@ export default {
     },
     methods:{
         gos(){
-            this.$router.push({path:'/MainHeader/Homepage/Homepage'})
-        }
+            this.$router.push({path:'/NavBar/Homepage/Homepage'})
+        },
+        // Identification(){
+        //     this.$router.replace({path:'/Publicfore/Identification'})
+        // }
     },
     components:{
         'tabbar-home':tebbarhome

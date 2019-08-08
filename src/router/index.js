@@ -2,7 +2,6 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import NavBar from '@/NavBar/NavBarLeft'
 import Homepage from '@/pages/Homepage/Homepage'
-import MainHeader from '@/components/MainHeader'
 import Null from '@/components/CParameter'
 import CurrencyData from '@/pages/MainPages/CurrencyData'
 import CTAllocation from '@/pages/MainPages/CTAllocation'
@@ -34,13 +33,20 @@ import Publicone from '@/PublicNumber/Publicone/Publicone.vue'
 import Publicthree from '@/PublicNumber/Publicthree/Publicthree.vue'
 import Publictow from '@/PublicNumber/Publictow/Publictow.vue'
 
+import Identification from '@/PublicNumber/Publicfore/Information/Identification.vue'
+
 
 import Login from '@/login/Login/'
 
 Vue.use(Router)
 
 export default new Router({
+  mode: 'history',
   routes: [
+    {
+      path:'/',
+      redirect: '/Publicone',
+    },
     // 前台
     {
       path: '/Publicone',
@@ -60,9 +66,13 @@ export default new Router({
     {
       path: '/Publicfore',
       name: 'Publicfore',
-      component: Publicfore
+      component: Publicfore,
     },
-    
+    {
+      path: '/Identification',
+      name: 'Identification',
+      component: Identification
+    },
 
 // 后台
     {
@@ -70,25 +80,19 @@ export default new Router({
       name: 'Login',
       component: Login
     },
-    {
-      path: '/',
-      name: 'NavBar',
-      redirect: '/MainHeader/Homepage/Homepage',
-      component: NavBar,         //公共导航栏
-      children: [
         {
-          path: 'MainHeader',
-          name: 'MainHeader',
-          component: MainHeader, //公共头部登录
+          path: '/NavBar',
+          name: 'NavBar',
+          component: NavBar,         //公共导航栏
           children: [
             // 首页
             {
-              path: 'Homepage',
+              path: '/Homepage',
               name: 'Homepagehome',
               component: Null,
               children: [
                 {
-                  path: '/MainHeader/Homepage/Homepage',
+                  path: '/NavBar/Homepage/Homepage',
                   name: 'Homepage',
                   component: Homepage
                 }
@@ -101,35 +105,35 @@ export default new Router({
               component: Null,
               children: [
                 {
-                  path: '/MainHeader/CParameter/CurrencyData',
+                  path: '/NavBar/CParameter/CurrencyData',
                   name: 'CurrencyData',
                   meta: {
-                    title: '币种资料管理'
+                    title: '客户信息'
                   },
                   component: CurrencyData
                 },
                 {
-                  path: '/MainHeader/CParameter/CTAllocation',
+                  path: '/NavBar/CParameter/CTAllocation',
                   name: 'CTAllocation',
                   component: CTAllocation
                 },
                 {
-                  path: '/MainHeader/CParameter/CCTAllocation',
+                  path: '/NavBar/CParameter/CCTAllocation',
                   name: 'CCTAllocation',
                   component: CCTAllocation
                 },
                 {
-                  path: '/MainHeader/CParameter/CCCtallocation',
+                  path: '/NavBar/CParameter/CCCtallocation',
                   name: 'CCCtallocation',
                   component: CCCtallocation
                 },
                 {
-                  path: '/MainHeader/CParameter/CCCCtallocation',
+                  path: '/NavBar/CParameter/CCCCtallocation',
                   name: 'CCCCtallocation',
                   component: CCCCtallocation
                 },
                 {
-                  path: '/MainHeader/CParameter/CCCCCtallocation',
+                  path: '/NavBar/CParameter/CCCCCtallocation',
                   name: 'CCCCCtallocation',
                   component: CCCCCtallocation
                 }
@@ -142,12 +146,12 @@ export default new Router({
               component: Null,
               children: [
                 {
-                  path: '/MainHeader/DataDitionary/BankData',
+                  path: '/NavBar/DataDitionary/BankData',
                   name: 'BankData',
                   component: BankData
                 },
                 {
-                  path: '/MainHeader/DataDitionary/BbankData',
+                  path: '/NavBar/DataDitionary/BbankData',
                   name: 'BbankData',
                   component: BbankData
                 }
@@ -160,22 +164,22 @@ export default new Router({
               component: Null,
               children: [
                 {
-                  path: '/MainHeader/UserManage/AccountManage',
+                  path: '/NavBar/UserManage/AccountManage',
                   name: 'AccountManage',
                   component: AccountManage
                 },
                 {
-                  path: '/MainHeader/UserManage/UserFun',
+                  path: '/NavBar/UserManage/UserFun',
                   name: 'UserFun',
                   component: UserFun
                 },
                 {
-                  path: '/MainHeader/UserManage/UserRecord',
+                  path: '/NavBar/UserManage/UserRecord',
                   name: 'UserRecord',
                   component: UserRecord
                 },
                 {
-                  path: '/MainHeader/UserManage/UserInfo',
+                  path: '/NavBar/UserManage/UserInfo',
                   name: 'UserInfo',
                   component: UserInfo
                 }
@@ -188,7 +192,7 @@ export default new Router({
               component: Null,
               children: [
                 {
-                  path: '/MainHeader/MemberManage/Aparameters',
+                  path: '/NavBar/MemberManage/Aparameters',
                   name: 'Aparameters',
                   component: Aparameters
                 }
@@ -201,17 +205,17 @@ export default new Router({
               component: Null,
               children: [
                 {
-                  path: '/MainHeader/Pushmessages/Pushmessage',
+                  path: '/NavBar/Pushmessages/Pushmessage',
                   name: 'Pushmessage',
                   component: Pushmessage
                 },
                 {
-                  path: '/MainHeader/Pushmessages/Pushmessagetow',
+                  path: '/NavBar/Pushmessages/Pushmessagetow',
                   name: 'Pushmessagetow',
                   component: Pushmessagetow
                 },
                 {
-                  path: '/MainHeader/Pushmessages/Pushmessagethree',
+                  path: '/NavBar/Pushmessages/Pushmessagethree',
                   name: 'Pushmessagethree',
                   component: Pushmessagethree
                 }
@@ -224,37 +228,37 @@ export default new Router({
               component: Null,
               children: [
                 {
-                  path: '/MainHeader/Managements/Managementone',
+                  path: '/NavBar/Managements/Managementone',
                   name: 'Management',
                   component: Managementone
                 },
                 {
-                  path: '/MainHeader/Managements/Managementtow',
+                  path: '/NavBar/Managements/Managementtow',
                   name: 'Managementtow',
                   component: Managementtow
                 },
                 {
-                  path: '/MainHeader/Managements/Managementthree',
+                  path: '/NavBar/Managements/Managementthree',
                   name: 'Managementfour',
                   component: Managementfour
                 },
                 {
-                  path: '/MainHeader/Managements/Managementfour',
+                  path: '/NavBar/Managements/Managementfour',
                   name: 'Managementthree',
                   component: Managementthree
                 },
                 {
-                  path: '/MainHeader/Managements/Managementfive',
+                  path: '/NavBar/Managements/Managementfive',
                   name: 'Managementfive',
                   component: Managementfive
                 },
                 {
-                  path: '/MainHeader/Managements/Managementsix',
+                  path: '/NavBar/Managements/Managementsix',
                   name: 'Managementsix',
                   component: Managementsix
                 },
                 {
-                  path: '/MainHeader/Managements/Managementseven',
+                  path: '/NavBar/Managements/Managementseven',
                   name: 'Managementseven',
                   component: Managementseven
                 }
@@ -262,8 +266,202 @@ export default new Router({
             }
           ]
         }
-      ]
-    }
+  
+    
+    // {
+    //   path: '/',
+    //   name: 'NavBar',
+    //   redirect: '/Publicone',
+    //   component: NavBar,         //公共导航栏
+    //   children: [
+    //     {
+    //       path: 'MainHeader',
+    //       name: 'MainHeader',
+    //       component: MainHeader, //公共头部登录
+    //       children: [
+    //         // 首页
+    //         {
+    //           path: 'Homepage',
+    //           name: 'Homepagehome',
+    //           component: Null,
+    //           children: [
+    //             {
+    //               path: '/MainHeader/Homepage/Homepage',
+    //               name: 'Homepage',
+    //               component: Homepage
+    //             }
+    //           ]
+    //         },
+    //         // 适当性管理
+    //         {
+    //           path: 'CParameter',
+    //           name: 'CParameter',
+    //           component: Null,
+    //           children: [
+    //             {
+    //               path: '/MainHeader/CParameter/CurrencyData',
+    //               name: 'CurrencyData',
+    //               meta: {
+    //                 title: '币种资料管理'
+    //               },
+    //               component: CurrencyData
+    //             },
+    //             {
+    //               path: '/MainHeader/CParameter/CTAllocation',
+    //               name: 'CTAllocation',
+    //               component: CTAllocation
+    //             },
+    //             {
+    //               path: '/MainHeader/CParameter/CCTAllocation',
+    //               name: 'CCTAllocation',
+    //               component: CCTAllocation
+    //             },
+    //             {
+    //               path: '/MainHeader/CParameter/CCCtallocation',
+    //               name: 'CCCtallocation',
+    //               component: CCCtallocation
+    //             },
+    //             {
+    //               path: '/MainHeader/CParameter/CCCCtallocation',
+    //               name: 'CCCCtallocation',
+    //               component: CCCCtallocation
+    //             },
+    //             {
+    //               path: '/MainHeader/CParameter/CCCCCtallocation',
+    //               name: 'CCCCCtallocation',
+    //               component: CCCCCtallocation
+    //             }
+    //           ]
+    //         },
+    //         // 信息披露
+    //         {
+    //           path: 'DataDitionary',
+    //           name: 'DataDitionary',
+    //           component: Null,
+    //           children: [
+    //             {
+    //               path: '/MainHeader/DataDitionary/BankData',
+    //               name: 'BankData',
+    //               component: BankData
+    //             },
+    //             {
+    //               path: '/MainHeader/DataDitionary/BbankData',
+    //               name: 'BbankData',
+    //               component: BbankData
+    //             }
+    //           ]
+    //         },
+    //         // 电子签约
+    //         {
+    //           path: 'UserManage',
+    //           name: 'UserManage',
+    //           component: Null,
+    //           children: [
+    //             {
+    //               path: '/MainHeader/UserManage/AccountManage',
+    //               name: 'AccountManage',
+    //               component: AccountManage
+    //             },
+    //             {
+    //               path: '/MainHeader/UserManage/UserFun',
+    //               name: 'UserFun',
+    //               component: UserFun
+    //             },
+    //             {
+    //               path: '/MainHeader/UserManage/UserRecord',
+    //               name: 'UserRecord',
+    //               component: UserRecord
+    //             },
+    //             {
+    //               path: '/MainHeader/UserManage/UserInfo',
+    //               name: 'UserInfo',
+    //               component: UserInfo
+    //             }
+    //           ]
+    //         },
+    //         // 备案材料
+    //         {
+    //           path: 'MemberManage',
+    //           name: 'MemberManage',
+    //           component: Null,
+    //           children: [
+    //             {
+    //               path: '/MainHeader/MemberManage/Aparameters',
+    //               name: 'Aparameters',
+    //               component: Aparameters
+    //             }
+    //           ]
+    //         },
+    //         // 信息推送
+    //         {
+    //           path: 'Pushmessages',
+    //           name: 'Pushmessages',
+    //           component: Null,
+    //           children: [
+    //             {
+    //               path: '/MainHeader/Pushmessages/Pushmessage',
+    //               name: 'Pushmessage',
+    //               component: Pushmessage
+    //             },
+    //             {
+    //               path: '/MainHeader/Pushmessages/Pushmessagetow',
+    //               name: 'Pushmessagetow',
+    //               component: Pushmessagetow
+    //             },
+    //             {
+    //               path: '/MainHeader/Pushmessages/Pushmessagethree',
+    //               name: 'Pushmessagethree',
+    //               component: Pushmessagethree
+    //             }
+    //           ]
+    //         },
+    //         // 系统管理
+    //         {
+    //           path: 'Managements',
+    //           name: 'Managements',
+    //           component: Null,
+    //           children: [
+    //             {
+    //               path: '/MainHeader/Managements/Managementone',
+    //               name: 'Management',
+    //               component: Managementone
+    //             },
+    //             {
+    //               path: '/MainHeader/Managements/Managementtow',
+    //               name: 'Managementtow',
+    //               component: Managementtow
+    //             },
+    //             {
+    //               path: '/MainHeader/Managements/Managementthree',
+    //               name: 'Managementfour',
+    //               component: Managementfour
+    //             },
+    //             {
+    //               path: '/MainHeader/Managements/Managementfour',
+    //               name: 'Managementthree',
+    //               component: Managementthree
+    //             },
+    //             {
+    //               path: '/MainHeader/Managements/Managementfive',
+    //               name: 'Managementfive',
+    //               component: Managementfive
+    //             },
+    //             {
+    //               path: '/MainHeader/Managements/Managementsix',
+    //               name: 'Managementsix',
+    //               component: Managementsix
+    //             },
+    //             {
+    //               path: '/MainHeader/Managements/Managementseven',
+    //               name: 'Managementseven',
+    //               component: Managementseven
+    //             }
+    //           ]
+    //         }
+    //       ]
+    //     }
+    //   ]
+    // }
   ],
   linkActiveClass:'mui-active'//覆盖默认路由的高亮
 })
