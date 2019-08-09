@@ -34,7 +34,15 @@ import Publicthree from '@/PublicNumber/Publicthree/Publicthree.vue'
 import Publictow from '@/PublicNumber/Publictow/Publictow.vue'
 
 import Identification from '@/PublicNumber/Publicfore/Information/Identification.vue'
-
+import Authentication from '@/PublicNumber/Publicfore/Information/Authentication.vue'
+import Assessment from '@/PublicNumber/Publicfore/Information/Assessment.vue'
+import Acquisition from '@/PublicNumber/Publicfore/Information/Acquisition.vue'
+import Material from '@/PublicNumber/Publicfore/Information/Material.vue'
+import Conversion from '@/PublicNumber/Publicfore/Information/Conversion.vue'
+import Reservation from '@/PublicNumber/Publicfore/TransactionRecord/Reservation.vue'
+import Purchase from '@/PublicNumber/Publicfore/TransactionRecord/Purchase.vue'
+import Redeem from '@/PublicNumber/Publicfore/TransactionRecord/Redeem.vue'
+import Returnvisit from '@/PublicNumber/Publicfore/TransactionRecord/Returnvisit.vue'
 
 import Login from '@/login/Login/'
 
@@ -69,10 +77,81 @@ export default new Router({
       component: Publicfore,
     },
     {
-      path: '/Publicfore/Identification',
-      name: 'Identification',
-      component: Identification
+      path:'/Publicfore/04',
+      name: '04',
+      component: Null,
+      children: [
+        {
+          path: '/Publicfore/04/Identification',
+          name: 'Identification',
+          title:'投资者认定',
+          component: Identification
+        },
+        {
+          path: '/Publicfore/04/Authentication',
+          name: 'Authentication',
+          title:'实名认证',
+          component: Authentication
+        },
+        {
+          path: '/Publicfore/04/Assessment',
+          name: 'Assessment',
+          title:'风险评测',
+          component: Assessment
+        },
+        {
+          path: '/Publicfore/04/Acquisition',
+          name: 'Acquisition',
+          title:'信息采集',
+          component: Acquisition
+        },
+        {
+          path: '/Publicfore/04/Material',
+          name: 'Material',
+          title:'证明材料',
+          component: Material
+        },
+        {
+          path: '/Publicfore/04/Conversion',
+          name: 'Conversion',
+          title:'投资者转化',
+          component: Conversion
+        },
+      ]
     },
+    {
+      path:'/Publicfore/07',
+      name: '07',
+      title:'交易记录',
+      component: Null,
+      children: [
+        {
+          path: '/Publicfore/07/Reservation',
+          name: 'Reservation',
+          title:'预约记录',
+          component: Reservation
+        },
+        {
+          path: '/Publicfore/07/Purchase',
+          name: 'Purchase',
+          title:'购买申请记录',
+          component: Purchase
+        },
+        {
+          path: '/Publicfore/07/Redeem',
+          name: 'Redeem',
+          title:'赎回记录',
+          component: Redeem
+        },
+        {
+          path: '/Publicfore/07/Returnvisit',
+          name: 'Returnvisit',
+          title:'回访记录',
+          component: Returnvisit
+        },
+      ]
+    },
+
 
 // 后台
     {
@@ -265,203 +344,7 @@ export default new Router({
               ]
             }
           ]
-        }
-  
-    
-    // {
-    //   path: '/',
-    //   name: 'NavBar',
-    //   redirect: '/Publicone',
-    //   component: NavBar,         //公共导航栏
-    //   children: [
-    //     {
-    //       path: 'MainHeader',
-    //       name: 'MainHeader',
-    //       component: MainHeader, //公共头部登录
-    //       children: [
-    //         // 首页
-    //         {
-    //           path: 'Homepage',
-    //           name: 'Homepagehome',
-    //           component: Null,
-    //           children: [
-    //             {
-    //               path: '/MainHeader/Homepage/Homepage',
-    //               name: 'Homepage',
-    //               component: Homepage
-    //             }
-    //           ]
-    //         },
-    //         // 适当性管理
-    //         {
-    //           path: 'CParameter',
-    //           name: 'CParameter',
-    //           component: Null,
-    //           children: [
-    //             {
-    //               path: '/MainHeader/CParameter/CurrencyData',
-    //               name: 'CurrencyData',
-    //               meta: {
-    //                 title: '币种资料管理'
-    //               },
-    //               component: CurrencyData
-    //             },
-    //             {
-    //               path: '/MainHeader/CParameter/CTAllocation',
-    //               name: 'CTAllocation',
-    //               component: CTAllocation
-    //             },
-    //             {
-    //               path: '/MainHeader/CParameter/CCTAllocation',
-    //               name: 'CCTAllocation',
-    //               component: CCTAllocation
-    //             },
-    //             {
-    //               path: '/MainHeader/CParameter/CCCtallocation',
-    //               name: 'CCCtallocation',
-    //               component: CCCtallocation
-    //             },
-    //             {
-    //               path: '/MainHeader/CParameter/CCCCtallocation',
-    //               name: 'CCCCtallocation',
-    //               component: CCCCtallocation
-    //             },
-    //             {
-    //               path: '/MainHeader/CParameter/CCCCCtallocation',
-    //               name: 'CCCCCtallocation',
-    //               component: CCCCCtallocation
-    //             }
-    //           ]
-    //         },
-    //         // 信息披露
-    //         {
-    //           path: 'DataDitionary',
-    //           name: 'DataDitionary',
-    //           component: Null,
-    //           children: [
-    //             {
-    //               path: '/MainHeader/DataDitionary/BankData',
-    //               name: 'BankData',
-    //               component: BankData
-    //             },
-    //             {
-    //               path: '/MainHeader/DataDitionary/BbankData',
-    //               name: 'BbankData',
-    //               component: BbankData
-    //             }
-    //           ]
-    //         },
-    //         // 电子签约
-    //         {
-    //           path: 'UserManage',
-    //           name: 'UserManage',
-    //           component: Null,
-    //           children: [
-    //             {
-    //               path: '/MainHeader/UserManage/AccountManage',
-    //               name: 'AccountManage',
-    //               component: AccountManage
-    //             },
-    //             {
-    //               path: '/MainHeader/UserManage/UserFun',
-    //               name: 'UserFun',
-    //               component: UserFun
-    //             },
-    //             {
-    //               path: '/MainHeader/UserManage/UserRecord',
-    //               name: 'UserRecord',
-    //               component: UserRecord
-    //             },
-    //             {
-    //               path: '/MainHeader/UserManage/UserInfo',
-    //               name: 'UserInfo',
-    //               component: UserInfo
-    //             }
-    //           ]
-    //         },
-    //         // 备案材料
-    //         {
-    //           path: 'MemberManage',
-    //           name: 'MemberManage',
-    //           component: Null,
-    //           children: [
-    //             {
-    //               path: '/MainHeader/MemberManage/Aparameters',
-    //               name: 'Aparameters',
-    //               component: Aparameters
-    //             }
-    //           ]
-    //         },
-    //         // 信息推送
-    //         {
-    //           path: 'Pushmessages',
-    //           name: 'Pushmessages',
-    //           component: Null,
-    //           children: [
-    //             {
-    //               path: '/MainHeader/Pushmessages/Pushmessage',
-    //               name: 'Pushmessage',
-    //               component: Pushmessage
-    //             },
-    //             {
-    //               path: '/MainHeader/Pushmessages/Pushmessagetow',
-    //               name: 'Pushmessagetow',
-    //               component: Pushmessagetow
-    //             },
-    //             {
-    //               path: '/MainHeader/Pushmessages/Pushmessagethree',
-    //               name: 'Pushmessagethree',
-    //               component: Pushmessagethree
-    //             }
-    //           ]
-    //         },
-    //         // 系统管理
-    //         {
-    //           path: 'Managements',
-    //           name: 'Managements',
-    //           component: Null,
-    //           children: [
-    //             {
-    //               path: '/MainHeader/Managements/Managementone',
-    //               name: 'Management',
-    //               component: Managementone
-    //             },
-    //             {
-    //               path: '/MainHeader/Managements/Managementtow',
-    //               name: 'Managementtow',
-    //               component: Managementtow
-    //             },
-    //             {
-    //               path: '/MainHeader/Managements/Managementthree',
-    //               name: 'Managementfour',
-    //               component: Managementfour
-    //             },
-    //             {
-    //               path: '/MainHeader/Managements/Managementfour',
-    //               name: 'Managementthree',
-    //               component: Managementthree
-    //             },
-    //             {
-    //               path: '/MainHeader/Managements/Managementfive',
-    //               name: 'Managementfive',
-    //               component: Managementfive
-    //             },
-    //             {
-    //               path: '/MainHeader/Managements/Managementsix',
-    //               name: 'Managementsix',
-    //               component: Managementsix
-    //             },
-    //             {
-    //               path: '/MainHeader/Managements/Managementseven',
-    //               name: 'Managementseven',
-    //               component: Managementseven
-    //             }
-    //           ]
-    //         }
-    //       ]
-    //     }
-    //   ]
-    // }
-  ],
+        } 
+    ],
   linkActiveClass:'mui-active'//覆盖默认路由的高亮
 })

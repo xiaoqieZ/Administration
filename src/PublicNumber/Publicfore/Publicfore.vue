@@ -28,16 +28,17 @@
             ><i class="el-icon-menu"></i>&nbsp;进入后台系统</el-button>
         </div>
         <!-- 信息列表 -->
-        <div class="myhometcenter">
-            <router-link to="/Publicfore/Identification" >
+        <div class="myhometcenter">           
                 <div class="myhometupdey" >
-                        <p>
+                        <p style="font-weight: 800;">
                         <i class="el-icon-s-check"></i>
                         <span>投资者认定</span>
                     </p>
+                    <router-link to="/Publicfore/04/Identification" >
                     <el-button type="warning" size="mini">路演清单</el-button> 
+                    </router-link>
                 </div>
-            </router-link>
+             <router-link to="/Publicfore/04/Authentication" >
             <div class="myhometupdey">
                 <p>
                     <i class="el-icon-user"></i>
@@ -45,43 +46,53 @@
                 </p>
                 <i class="el-icon-arrow-right"></i>
             </div>
+            </router-link>
+            <router-link to="/Publicfore/04/Assessment" >
             <div class="myhometupdey">
                 <p>
-                    <i class="el-icon-goods"></i>
+                    <i class="el-icon-user"></i>
                     <span>风险评测</span>
                 </p>
                 <i class="el-icon-arrow-right"></i>
             </div>
+            </router-link>
+            <router-link to="/Publicfore/04/Acquisition" >
             <div class="myhometupdey">
                 <p>
-                    <i class="el-icon-edit-outline"></i>
+                    <i class="el-icon-user"></i>
                     <span>信息采集</span>
                 </p>
                 <i class="el-icon-arrow-right"></i>
             </div>
+            </router-link>
+            <router-link to="/Publicfore/04/Material" >
             <div class="myhometupdey">
                 <p>
-                    <i class="el-icon-document"></i>
+                    <i class="el-icon-user"></i>
                     <span>证明材料</span>
                 </p>
                 <i class="el-icon-arrow-right"></i>
             </div>
+            </router-link>
+            <router-link to="/Publicfore/04/Conversion" >
             <div class="myhometupdey">
                 <p>
-                    <i class="el-icon-sort"></i>
+                    <i class="el-icon-user"></i>
                     <span>投资者转化(选填)</span>
                 </p>
                 <i class="el-icon-arrow-right"></i>
             </div>
+            </router-link>
         </div>
         <!-- 交易记录 -->
         <div class="myhometcenter">
             <div class="myhometupdey">
-                <p>
+                <p style="font-weight: 800;">
                     <i class="el-icon-date"></i>
                     <span>交易记录</span>
                 </p>
             </div>
+            <router-link to="/Publicfore/07/Reservation" >
             <div class="myhometupdey">
                 <p>
                     <i class="el-icon-user"></i>
@@ -89,27 +100,34 @@
                 </p>
                 <i class="el-icon-arrow-right"></i>
             </div>
+            </router-link>
+            <router-link to="/Publicfore/07/Purchase" >
             <div class="myhometupdey">
                 <p>
-                    <i class="el-icon-s-unfold"></i>
+                    <i class="el-icon-user"></i>
                     <span>购买申请记录</span>
                 </p>
                 <i class="el-icon-arrow-right"></i>
             </div>
+            </router-link>
+            <router-link to="/Publicfore/07/Redeem" >
             <div class="myhometupdey">
                 <p>
-                    <i class="el-icon-s-fold"></i>
+                    <i class="el-icon-user"></i>
                     <span>赎回记录</span>
                 </p>
                 <i class="el-icon-arrow-right"></i>
             </div>
+            </router-link>
+            <router-link to="/Publicfore/07/Returnvisit" >
             <div class="myhometupdey">
                 <p>
-                    <i class="el-icon-tickets"></i>
+                    <i class="el-icon-user"></i>
                     <span>回访记录</span>
                 </p>
                 <i class="el-icon-arrow-right"></i>
             </div>
+            </router-link>
             <div class="myhometupdey">
                 <p>
                     <i class="el-icon-document-copy"></i>
@@ -162,6 +180,7 @@ export default {
         .myhomettop{
             width: 100%;
             padding: 20px;
+            margin-top: 10px;
             background: #fff;
             display: flex;
             align-items: center;
