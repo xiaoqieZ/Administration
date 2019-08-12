@@ -17,7 +17,7 @@
         <div class="hometlist">
             <div class="hometadd">
                 <span>热门产品</span>
-                <span>更多</span>
+                <span @click="more">更多</span>
             </div>
             <div class="hometnav">
                 <div class="hometswrip">
@@ -63,6 +63,11 @@ export default {
         return{
 
         }
+    },
+    methods:{
+        more(){
+            this.$router.push({path: '/Publicthree'})
+        },
     },
     components:{
         'tabbar-home':tebbarhome

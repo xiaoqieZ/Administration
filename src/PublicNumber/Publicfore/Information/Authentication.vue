@@ -22,15 +22,15 @@
                     </el-radio-group>
                 </div>
                 <div>
-                    <el-form label-width="90px">
-                        <el-form-item label="手机号码：">
-                            <el-input type="number" v-model="phone"></el-input>
+                    <el-form label-width="23%" :model="ruleForm" :rules="rules" ref="ruleForm">
+                        <el-form-item label="手机号码：" prop="phone">
+                            <el-input type="number" v-model="ruleForm.phone"></el-input>
                         </el-form-item>
-                        <el-form-item label="短信验证：">
-                            <el-input type="number" v-model="short"></el-input>
+                        <el-form-item label="短信验证：" prop="short">
+                            <el-input type="number" v-model="ruleForm.short"></el-input>
                         </el-form-item>
-                        <el-form-item label="电子邮件：">
-                            <el-input type="number" v-model="mail"></el-input>
+                        <el-form-item label="电子邮件：" prop="mail">
+                            <el-input type="number" v-model="ruleForm.mail"></el-input>
                         </el-form-item>
                     </el-form>
                 </div>
@@ -41,18 +41,19 @@
                          <br/>
                          <el-checkbox label="确认本人符合">《合格投资者》相关要求</el-checkbox>
                 </el-radio-group>
+
             </div>
             <!-- 补充信息 -->
             <div v-show="fill==2">
                 <el-form label-width="90px">
-                    <el-form-item label="真实姓名">
-                        <el-input type="text" v-model="phone"></el-input>
+                    <el-form-item label="真实姓名：">
+                        <el-input type="text" v-model="name"></el-input>
                     </el-form-item>
-                    <el-form-item label="证件类型">
-                        <el-input type="text" v-model="short"></el-input>
+                    <el-form-item label="证件类型：">
+                        <el-input type="text" v-model="certi"></el-input>
                     </el-form-item>
-                    <el-form-item label="证件号码">
-                        <el-input type="number" v-model="mail"></el-input>
+                    <el-form-item label="证件号码：">
+                        <el-input type="number" v-model="ber"></el-input>
                     </el-form-item>
                 </el-form>
             </div>
@@ -62,7 +63,7 @@
                 </div>
             </div>
                 <div class="buttommagin">
-                    <el-button type="primary" plain  @click="next" v-show="isShow==0">下一步</el-button>
+                    <el-button type="primary" plain  @click="next('ruleForm')" v-show="isShow==0">下一步</el-button>
                     <el-button type="primary"   @click="play" v-show="isShow==1" >完成</el-button>
                 </div>
         </div>
@@ -76,27 +77,54 @@ export default {
         active: 0,
         isShow:0,
         radio: '',
-        phone: '',
-        short:'',
-        mail:'',
+        name:'',
+        certi:'',
+        ber:'',
+        
         checkList:'',
-        fill:1
-      };
+        fill:1,
+        ruleForm:{
+            phone: '',
+            short:'',
+            mail:'',
+        },
+        rules: {
+          phone: [
+            { required: true, message: '请输入姓名', trigger: 'blur' },
+            { min: 11, max: 11, message: '长度在 11 个字符', trigger: 'blur' }
+          ],
+           short: [
+            { required: true, message: '请输入姓名', trigger: 'blur' },
+            { min: 6, max: 6, message: '长度在 6 到 6 个字符', trigger: 'blur' }
+          ],
+           mail: [
+            { required: true, message: '请输入姓名', trigger: 'blur' },
+            // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+          ],
+        }
+      }; 
     },
 
     methods: {
-      next() {
-        if (this.active++ > 0){
-            this.isShow=1;
-            this.fill=3
-            // return
-        }else if(this.active++ ==1){
-            this.fill=2
-        }
+      next(formName) { 
+          this.$refs[formName].validate((valid) => {
+          if (valid) {
+            // this.$message('提交成功');
+            if (this.active++ ==0 && this.phone !=''){
+            this.fill=2;
+            }else if(this.active++ >1){
+                this.fill=3;
+                this.isShow=1;
+            }
+          } else {
+            return false;
+          }
+        });
       },
      play(){
-        
-     }
+        this.$router.push({path: '/Publicfore'})
+     },
+     
     }
   }
 </script>
@@ -125,6 +153,12 @@ export default {
             width: 100%;
             margin: 0;
         }
+    }
+    .el-form-item__content{
+        width: 75%;
+    }
+    .el-form-item__label{
+        padding: 0;
     }
 }
 </style>

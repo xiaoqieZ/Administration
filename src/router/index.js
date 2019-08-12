@@ -44,6 +44,9 @@ import Purchase from '@/PublicNumber/Publicfore/TransactionRecord/Purchase.vue'
 import Redeem from '@/PublicNumber/Publicfore/TransactionRecord/Redeem.vue'
 import Returnvisit from '@/PublicNumber/Publicfore/TransactionRecord/Returnvisit.vue'
 
+import Purchases from '@/PublicNumber/Publicthree/purchase/purchases.vue'
+
+
 import Login from '@/login/Login/'
 
 Vue.use(Router)
@@ -118,6 +121,12 @@ export default new Router({
           component: Conversion
         },
       ]
+    },
+    {
+      path: '/Publicthree/Purchases',
+      name: 'Purchases',
+      title:'购买',
+      component:Purchases
     },
     {
       path:'/Publicfore/07',

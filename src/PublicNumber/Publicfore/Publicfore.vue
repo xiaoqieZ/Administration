@@ -5,7 +5,7 @@
         </div>
         <div class="myhomettop">
             <div class="myhometimg">
-                <div class="imgs">
+                <div class="imges">
                     <img src="../../../static/img/youliya.jpg" alt="">
                     <div class="imgtime">
                         <p>专业投资者</p>
@@ -185,7 +185,7 @@ export default {
             display: flex;
             align-items: center;
             .myhometimg{
-                .imgs{
+                .imges{
                     width: 80px;
                     height: 120px;
                     position: relative;
