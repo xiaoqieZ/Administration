@@ -14,7 +14,10 @@ import 'vuescroll/dist/vuescroll.css'
 //导入mui样式
 import './lib/mui/css/mui.min.css'
 import './lib/mui/css/icons-extra.css'
+import iView from 'iview';
+import 'iview/dist/styles/iview.css'
 
+Vue.use(iView)
 Vue.use(vuescroll)
 Vue.use(Mint)
 Vue.use(VueResource)// 安装vue-resource

@@ -33,6 +33,7 @@ import Publicone from '@/PublicNumber/Publicone/Publicone.vue'
 import Publicthree from '@/PublicNumber/Publicthree/Publicthree.vue'
 import Publictow from '@/PublicNumber/Publictow/Publictow.vue'
 
+import Information from '@/PublicNumber/Publicone/Information/Information.vue'
 import Identification from '@/PublicNumber/Publicfore/Information/Identification.vue'
 import Authentication from '@/PublicNumber/Publicfore/Information/Authentication.vue'
 import Assessment from '@/PublicNumber/Publicfore/Information/Assessment.vue'
@@ -159,6 +160,12 @@ export default new Router({
           component: Returnvisit
         },
       ]
+    },
+    {
+      path:'/Information',
+      name:'Information',
+      title:'热门资讯',
+      component:Information
     },
 
 

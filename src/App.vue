@@ -18,6 +18,7 @@ export default {
 <style>
 #app {
   height: 100%;
+  font-size: 14px
 }
 .el-submenu__title{
     padding-left:25px !important; 

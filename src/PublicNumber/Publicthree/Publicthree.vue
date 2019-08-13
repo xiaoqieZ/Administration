@@ -8,7 +8,7 @@
                 <p>您现在是<span style="color:red">进取型(C5)</span>投资者推荐下列产品</p>
             </div>
             <div class="plops">
-                <div class="period"><i class="el-icon-sort-down"></i>募集期</div>
+                <div class="period"><Icon type="ios-bookmark" size="20" />募集期</div>
                     <div class="huaihe">
                         <span>{{huaihyh}}</span>
                     </div>
@@ -18,11 +18,12 @@
                             <el-divider direction="vertical"></el-divider>
                             <span>当前净值：--</span>
                         </div>
-                        <i class="el-icon-help" @click="hhplai"></i>
+                        <!-- <i class="el-icon-help" @click="hhplai"></i> -->
+                        <Icon type="md-log-in" class="help" @click="hhplai" size="25"/>
                     </div>
             </div>
             <div class="plops">
-                <div class="period"><i class="el-icon-sort-down"></i>运作期</div>
+                <div class="period"><Icon type="ios-bookmark" size="20" />运作期</div>
                     <div class="huaihe">
                         <span>下载中心测试小而美</span>
                     </div>
@@ -38,7 +39,7 @@
                                 <p>基金经理：</p>
                             </div>
                         </div>
-                        <i class="el-icon-help"></i>
+                        <Icon type="md-log-in" class="help"  size="25"/>
                     </div>
             </div>
         </div>
@@ -125,7 +126,7 @@ export default {
                     }
                 }
             }
-            .el-icon-help{
+            .help{
                 padding-right: 10px;
             }
         }

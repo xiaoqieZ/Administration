@@ -464,7 +464,7 @@ export default {
      .el-dropdown{
         width: 50px;
         height: 50px;
-        margin-left: 90%;
+        margin-left: 86%;
         position: absolute;
         bottom: 4px;
         display: flex;

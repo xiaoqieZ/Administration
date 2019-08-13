@@ -49,7 +49,7 @@
         </div>
         <div class="Information">
                 <span>热门资讯</span>
-                <span>更多</span>
+                <span @click="ition">更多</span>
             </div>
         <tabbar-home></tabbar-home>
     </div>
@@ -68,10 +68,20 @@ export default {
         more(){
             this.$router.push({path: '/Publicthree'})
         },
+        ition(){
+            this.$router.push({path:'/Information'})
+        }
     },
     components:{
         'tabbar-home':tebbarhome
+    },
+    changePage(current) {
+      console.log('当前轮播图序号为:' + current)
+    },
+    clickHandler(item, index) {
+      console.log(item, index)
     }
+  
 }
 </script>
 
