@@ -4,15 +4,13 @@
             首页
         </div>
         <!-- 轮播图 -->
-        <template>
-            <div class="block">
-                <el-carousel height="150px" :interval="2000">
-                <el-carousel-item v-for="item in 4" :key="item">
-                    <h3 class="small">{{ item }}</h3>
-                </el-carousel-item>
-                </el-carousel>
-            </div>
-        </template>
+        <van-swipe :autoplay="3000" indicator-color="white" :height="180">
+            <van-swipe-item>1</van-swipe-item>
+            <van-swipe-item>2</van-swipe-item>
+            <van-swipe-item>3</van-swipe-item>
+            <van-swipe-item>4</van-swipe-item>
+        </van-swipe>
+
         <!-- 中间内容 -->
         <div class="hometlist">
             <div class="hometadd">
@@ -46,14 +44,15 @@
                 </div>
                 </div>
             </div>
-        </div>
-        <div class="Information">
+            <div class="Information">
                 <span>热门资讯</span>
                 <span @click="ition">更多</span>
             </div>
+        </div>
+        
+            
         <tabbar-home></tabbar-home>
     </div>
-    
 </template>
 
 <script>
@@ -114,6 +113,7 @@ export default {
   .hometlist{
       width: 100%;
       margin-top: 10px;
+      margin-bottom: 65px;
       background: #fff;
       padding: 0 8px;
       border-bottom:1px solid #666; 
@@ -155,8 +155,7 @@ export default {
               }
           }
       }
-  }
-.Information{
+      .Information{
       height: 40px;
       margin-top: 10px;
       background: #fff;
@@ -165,6 +164,7 @@ export default {
       border-bottom: 1px solid #666;
       align-items: center;
       justify-content: space-between;
+  }
   }
 }
 </style>

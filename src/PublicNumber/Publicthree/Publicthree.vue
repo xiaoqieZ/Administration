@@ -81,6 +81,7 @@ export default {
     }
     .raise{
         margin-top: 10px;
+        margin-bottom: 65px;
         background: #fff;
         .aggre{
             height: 60px;

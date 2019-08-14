@@ -28,6 +28,7 @@
             ><i class="el-icon-menu"></i>&nbsp;进入后台系统</el-button>
         </div>
         <!-- 信息列表 -->
+        <div class="merges">      
         <div class="myhometcenter">           
                 <div class="myhometupdey" >
                         <p style="font-weight: 800;">
@@ -139,6 +140,7 @@
                 </p>
             </div>
         </div>
+        </div>
         <tabbar-home></tabbar-home>
     </div>
     
@@ -212,7 +214,9 @@ export default {
                 padding-left: 20px;
             }
         }
-        .myhometcenter{
+        .merges{
+            padding-bottom: 115px;
+            .myhometcenter{
             margin-top: 10px;
             .myhometupdey{
                 width: 100%;
@@ -229,6 +233,7 @@ export default {
                     color: #000;
                 }
             }
+        }
         }
     }
 </style>

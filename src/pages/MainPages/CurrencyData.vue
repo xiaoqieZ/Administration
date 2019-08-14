@@ -95,7 +95,6 @@
               <el-button type="primary" @click.native="editSubmit" >提交</el-button>
             </div>
           </el-dialog>
-          
   </el-table>
 
   <!-- 页码 -->

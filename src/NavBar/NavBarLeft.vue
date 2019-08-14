@@ -14,7 +14,7 @@
           <span
             class="title-ico"
             @click="tabShow"
-            :style="{ 'background' : isShow ? 'url(../../static/img/offUnfold.png) no-repeat center' : 'url(../../static/img/tUnfold.png) no-repeat center'}"
+            :class="[isShow ? 'nav-open-icon0' : 'nav-open-icon0-1']"
           ></span>
         </div>
         <el-menu
@@ -134,7 +134,7 @@
             <template slot="title">
               <i
                 class="nav-open-icon"
-                :style="{'background' : High.UserManage ? 'url(../../static/img/uManage.png)' : 'url(../../static/img/uManagexz.png)'}"
+                :class="[High.UserManage ? 'nav-open-icon3-1' : 'nav-open-icon3-2']"
               ></i>
               <span
               v-show="!isShow"
@@ -171,7 +171,7 @@
             <template slot="title">
               <i
                 class="nav-open-icon"
-                :style="{'background' : High.MemberManage ? 'url(../../static/img/member.png)' : 'url(../../static/img/memberxz.png)'}"
+                :class="[High.MemberManage ? 'nav-open-icon4-1' : 'nav-open-icon4-2']"
               ></i>
               <span
                 v-show="!isShow"
@@ -195,7 +195,7 @@
             <template slot="title">
               <i
                 class="nav-open-icon"
-                :style="{'background' : High.Pushmessages ? 'url(../../static/img/c2c.png)' : 'url(../../static/img/c2cxz.png)'}"
+                :class="[High.Pushmessages ? 'nav-open-icon5-1' : 'nav-open-icon5-2']"
               ></i>
               <span
                 v-show="!isShow"
@@ -227,7 +227,7 @@
             <template slot="title">
               <i
                 class="nav-open-icon"
-                :style="{'background' : High.Managements ? 'url(../../static/img/book.png)' : 'url(../../static/img/bookxz.png)'}"
+                :class="[High.Managements ? 'nav-open-icon6-1' : 'nav-open-icon6-2']"
               ></i>
               <span
                 v-show="!isShow"
@@ -307,8 +307,7 @@
                     </el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
-            </div>    
-            
+          </div>       
     </div>
     <div style="height: 10px;background: #d6d2d2;margin: 10px 0"></div>
     <router-view :class="[isShow?'bossyone':'bossytow']"></router-view>
@@ -569,9 +568,9 @@ export default {
       background: url(../../static/img/tUnfold.png) no-repeat;
       background-position: center;
     }
-    .title-ico:hover {
-      background: url(../../static/img/hoverUnfold.png) no-repeat;
-    }
+    // .title-ico:hover {
+    //   background: url(../../static/img/offUnfold.png) no-repeat;
+    // }
   }
   .grou-title {
     margin-top: 47px;
@@ -592,6 +591,12 @@ export default {
     margin-right: 18px;
     box-sizing: border-box;
   }
+  .nav-open-icon0 {
+    background: url(../../static/img/offUnfold.png);
+  }
+  .nav-open-icon0-1 {
+    background: url(../../static/img/tUnfold.png);
+  }
   .nav-open-icon1 {
     background: url(../../static/img/bzzl.png);
   }
@@ -603,6 +608,32 @@ export default {
   }
   .nav-open-icon2-2 {
     background: url(../../static/img/zdxz.png);
+  }
+
+  .nav-open-icon3-1 {
+    background: url(../../static/img/uManage.png);
+  }
+  .nav-open-icon3-2 {
+    background: url(../../static/img/uManagexz.png);
+  }
+  
+  .nav-open-icon4-1 {
+    background: url(../../static/img/member.png);
+  }
+  .nav-open-icon4-2 {
+    background: url(../../static/img/memberxz.png);
+  }
+  .nav-open-icon5-1 {
+    background: url(../../static/img/c2c.png);
+  }
+  .nav-open-icon5-2 {
+    background: url(../../static/img/c2cxz.png);
+  }
+  .nav-open-icon6-1 {
+    background: url(../../static/img/book.png);
+  }
+  .nav-open-icon6-2 {
+    background: url(../../static/img/bookxz.png);
   }
   .qi-ren-a{
     background: url(../../static/img/cB.png)
@@ -634,16 +665,16 @@ export default {
 }
 // vue动画
 .fade-enter-active {
-  transition: opacity 1.5s;
+  transition: opacity .9s;
 }
 .fade-leave-active {
-  transition: opacity 0.05s;
+  transition: opacity .9s;
 }
 .fade-enter,
 .fade-leave-to {
   opacity: 0;
 }
-// 文字隐藏
+// 导航栏隐藏与显示
 .tr-nav {
   animation: keynav 0.3s;
   animation-fill-mode: forwards;

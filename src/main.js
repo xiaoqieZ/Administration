@@ -11,12 +11,17 @@ import Mint from 'mint-ui'
 import 'mint-ui/lib/style.css'
 import vuescroll from 'vuescroll/dist/vuescroll-native'
 import 'vuescroll/dist/vuescroll.css'
-//导入mui样式
+//导入mui样式，用了TabBar
 import './lib/mui/css/mui.min.css'
 import './lib/mui/css/icons-extra.css'
+//导入iView插件，用了图标
 import iView from 'iview';
 import 'iview/dist/styles/iview.css'
+//导入Vant插件，用了轮播
+import Vant from 'vant'
+import 'vant/lib/index.css'
 
+Vue.use(Vant)
 Vue.use(iView)
 Vue.use(vuescroll)
 Vue.use(Mint)
