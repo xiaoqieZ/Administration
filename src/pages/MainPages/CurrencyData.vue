@@ -1,5 +1,6 @@
  <template>
  <div id="app">
+   <vue-scroll>
      <div slot="币种资料管理">
          客户信息
      </div>
@@ -120,14 +121,16 @@
          <p>新技能</p>
        </div>
     </div>
+    </vue-scroll>
   </div>
 </template>
 
 <script>
+import vuescroll from 'vuescroll';
 import { Toast } from 'mint-ui';
  // 引入导出Excel表格依赖
-    import FileSaver from "file-saver";
-    import XLSX from "xlsx";
+import FileSaver from "file-saver";
+import XLSX from "xlsx";
   export default {
     data() {
       return {
@@ -281,10 +284,13 @@ import { Toast } from 'mint-ui';
         align-items: center;
         justify-content: space-between;
         .el-input{
-            width: 230px;
+            width: 220px;
         }
         .searchright{
           right: 0;
+          .el-input__icon{
+            width: 75%;
+          }
         }
         /deep/.el-button{
           width: 70px;

@@ -11,11 +11,11 @@
           <transition name="fade">
             <span class="title-txt" v-show="!isShow">COINRISE后台管理</span>
           </transition>
-          <span
+          <i
             class="title-ico"
             @click="tabShow"
-            :class="[isShow ? 'nav-open-icon0' : 'nav-open-icon0-1']"
-          ></span>
+            :class="[ isShow ? 'nav-open-icon0' : 'nav-open-icon0-1']"
+          ></i>
         </div>
         <el-menu
           @close="handleClose"
@@ -49,7 +49,6 @@
             </el-menu-item>
           <div
             class="grou-title"
-            
             onselectstart="return false;"
           >{{ !isShow?'系统环境':'系统' }}</div>
           <!-- 适当性管理 -->
@@ -565,12 +564,8 @@ export default {
       top: 0;
       width: 65px;
       height: 65px;
-      background: url(../../static/img/tUnfold.png) no-repeat;
       background-position: center;
     }
-    // .title-ico:hover {
-    //   background: url(../../static/img/offUnfold.png) no-repeat;
-    // }
   }
   .grou-title {
     margin-top: 47px;
@@ -592,10 +587,10 @@ export default {
     box-sizing: border-box;
   }
   .nav-open-icon0 {
-    background: url(../../static/img/offUnfold.png);
+    background: url(../../static/img/offUnfold.png) no-repeat;
   }
   .nav-open-icon0-1 {
-    background: url(../../static/img/tUnfold.png);
+    background: url(../../static/img/tUnfold.png) no-repeat;
   }
   .nav-open-icon1 {
     background: url(../../static/img/bzzl.png);
@@ -665,15 +660,16 @@ export default {
 }
 // vue动画
 .fade-enter-active {
-  transition: opacity .9s;
+  transition: opacity .1s;
 }
 .fade-leave-active {
-  transition: opacity .9s;
+  transition: opacity 1s;
 }
-.fade-enter,
-.fade-leave-to {
+.fade-enter, .fade-leave-to {
   opacity: 0;
 }
+
+
 // 导航栏隐藏与显示
 .tr-nav {
   animation: keynav 0.3s;

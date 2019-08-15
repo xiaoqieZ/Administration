@@ -1,14 +1,15 @@
 <template>
     <div class="home-page">
-        <div class="hometitle">
-            首页
-        </div>
+        <mt-header fixed title="首页">    
+        </mt-header>
         <!-- 轮播图 -->
-        <van-swipe :autoplay="3000" indicator-color="white" :height="180">
-            <van-swipe-item>1</van-swipe-item>
-            <van-swipe-item>2</van-swipe-item>
-            <van-swipe-item>3</van-swipe-item>
-            <van-swipe-item>4</van-swipe-item>
+        <van-swipe :autoplay="3000" indicator-color="white" :height="120" >
+            <van-swipe-item v-for="item in listtu" :key="item.index">
+                <img :src="item.url" alt />>
+            </van-swipe-item>
+            <!-- <van-swipe-item>{{iten.url}}</van-swipe-item>
+            <van-swipe-item>{{iten.url}}</van-swipe-item>
+            <van-swipe-item>{{iten.url}}</van-swipe-item> -->
         </van-swipe>
 
         <!-- 中间内容 -->
@@ -60,7 +61,7 @@ import tebbarhome from '../../components/Publictebbar/Publictebbar'
 export default {
     data(){
         return{
-
+            listtu:[]
         }
     },
     methods:{
@@ -69,7 +70,25 @@ export default {
         },
         ition(){
             this.$router.push({path:'/Information'})
+        },
+        getlisttu(){
+            this.$http.get("http://mx.maplegg.com/api/vue/lunbotu").then(res=>{
+                console.log(res)
+                if(res.status == 200){
+                    this.listtu = res.data.xiaowulang[0].images;
+                }else{
+                    this.$message({
+                      showClose: true,
+                      message: '可能网不行吧！',
+                      duration:2000,
+                      type: 'warning'
+                    });
+                }
+            })
         }
+    },
+    created(){
+        this.getlisttu()
     },
     components:{
         'tabbar-home':tebbarhome
@@ -86,15 +105,8 @@ export default {
 
 <style lang="less">
 .home-page{
+    padding-top: 40px;
     background: #dde1e6;
-    .hometitle{
-        height: 36px;
-        color: #fff;
-        background: #5aa8fb;   
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
     .el-carousel__item h3 {
         color: #475669;
         font-size: 18px;
@@ -102,7 +114,10 @@ export default {
         line-height: 150px;
         margin: 0;
   }
-  
+  img{
+      width: 100%;
+      height: 100%;
+  }
   .el-carousel__item:nth-child(2n) {
     background-color: #99a9bf;
   }
@@ -112,11 +127,9 @@ export default {
   }
   .hometlist{
       width: 100%;
-      margin-top: 10px;
       margin-bottom: 65px;
       background: #fff;
       padding: 0 8px;
-      border-bottom:1px solid #666; 
       .hometadd{
           height: 40px;
           display: flex;
@@ -132,6 +145,7 @@ export default {
           height: 120px;
           position: relative;
           overflow-x: scroll;
+          border-bottom: 1px solid #666; 
           .hometswrip{
               width: 200%;
               height: 120px;

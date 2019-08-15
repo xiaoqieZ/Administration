@@ -1,8 +1,7 @@
 <template>
     <div class="About-us">
-        <div class="Aboutitle">
-            关于我们
-        </div>
+        <mt-header fixed title="关于我们">    
+        </mt-header>
         <div class="Aboutcenter">
             <p>Hello 碳链科技</p>
         </div>
@@ -28,15 +27,7 @@ export default {
 
 <style lang="less">
 .About-us{
-    text-align: center;
-    .Aboutitle{
-        height: 36px;
-        color: #fff;
-        background: #5aa8fb;   
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
+    padding-top: 40px;
     .Aboutcenter{
         width: 100%;
         height: 100px;

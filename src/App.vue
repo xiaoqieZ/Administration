@@ -22,7 +22,8 @@ export default {
 }
 .el-submenu__title{
     padding-left:25px !important; 
-    height:30px;
-    line-height:30px;
+    height:30px !important;
+    line-height:30px !important;
   }
+
 </style>

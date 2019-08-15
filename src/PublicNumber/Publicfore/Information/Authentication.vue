@@ -1,6 +1,6 @@
 <template>
     <div style="width:100%">
-        <mt-header fixed title="实名认证">
+        <mt-header style="z-index:9;" fixed title="实名认证">
             <router-link to="/Publicfore" slot="left">
                 <mt-button icon="back">返回</mt-button>
             </router-link>
@@ -41,7 +41,6 @@
                          <br/>
                          <el-checkbox label="确认本人符合">《合格投资者》相关要求</el-checkbox>
                 </el-radio-group>
-
             </div>
             <!-- 补充信息 -->
             <div v-show="fill==2">
@@ -90,15 +89,15 @@ export default {
         },
         rules: {
           phone: [
-            { required: true, message: '请输入姓名', trigger: 'blur' },
+            { required: true, message: '请输入手机号', trigger: 'blur' },
             { min: 11, max: 11, message: '长度在 11 个字符', trigger: 'blur' }
           ],
            short: [
-            { required: true, message: '请输入姓名', trigger: 'blur' },
+            { required: true, message: '请输入验证码', trigger: 'blur' },
             { min: 6, max: 6, message: '长度在 6 到 6 个字符', trigger: 'blur' }
           ],
            mail: [
-            { required: true, message: '请输入姓名', trigger: 'blur' },
+            { required: true, message: '请输入电子邮箱', trigger: 'blur' },
             // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
           ],
         }
@@ -137,6 +136,17 @@ export default {
         .Authenradio{
             padding: 0  0 20px 10px;
         }
+        /deep/.el-radio-group{
+            width: 95%;
+            margin: 0 10px;
+            /deep/.el-checkbox__label{
+                font-size: 12px;
+                padding: 0
+            }
+        }
+        .el-input{
+            height: 42px;
+        }
     }
     .goods{
             width: 100%;
@@ -146,12 +156,12 @@ export default {
         }
     .buttommagin{
         /deep/.el-button--primary.is-plain{
-            width: 100%;
+            width: 95%;
+            margin: 0 10px;
         
         }
-        /deep/.el-button--primary{
-            width: 100%;
-            margin: 0;
+        .el-button--primary{
+            width: 95%;
         }
     }
     .el-form-item__content{

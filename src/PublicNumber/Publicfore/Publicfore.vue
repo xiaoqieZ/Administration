@@ -1,8 +1,7 @@
 <template>
     <div class="myhome">
-        <div class="myhometitle">
-            我的
-        </div>
+        <mt-header fixed title="我的">    
+        </mt-header>
         <div class="myhomettop">
             <div class="myhometimg">
                 <div class="imges">
@@ -171,18 +170,10 @@ export default {
 <style lang="less">
     .myhome{
         background: #dde1e6;
-        .myhometitle{
-            height: 36px;
-            color: #fff;
-            background: #5aa8fb;   
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+        padding-top: 40px;
         .myhomettop{
             width: 100%;
             padding: 20px;
-            margin-top: 10px;
             background: #fff;
             display: flex;
             align-items: center;

@@ -1,8 +1,7 @@
 <template>
     <div class="Privates">
-        <div class="Privatetitle">
-            私募产品
-        </div>
+        <mt-header fixed title="私募产品">    
+        </mt-header>
         <div class="raise">
             <div class="aggre">
                 <p>您现在是<span style="color:red">进取型(C5)</span>投资者推荐下列产品</p>
@@ -71,16 +70,8 @@ export default {
 <style lang="less">
 .Privates{
     background: #dde1e6;
-    .Privatetitle{
-        height: 36px;
-        color: #fff;
-        background: #5aa8fb;   
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
     .raise{
-        margin-top: 10px;
+        margin-top: 40px;
         margin-bottom: 65px;
         background: #fff;
         .aggre{
