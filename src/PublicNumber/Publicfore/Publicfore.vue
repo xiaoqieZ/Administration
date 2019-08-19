@@ -1,7 +1,19 @@
 <template>
     <div class="myhome">
-        <mt-header fixed title="我的">    
+        <mt-header fixed title="我的">
+            <mt-button slot="right" @click="dialogVisible = true"><Icon type="ios-warning-outline" /></mt-button>    
         </mt-header>
+        <el-dialog
+        title="免费声明"
+        :visible.sync="dialogVisible"
+        width="80%"
+        :before-close="handleClose">
+        <span>免费声明如下：</span>
+        <p>本平台所有数据为方便您查看产品的信息披露，仅供参考，不作为最终申购、赎回的法律依据。如有因为信息滞后问题与实际不符，以实际投资信息为准。</p>
+        <span slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+        </span>
+        </el-dialog>
         <div class="myhomettop">
             <div class="myhometimg">
                 <div class="imges">
@@ -150,16 +162,20 @@ import tebbarhome from '../../components/Publictebbar/Publictebbar'
 export default {
     data(){
         return{
-
+            dialogVisible: false
         }
     },
     methods:{
         gos(){
             this.$router.push({path:'/NavBar/Homepage/Homepage'})
-        },
-        // Identification(){
-        //     this.$router.replace({path:'/Publicfore/Identification'})
-        // }
+        },    
+        handleClose(done) {
+        this.$confirm('确认关闭？')
+          .then(_ => {
+            done();
+          })
+          .catch(_ => {});
+      }
     },
     components:{
         'tabbar-home':tebbarhome

@@ -1,9 +1,9 @@
  <template>
  <div id="app">
-   <vue-scroll>
-     <div slot="币种资料管理">
+   <div slot="客户信息" style="font-size:16px;">
          客户信息
-     </div>
+   </div>
+   <vue-scroll>
     <div class="currenminput">
         <div class="left">
           <el-input v-model="username" placeholder="请输入姓名"></el-input>
@@ -78,7 +78,7 @@
       <template slot-scope="scope">
             <el-button type="primary" icon="el-icon-edit" size="mini" @click="handleEdit(scope.$index,scope.row)" circle></el-button>
             <el-button type="danger" icon="el-icon-delete" size="mini" @click.prevent="del(scope.$index, scope.row)" circle></el-button>
-            <el-button type="primary" icon="el-icon-view" size="mini" @click="checkDetail(scope.$index,scope.row)"  circle></el-button>
+            <el-button type="primary" icon="el-icon-view" size="mini" @click="checkDe(scope.$index, scope.row)"  circle></el-button>
       </template>
           </el-table-column>
           <el-dialog title="编辑" :visible.sync="editFormVisible" :close-on-click-modal="true" :append-to-body="true">
@@ -112,15 +112,20 @@
     </el-pagination>
     </div>
     <!-- 查看详情 -->
-    <div class="details" v-show="hide">
-       <div class="details_list">
-         <i class="el-icon-close" @click="cha"></i>
-         <p>姓名：{{guid}}</p>
-         <p>地址： {{diz}}</p>
-         <p>填表时间：{{times}}</p>
-         <p>新技能</p>
-       </div>
-    </div>
+    <el-dialog
+      title="详情"
+      :visible.sync="checkDetail"
+      width="80%"
+      >
+      <p>姓名：{{guid}}</p>
+      <p>地址： {{diz}}</p>
+      <p>填表时间：{{times}}</p>
+      <p>新技能</p>
+      <span slot="footer" class="dialog-footer">
+        <!-- <el-button @click="checkDetail = false">取 消</el-button> -->
+        <el-button type="primary" @click="checkDetail = false">确 定</el-button>
+      </span>
+    </el-dialog>
     </vue-scroll>
   </div>
 </template>
@@ -150,20 +155,17 @@ import XLSX from "xlsx";
         guid:'',
         diz:'',
         times:'',
-        hide:false,
+        checkDetail: false,
       }
     },
     methods:{
       // 查看详情
-       checkDetail(index, row){
+       checkDe(index, row){
                 console.log(index, row);
                 this.guid=row.title;
                 this.diz=row.content;
                 this.times=row.created_at;
-                this.hide=true;
-            },
-            cha(){
-              this.hide=false;
+                this.checkDetail=!this.checkDetail;
             },
         getAllList() {//获取数据  
             let list={num:this.num,page:this.page};
@@ -297,28 +299,6 @@ import XLSX from "xlsx";
           height: 40px;
         }
     }
-    .details{
-          width: 100%;
-          height: 100%;
-          position: absolute;
-          top: 0%;
-          left: 0%;
-          background-color:rgba(0,0,0,0.5);
-          z-index: 999;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          .details_list{
-            width: 400px;
-            height: 260px;
-            background: #fff;
-            i{
-              padding-left:95%; 
-            }
-          p{
-              padding-left: 10px;
-          }
-          }
-        }
+
  </style>
  

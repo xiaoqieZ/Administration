@@ -5,11 +5,8 @@
         <!-- 轮播图 -->
         <van-swipe :autoplay="3000" indicator-color="white" :height="120" >
             <van-swipe-item v-for="item in listtu" :key="item.index">
-                <img :src="item.url" alt />>
+                <img :src="item.url" alt />
             </van-swipe-item>
-            <!-- <van-swipe-item>{{iten.url}}</van-swipe-item>
-            <van-swipe-item>{{iten.url}}</van-swipe-item>
-            <van-swipe-item>{{iten.url}}</van-swipe-item> -->
         </van-swipe>
 
         <!-- 中间内容 -->

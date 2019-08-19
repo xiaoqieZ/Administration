@@ -1,6 +1,7 @@
 <template>
   <div style="height:100%;background:#F0F1F7">
-    <div @mouseenter="hoverNav" @mouseleave="leaveNav">
+     <!-- @mouseenter="hoverNav" @mouseleave="leaveNav" -->
+    <div>
       <el-col
         :span="12"
         class="c-nav-show"
@@ -272,9 +273,7 @@
         </vue-scroll>
         </el-menu>
         <div class="listtitle">
-        <div
-        :class="[isShow?'lFFF':'listtime']"
-        >
+          <div :class="[isShow?'lFFF':'listtime']">
           <i class="el-icon-phone"></i>
           <span>{{isShow?'咨询':'联系电话(工作时间：9：30-16：30)'}}</span>
           <p v-show="!isShow">020-3463706-1111</p>
@@ -367,13 +366,13 @@ export default {
 
 
     //鼠标进入
-    hoverNav() {
-      this.isShow = false;
-    },
-    //鼠标离开
-    leaveNav() {
-      this.isShow = true;
-    },
+    // hoverNav() {
+    //   this.isShow = false;
+    // },
+    // //鼠标离开
+    // leaveNav() {
+    //   this.isShow = true;
+    // },
     getPath() {
       this.rouPath = this.$route.path;
     },
@@ -492,6 +491,7 @@ export default {
   right: 0;
   bottom: 0;
   .listtime{
+    width: 265px;
     height: 54px;
     line-height: 25px;
     background: rgba(0, 0, 0, 0.3);
@@ -522,6 +522,9 @@ export default {
   box-sizing: border-box;
 }
 .c-nav-show {
+  .nav-bar-title{
+    width: 195px;
+  }
   ::-webkit-scrollbar {
     display: none;
   }
@@ -658,7 +661,7 @@ export default {
 /deep/ .el-submenu__title i {
   display: none;
 }
-// vue动画
+// vue过渡动画
 .fade-enter-active {
   transition: opacity .1s;
 }

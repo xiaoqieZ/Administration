@@ -96,11 +96,7 @@ export default {
           color: royalblue
         }
     }
-    .el-button--primary{
-        width: 100%;
-    }
     .audit{
-        width: 100%;
         margin-top: 50px; 
         .add{
             height: 200px;
