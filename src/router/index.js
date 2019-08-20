@@ -63,21 +63,25 @@ export default new Router({
     {
       path: '/Publicone',
       name: 'Publicone',
+      title:'首页',
       component: Publicone
     },
     {
       path: '/Publictow',
       name: 'Publictow',
+      title:'关于我们',
       component: Publictow
     },
     {
       path: '/Publicthree',
       name: 'Publicthree',
+      title:'私募产品',
       component: Publicthree
     },
     {
       path: '/Publicfore',
       name: 'Publicfore',
+      title:'我的',
       component: Publicfore,
     },
     {
@@ -325,36 +329,43 @@ export default new Router({
                 {
                   path: '/NavBar/Managements/Managementone',
                   name: 'Management',
+                  title:'页面设置',
                   component: Managementone
                 },
                 {
                   path: '/NavBar/Managements/Managementtow',
                   name: 'Managementtow',
+                  title:'投资者统计',
                   component: Managementtow
                 },
                 {
                   path: '/NavBar/Managements/Managementthree',
                   name: 'Managementfour',
+                  title:'问卷管理',
                   component: Managementfour
                 },
                 {
                   path: '/NavBar/Managements/Managementfour',
                   name: 'Managementthree',
+                  title:'权限管理',
                   component: Managementthree
                 },
                 {
                   path: '/NavBar/Managements/Managementfive',
                   name: 'Managementfive',
+                  title:'使用统计',
                   component: Managementfive
                 },
                 {
                   path: '/NavBar/Managements/Managementsix',
                   name: 'Managementsix',
+                  title:'同步设置',
                   component: Managementsix
                 },
                 {
                   path: '/NavBar/Managements/Managementseven',
                   name: 'Managementseven',
+                  title:'认证管理',
                   component: Managementseven
                 }
               ]

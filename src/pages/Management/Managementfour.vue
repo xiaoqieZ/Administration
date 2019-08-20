@@ -1,6 +1,6 @@
 <template>
     <div>
-        权限管理
+        问卷管理
     </div>
 </template>
 

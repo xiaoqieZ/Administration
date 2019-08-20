@@ -81,7 +81,7 @@
             <el-button type="primary" icon="el-icon-view" size="mini" @click="checkDe(scope.$index, scope.row)"  circle></el-button>
       </template>
           </el-table-column>
-          <el-dialog title="编辑" :visible.sync="editFormVisible" :close-on-click-modal="true" :append-to-body="true">
+          <el-dialog title="编辑" :visible.sync="editFormVisible" :close-on-click-modal="true" :append-to-body="true" width="80%">
               <!--//editForm表单提交的数据-->
             <el-form :model="editForm" label-width="80px"  ref="editForm">
               <el-form-item label="姓名" prop="name">
