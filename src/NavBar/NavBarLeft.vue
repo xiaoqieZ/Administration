@@ -248,11 +248,11 @@
                 <span class="mr-right-18">·</span>
                 投资者统计
               </el-menu-item>
-              <el-menu-item index="/NavBar/Managements/Managementthree">
+              <el-menu-item index="/NavBar/Managements/Managementfour">
                 <span class="mr-right-18">·</span>
                 问卷管理
               </el-menu-item>
-              <el-menu-item index="/NavBar/Managements/Managementfour">
+              <el-menu-item index="/NavBar/Managements/Managementthree">
                 <span class="mr-right-18">·</span>
                 权限管理
               </el-menu-item>
@@ -666,13 +666,11 @@ export default {
   transition: opacity .1s;
 }
 .fade-leave-active {
-  transition: opacity 1s;
+  transition: opacity .1s;
 }
 .fade-enter, .fade-leave-to {
   opacity: 0;
 }
-
-
 // 导航栏隐藏与显示
 .tr-nav {
   animation: keynav 0.3s;

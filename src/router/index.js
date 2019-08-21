@@ -214,26 +214,31 @@ export default new Router({
                 {
                   path: '/NavBar/CParameter/CTAllocation',
                   name: 'CTAllocation',
+                  title:'客户审核',
                   component: CTAllocation
                 },
                 {
                   path: '/NavBar/CParameter/CCTAllocation',
                   name: 'CCTAllocation',
+                  title:'投资者份额',
                   component: CCTAllocation
                 },
                 {
                   path: '/NavBar/CParameter/CCCtallocation',
                   name: 'CCCtallocation',
+                  title:'投资者导入',
                   component: CCCtallocation
                 },
                 {
                   path: '/NavBar/CParameter/CCCCtallocation',
                   name: 'CCCCtallocation',
+                  title:'理财顾问',
                   component: CCCCtallocation
                 },
                 {
                   path: '/NavBar/CParameter/CCCCCtallocation',
                   name: 'CCCCCtallocation',
+                  title:'智能自查',
                   component: CCCCCtallocation
                 }
               ]
@@ -247,11 +252,13 @@ export default new Router({
                 {
                   path: '/NavBar/DataDitionary/BankData',
                   name: 'BankData',
+                  title:'产品列表',
                   component: BankData
                 },
                 {
                   path: '/NavBar/DataDitionary/BbankData',
                   name: 'BbankData',
+                  title:'日历提醒',
                   component: BbankData
                 }
               ]
@@ -265,21 +272,25 @@ export default new Router({
                 {
                   path: '/NavBar/UserManage/AccountManage',
                   name: 'AccountManage',
+                  title:'去签约',
                   component: AccountManage
                 },
                 {
                   path: '/NavBar/UserManage/UserFun',
                   name: 'UserFun',
+                  title:'基金合同',
                   component: UserFun
                 },
                 {
                   path: '/NavBar/UserManage/UserRecord',
                   name: 'UserRecord',
+                  title:'公文文件',
                   component: UserRecord
                 },
                 {
                   path: '/NavBar/UserManage/UserInfo',
                   name: 'UserInfo',
+                  title:'账户设置',
                   component: UserInfo
                 }
               ]
@@ -293,6 +304,7 @@ export default new Router({
                 {
                   path: '/NavBar/MemberManage/Aparameters',
                   name: 'Aparameters',
+                  title:'下载中心',
                   component: Aparameters
                 }
               ]
@@ -306,16 +318,19 @@ export default new Router({
                 {
                   path: '/NavBar/Pushmessages/Pushmessage',
                   name: 'Pushmessage',
+                  title:'发送信息',
                   component: Pushmessage
                 },
                 {
                   path: '/NavBar/Pushmessages/Pushmessagetow',
                   name: 'Pushmessagetow',
+                  title:'接收消息',
                   component: Pushmessagetow
                 },
                 {
                   path: '/NavBar/Pushmessages/Pushmessagethree',
                   name: 'Pushmessagethree',
+                  title:'模板消息',
                   component: Pushmessagethree
                 }
               ]
@@ -328,7 +343,7 @@ export default new Router({
               children: [
                 {
                   path: '/NavBar/Managements/Managementone',
-                  name: 'Management',
+                  name: 'Managementone',
                   title:'页面设置',
                   component: Managementone
                 },
@@ -340,15 +355,15 @@ export default new Router({
                 },
                 {
                   path: '/NavBar/Managements/Managementthree',
-                  name: 'Managementfour',
-                  title:'问卷管理',
-                  component: Managementfour
-                },
-                {
-                  path: '/NavBar/Managements/Managementfour',
                   name: 'Managementthree',
                   title:'权限管理',
                   component: Managementthree
+                },
+                {
+                  path: '/NavBar/Managements/Managementfour',
+                  name: 'Managementfour',
+                  title:'问卷管理',
+                  component: Managementfour
                 },
                 {
                   path: '/NavBar/Managements/Managementfive',
