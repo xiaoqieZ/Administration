@@ -30,6 +30,7 @@
  
 <script>
 import {setCookie,getCookie} from '../assets/js/cookie.js'
+import post from '../api/https.js'
     export default{
         data(){
             return{
@@ -52,7 +53,7 @@ import {setCookie,getCookie} from '../assets/js/cookie.js'
                 }else{
                     let data = {'username':this.username,'password':this.password}
                     /*接口请求*/
-                    this.$http.post('http://localhost/vueapi/index.php/Home/user/login',data).then((res)=>{
+                    this.$http.post('/vueapi/index.php/Home/user/login',data,(res)=>{
                         console.log(res)
                     /*接口的传值是(-1,该用户不存在),(0,密码错误)，同时还会检测管理员账号的值*/
                     if(res.data == -1){
@@ -81,7 +82,7 @@ import {setCookie,getCookie} from '../assets/js/cookie.js'
                     alert("请输入用户名或密码")
                 }else{
                     let data = {'username':this.newUsername,'password':this.newPassword}
-                    this.$http.post('http://localhost/vueapi/index.php/Home/user/register',data).then((res)=>{
+                    post("/vueapi/index.php/Home/user/register",data,(res)=>{
                         console.log(res)
                         if(res.data == "ok"){
                             this.tishi = "注册成功"
@@ -95,7 +96,7 @@ import {setCookie,getCookie} from '../assets/js/cookie.js'
                                 this.showTishi = false
                             }.bind(this),1000)
                         }
-                    })
+                    })  
                 }
             },
             // 注册卡片
@@ -119,7 +120,12 @@ import {setCookie,getCookie} from '../assets/js/cookie.js'
                 this.$router.push('/NavBar/Homepage/Homepage')
     }
   },
-    }
+}
+
+    // function post(u,data,then){
+    //     var url="http://localhost"+u;
+    //     this.$http.post(url,data).then(then)
+    // }
 </script>
 
 <style lang="less">

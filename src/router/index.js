@@ -53,7 +53,6 @@ import Login from '@/login/Login/'
 Vue.use(Router)
 
 export default new Router({
-  
   routes: [
     {
       path:'/',

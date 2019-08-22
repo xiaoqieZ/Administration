@@ -6,6 +6,7 @@
                 <el-tab-pane label="人员数据">人员数据</el-tab-pane>
                 <el-tab-pane label="产品数据">
                     <el-button type="primary" @click="exportExcel">下载</el-button>
+                    <vue-scroll>
                     <el-table
                     stripe
                     border
@@ -68,6 +69,7 @@
                             >
                         </el-pagination>
                     </div>
+                    </vue-scroll>
                 </el-tab-pane>
             </el-tabs>
         </div>

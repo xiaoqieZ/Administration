@@ -1,4 +1,3 @@
-
 /*用export把方法暴露出来*/
 /*设置cookie*/
 export function setCookie(c_name,value,expire) {

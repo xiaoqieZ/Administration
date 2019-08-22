@@ -3,7 +3,7 @@
         <div class="jurdic-title">权限管理</div>
         <div class="jurdic-list">
             <el-tabs type="border-card">
-                <el-tab-pane label="角色管理">
+                <el-tab-pane label="角色管理" style="overflow: scroll;">
                     <!-- 角色列表 -->
                         <div class="jurdic-bor">
                             <div class="jurdic-zuh">
@@ -177,11 +177,12 @@ export default {
              display: flex;
          }
          .jurdic-bor{
-             width: 30%;
+             
              height: 100%;
              background: #f0f1f7;
              margin-right: 15px;
             .jurdic-zuh{
+                width: 160px;
                 padding: 10px;
                 /deep/.el-input--prefix{
                     height: 40px;
