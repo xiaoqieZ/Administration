@@ -113,19 +113,14 @@ import post from '../api/https.js'
             requrey(){
                 this.$router.push({path:'/NavBar/Homepage/Homepage'})
             },
-  },
+        },
         mounted(){
-        /*页面挂载获取cookie，如果存在username的cookie，则跳转到主页，不需登录*/
+            /*页面挂载获取cookie，如果存在username的cookie，则跳转到主页，不需登录*/
             if(getCookie('username')){
                 this.$router.push('/NavBar/Homepage/Homepage')
+            }
+        },
     }
-  },
-}
-
-    // function post(u,data,then){
-    //     var url="http://localhost"+u;
-    //     this.$http.post(url,data).then(then)
-    // }
 </script>
 
 <style lang="less">

@@ -18,9 +18,9 @@
             <div class="hometnav">
                 <div class="hometswrip">
                     <div class="homeopesion">
-                    <P class="title">润达3号私募证券投资</P>
+                    <P class="title">润达36号私募证券投资</P>
                     <p>累计收益：<span>41.38%</span></p>
-                    <p>最新净值：<span>104265</span></p>
+                    <p>最新净值：<span>10425</span></p>
                 </div>
                 <el-divider direction="vertical"></el-divider>
                 <div class="homeopesion">
@@ -47,21 +47,26 @@
                 <span @click="ition">更多</span>
             </div>
         </div>
-        
-            
+        <div>我是vuex传过来的值 --  {{this.$store.state.count}}</div>
+           <button @click="include">加</button> 
         <tabbar-home></tabbar-home>
     </div>
 </template>
 
 <script>
 import tebbarhome from '../../components/Publictebbar/Publictebbar'
+import store from '../../store/index.js'
 export default {
     data(){
         return{
             listtu:[]
         }
     },
+    store,
     methods:{
+        include(){
+            this.$store.commit('include');
+        },
         more(){
             this.$router.push({path: '/Publicthree'})
         },
@@ -134,7 +139,7 @@ export default {
           align-items: center;
           justify-content: space-between;
       }
-      .hometnav::-webkit-scrollbar {
+      .hometnav::-webkit-scrollbar {        //关闭滚动条
           display: none;
       }
       .hometnav{

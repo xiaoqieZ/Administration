@@ -7,7 +7,7 @@
         title="免费声明"
         :visible.sync="dialogVisible"
         width="80%"
-        :before-close="handleClose">
+        >
         <span>免费声明如下：</span>
         <p>本平台所有数据为方便您查看产品的信息披露，仅供参考，不作为最终申购、赎回的法律依据。如有因为信息滞后问题与实际不符，以实际投资信息为准。</p>
         <span slot="footer" class="dialog-footer">
@@ -169,13 +169,6 @@ export default {
         gos(){
             this.$router.push({path:'/NavBar/Homepage/Homepage'})
         },    
-        handleClose(done) {
-        this.$confirm('确认关闭？')
-          .then(_ => {
-            done();
-          })
-          .catch(_ => {});
-      }
     },
     components:{
         'tabbar-home':tebbarhome
