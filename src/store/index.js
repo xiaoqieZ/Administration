@@ -4,12 +4,20 @@ Vue.use(Vuex)
 
 // 储存数据
 var state={
-    count:1
+    count:1,
 }
 // 改变state里面数据的方法
 var mutations={
     include(){
         ++state.count;
+        // state=JSON.stringify(state);
+        // localStorage.setItem('state',state);
+        // var list=localStorage.getItem('state');
+        // list=JSON.parse(list)
+        // console.log(list)
+    },
+    dele(){
+        localStorage.removeItem('state');
     }
 }
 

@@ -47,8 +47,13 @@
                 <span @click="ition">更多</span>
             </div>
         </div>
+        <div>测试：</div>
         <div>我是vuex传过来的值 --  {{this.$store.state.count}}</div>
-           <button @click="include">加</button> 
+           <button @click="include">加1个吧</button> 
+        <div>
+            <span>sessionStorage本都储存:</span>
+            <input type="text" v-model="addspy" @keyup.enter="qued">
+        </div>   
         <tabbar-home></tabbar-home>
     </div>
 </template>
@@ -59,12 +64,13 @@ import store from '../../store/index.js'
 export default {
     data(){
         return{
-            listtu:[]
+            listtu:[],
+            addspy:''
         }
     },
     store,
     methods:{
-        include(){
+        include(){    //vuex那边过来的
             this.$store.commit('include');
         },
         more(){
@@ -87,10 +93,19 @@ export default {
                     });
                 }
             })
+        },
+        qued(){
+            var addsp=this.addspy
+            sessionStorage.setItem('addsp',addsp);
         }
     },
     created(){
-        this.getlisttu()
+        this.getlisttu();
+        this.addspy=sessionStorage.getItem('addsp');
+        
+        // localStorage.setItem('addspy',addspy);
+        // var list=localStorage.getItem('state');
+        // list=this.addspy
     },
     components:{
         'tabbar-home':tebbarhome

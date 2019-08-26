@@ -113,6 +113,7 @@
     <!-- 查看详情 -->
     <el-dialog
       title="详情"
+      :append-to-body="true"
       :visible.sync="checkDetail"
       width="80%"
       >
