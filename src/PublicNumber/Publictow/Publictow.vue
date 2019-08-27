@@ -5,7 +5,9 @@
         <div class="Aboutcenter">
             <p>Hello 碳链科技</p>
         </div>
-        
+        <div>
+            <input type="text" v-model="addspy">
+        </div>
         <tabbar-home></tabbar-home>
     </div>
     
@@ -16,12 +18,15 @@ import tebbarhome from '../../components/Publictebbar/Publictebbar'
 export default {
     data(){
         return{
-
+            addspy:''
         }
     },
     components:{
         'tabbar-home':tebbarhome
-    }
+    },
+    created(){
+        this.addspy=sessionStorage.getItem('password');//把password数据取出来给addspy
+    },
 }
 </script>
 

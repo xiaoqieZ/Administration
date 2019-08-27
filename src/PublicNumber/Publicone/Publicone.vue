@@ -47,13 +47,16 @@
                 <span @click="ition">更多</span>
             </div>
         </div>
-        <div>测试：</div>
-        <div>我是vuex传过来的值 --  {{this.$store.state.count}}</div>
-           <button @click="include">加1个吧</button> 
-        <div>
-            <span>sessionStorage本都储存:</span>
-            <input type="text" v-model="addspy" @keyup.enter="qued">
-        </div>   
+        <div class="cesname">
+            <div>测试：</div>
+            <div>我是vuex传过来的值 --  {{this.$store.state.count}}</div>
+            <button @click="include">加1个吧</button> 
+           <!-- <button @click="dele">清除</button> -->
+            <div>
+                <span>本地储存:</span>
+                <input type="text" v-model="addspy" @keyup.enter="qued">
+            </div> 
+        </div>  
         <tabbar-home></tabbar-home>
     </div>
 </template>
@@ -65,7 +68,7 @@ export default {
     data(){
         return{
             listtu:[],
-            addspy:''
+            addspy:''         //sessionstorage保存下来的数据
         }
     },
     store,
@@ -94,18 +97,14 @@ export default {
                 }
             })
         },
-        qued(){
-            var addsp=this.addspy
-            sessionStorage.setItem('addsp',addsp);
+        qued(){  //本地储存输入框的数据
+            var password=this.addspy
+            sessionStorage.setItem('password',password);//储存数据，前面的是变量名，后面的是赋给变量的值
         }
     },
     created(){
         this.getlisttu();
-        this.addspy=sessionStorage.getItem('addsp');
-        
-        // localStorage.setItem('addspy',addspy);
-        // var list=localStorage.getItem('state');
-        // list=this.addspy
+        this.addspy=sessionStorage.getItem('password');  //页面刷新时获取本地储存的数据
     },
     components:{
         'tabbar-home':tebbarhome
@@ -196,6 +195,9 @@ export default {
       align-items: center;
       justify-content: space-between;
   }
+  }
+  .cesname{
+      padding: 0 10px;
   }
 }
 </style>

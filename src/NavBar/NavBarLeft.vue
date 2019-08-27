@@ -344,26 +344,25 @@ export default {
       name:''
     }
   },
-  methods: {
-    login(){
-        /*删除cookie*/
-        delCookie('username');
-        this.$router.push({path:'/login'})
-            },
-    fanhui(){
-        this.$router.push({path:'/Publicfore'})
-            },
-        mounted(){
+  mounted(){
         /*页面挂载获取保存的cookie值，渲染到页面上*/
         let uname = getCookie('username')
         this.name = uname;
         /*如果cookie不存在，则自动跳转到登录页*/
         if(uname == ""){
-             this.$router.push('/')
+            //  this.$router.push({path:'/login'})  //接口无效
+            this.$router.push({path: '/NavBar/Homepage/Homepage'})
             }
         },
-
-
+  methods: {
+    login(){
+        /*删除cookie*/
+        delCookie('username');
+        this.$router.push({path:'/login'})
+    },
+    fanhui(){
+        this.$router.push({path:'/Publicfore'})
+      },
 
     //鼠标进入
     // hoverNav() {

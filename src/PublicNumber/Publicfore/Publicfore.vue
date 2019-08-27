@@ -17,7 +17,7 @@
         <div class="myhomettop">
             <div class="myhometimg">
                 <div class="imges">
-                    <img src="../../../static/img/youliya.jpg" alt="">
+                    <img src="../../../static/img/youliya.jpg" alt="头像">
                     <div class="imgtime">
                         <p>专业投资者</p>
                     </div>
@@ -100,7 +100,8 @@
         <div class="myhometcenter">
             <div class="myhometupdey">
                 <p style="font-weight: 800;">
-                    <i class="el-icon-date"></i>
+                    <!-- <i class="el-icon-date"></i> -->
+                    <Icon type="ios-calendar" />
                     <span>交易记录</span>
                 </p>
             </div>

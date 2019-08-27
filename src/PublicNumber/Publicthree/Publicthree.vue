@@ -2,7 +2,7 @@
     <div class="Privates">
         <mt-header fixed title="私募产品">    
         </mt-header>
-        <div class="raise">
+        <div class="raise" v-show="muj==0">
             <div class="aggre">
                 <p>您现在是<span style="color:red">进取型(C5)</span>投资者推荐下列产品</p>
             </div>
@@ -42,16 +42,37 @@
                     </div>
             </div>
         </div>
+        <div class="kong" v-show="muj==1">
+            <div class="kgtitle">不实名的话不太想给你展示产品</div>
+            <div class="img">
+                <img src="../../../static/img/sgd.png" alt="表情包">
+            </div>
+        </div> 
+        <el-dialog
+            title="提示"
+            :visible.sync="centerDialogVisible"
+            :append-to-body="true"
+            width="80%"
+            center>
+            <span>小茄子：需要先实名认证才可以选购基金产品喔！</span>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="centerDialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="dssy">去认证</el-button>
+            </span>
+        </el-dialog>
         <tabbar-home></tabbar-home>
     </div>
 </template>
 
 <script>
 import tebbarhome from '../../components/Publictebbar/Publictebbar'
+import { getCookie } from '../../assets/js/cookie.js'
 export default {
     data(){
         return{
-            huaihyh:'淮河一号'
+            huaihyh:'淮河一号',
+            muj:1,   //没有实名认证的话，不展示产品页
+            centerDialogVisible:false
         }
     },
     components:{
@@ -61,11 +82,25 @@ export default {
         hhplai(){
             let data ={name:this.huaihyh}
             this.$router.push({name: 'Purchases',params:{data}})
+        },
+        dssy(){    //去实名
+            this.centerDialogVisible=false
+            this.$router.push({path: '/Publicfore/04/Authentication'})
+        }
+    },
+    mounted(){
+         /*页面挂载获取保存的cookie值，渲染到页面上*/
+        let mname = getCookie('username')
+        // this.name = mname;
+        /*如果cookie不存在，则跳出dialog框，选择回到实名页*/
+        if(mname == ""){
+           this.centerDialogVisible=true 
+        }else{
+            this.muj=0
         }
     }
 }
 </script>
-
 
 <style lang="less">
 .Privates{
@@ -122,6 +157,19 @@ export default {
                 padding-right: 10px;
             }
         }
+        }
+    }
+    .kong{
+        margin-top: 50px;
+        .kgtitle{
+            text-align: center;
+        }
+        .img{
+            width: 100%;
+            img{
+                width: 100%;
+                height: 100%;
+            }
         }
     }
 }

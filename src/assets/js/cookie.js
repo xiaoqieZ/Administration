@@ -1,6 +1,6 @@
 /*用export把方法暴露出来*/
 /*设置cookie*/
-export function setCookie(c_name,value,expire) {
+export function setCookie(c_name,value,expire) { //数据库用户名，输入框用户名，时间
     var date=new Date()
     date.setSeconds(date.getSeconds()+expire)
     document.cookie=c_name+ "="+escape(value)+"; expires="+date.toGMTString()
@@ -16,8 +16,8 @@ export function getCookie(c_name){
             let c_end=document.cookie.indexOf(";",c_start)
             if (c_end==-1) c_end=document.cookie.length
                 return unescape(document.cookie.substring(c_start,c_end))
-            } 
-        }
+        } 
+    }
     return ""
 }
  
