@@ -49,10 +49,11 @@
 </template>
 
 <script>
+import ajax from '../../api/https.js'
 export default {
         data(){
             return{
-                radio:'',
+                radio:'1',
                 tableDatas:'',
                 tableData:[],
                 // adds:true,
@@ -68,14 +69,15 @@ export default {
                 },
         getAllList() {//获取数据  
             let list={num:this.num,page:this.page};
-                this.$http.get('http://mx.maplegg.com/api/vue/getwz',{params:list}).then(res => {
+                ajax.get.bind(this)('/api/vue/getwz',list,(res) => {
                     console.log(res);
                         if (res.status === 200) {
                             this.tableData = res.data;
-                        } else {
-                            alert('请求数据失败')
                         }
-                    })
+                    }),
+                    (error=> {
+                    console.log(error);
+            })
                 },
         },
         created(){

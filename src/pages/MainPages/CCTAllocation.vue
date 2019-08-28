@@ -116,7 +116,7 @@
 </template>
 
 <script>
-import {get,post} from '../../api/https.js'
+import ajax from '../../api/https.js'
 import vuescroll from 'vuescroll';
 import { Toast } from 'mint-ui';
  // 引入导出Excel表格依赖
@@ -145,13 +145,14 @@ import XLSX from "xlsx";
     methods:{
         getAllList:function() {//获取数据  
             let list={num:this.num,page:this.page};
-                get.bind(this)('/api/vue/getwz',{params:list},(res) => {
+                ajax.get.bind(this)('/api/vue/getwz',{params:list},(res) => {
                     console.log(res);
-                        if (res.status === 200) {
+                        if (res.status == 200) {
                             this.tableData = res.data;
-                        } else {
-                            alert('请求数据失败')
                         }
+                    }),
+                    (error=> {
+                    console.log(error);
                     })
                 },
         // 添加
@@ -161,13 +162,16 @@ import XLSX from "xlsx";
                 title:this.username,
                 content:this.address
                 }
-            post.bind(this)('/api/vue/addwz',data,(res)=>{
+            ajax.post.bind(this)('/api/vue/addwz',data,(res)=>{
                 console.log(res);
                 if(res.status==200){
                     this.getAllList();
                     this.username=this.address=''
                 }
-            },{ emulateJSON: true })
+            }),
+            (error=> {
+                console.log(error);
+            })
             }else{
               // Toast({
               //   message: '输入框内不能留空',
@@ -218,9 +222,6 @@ import XLSX from "xlsx";
        return wbout;
        },
       },
-    // created(){
-    //     this. getAllList()
-    // },
     mounted(){
         this. getAllList()
     }

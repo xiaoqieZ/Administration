@@ -89,14 +89,13 @@ export default {
         }
     },
     mounted(){
-         /*页面挂载获取保存的cookie值，渲染到页面上*/
-        let mname = getCookie('username')
-        // this.name = mname;
-        /*如果cookie不存在，则跳出dialog框，选择回到实名页*/
-        if(mname == ""){
-           this.centerDialogVisible=true 
+         /*在本地拿到access_token给mname*/
+        let mname = sessionStorage.getItem("feng");
+        /*如果access_token不存在，则跳出dialog框，选择回到实名页*/
+        if(mname){
+            this.muj=0 
         }else{
-            this.muj=0
+            this.centerDialogVisible=true 
         }
     }
 }

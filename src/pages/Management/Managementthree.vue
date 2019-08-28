@@ -177,12 +177,11 @@ export default {
              display: flex;
          }
          .jurdic-bor{
-             
              height: 100%;
              background: #f0f1f7;
              margin-right: 15px;
             .jurdic-zuh{
-                width: 160px;
+                width: 300px;
                 padding: 10px;
                 /deep/.el-input--prefix{
                     height: 40px;

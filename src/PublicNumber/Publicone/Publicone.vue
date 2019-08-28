@@ -64,10 +64,11 @@
 <script>
 import tebbarhome from '../../components/Publictebbar/Publictebbar'
 import store from '../../store/index.js'
+import ajax from '../../api/https.js'
 export default {
     data(){
         return{
-            listtu:[],
+            listtu:[],         //轮播图
             addspy:''         //sessionstorage保存下来的数据
         }
     },
@@ -82,19 +83,17 @@ export default {
         ition(){
             this.$router.push({path:'/Information'})
         },
+        
+        //获取轮播图
         getlisttu(){
-            this.$http.get("http://mx.maplegg.com/api/vue/lunbotu").then(res=>{
-                console.log(res)
+            ajax.get.bind(this)('/api/vue/lunbotu',(res) =>{
+                console.log(res);
                 if(res.status == 200){
                     this.listtu = res.data.xiaowulang[0].images;
-                }else{
-                    this.$message({
-                      showClose: true,
-                      message: '可能网不行吧！',
-                      duration:2000,
-                      type: 'warning'
-                    });
                 }
+            }),
+            (error=> {
+                console.log(error);
             })
         },
         qued(){  //本地储存输入框的数据
@@ -163,7 +162,7 @@ export default {
           overflow-x: scroll;
           border-bottom: 1px solid #666; 
           .hometswrip{
-              width: 200%;
+              width: 217%;
               height: 120px;
               position: absolute;
               display: flex;

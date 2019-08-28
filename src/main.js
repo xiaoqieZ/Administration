@@ -21,6 +21,9 @@ import 'iview/dist/styles/iview.css'
 import Vant from 'vant'
 import 'vant/lib/index.css'
 
+import Axios from "axios"
+Vue.prototype.$axios = Axios
+
 Vue.use(Vant)
 Vue.use(iView)
 Vue.use(vuescroll)

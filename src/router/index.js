@@ -56,7 +56,7 @@ export default new Router({
   routes: [
     {
       path:'/',
-      redirect: '/Publicone',
+      redirect: '/Publicfore',
     },
     // 前台
     {
