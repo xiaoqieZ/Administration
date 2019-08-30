@@ -8,7 +8,7 @@
 
         <div class="radios" v-show="values==0">
             <p>
-                <span>1、您的主要收益来源是？</span>
+            <span>1、您的主要收益来源是？</span>
             <el-radio-group v-model="radio">
               <el-radio :label="1">工资、劳务报酬</el-radio><br/>
               <el-radio :label="2">生产经营所得</el-radio><br/>
@@ -44,12 +44,14 @@
 </template>
 
 <script>
+import ajax from "../../../api/https.js";
 export default {
     data(){
         return{
             values:0,
-            radio:'',
-            palss:''
+            radio:2,
+            palss:1,
+            getQuestlist:[]
         }
     },
     methods:{
@@ -68,7 +70,20 @@ export default {
         },
         Acquisition(){
             this.$router.push({path:'/Publicfore/04/Acquisition'})
-        }
+        },
+        //题目请求
+        getQuesttion(){
+            ajax.authGet.bind(this)('/api/Information/Account/Questionnaire',res=>{
+                console.log(res);
+                if(res.data.code ==200 ){
+                    this.getQuestlist=res.data.data
+                    
+                }
+            })
+        },
+    },
+    mounted(){
+        this.getQuesttion()
     }
 }
 </script>

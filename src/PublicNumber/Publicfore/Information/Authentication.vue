@@ -1,11 +1,14 @@
 <template>
   <div style="width:100%">
-    <mt-header style="z-index:9;" fixed title="实名认证">
-      <router-link to="/Publicfore" slot="left">
-        <mt-button icon="back">返回</mt-button>
-      </router-link>
-    </mt-header>
     <div class="Authentitle" v-show="Hang==0">
+      <mt-header style="z-index:9;" fixed title="实名认证">
+        <div @click="Ret" slot="left" v-if="retNo">
+          <mt-button icon="back">返回</mt-button>
+        </div>
+        <div @click="dssy" slot="left" v-if="retGo">
+          <mt-button icon="back">返回</mt-button>
+        </div>
+      </mt-header>
       <el-steps :active="active" finish-status="success" align-center>
         <el-step title="填写信息"></el-step>
         <el-step title="补充信息"></el-step>
@@ -30,29 +33,35 @@
               <el-input type="number" v-model="ruleForm.short"></el-input>
             </el-form-item>
             <el-form-item label="电子邮件：" prop="mail">
-              <el-input type="text" v-model="ruleForm.mail"></el-input>
+              <el-input v-model="ruleForm.mail"></el-input>
             </el-form-item>
           </el-form>
         </div>
-        <el-radio-group v-model="checkList">
-          <el-checkbox label="阅读并同意">
+        <el-checkbox-group v-model="checkList">
+          <el-checkbox label="A">
             <a>《北京润达信合投资基金管理有限公司微信公众号服务协议》</a>
           </el-checkbox>
-          <br />
-          <el-checkbox label="确认本人符合">《合格投资者》相关要求</el-checkbox>
-        </el-radio-group>
+          <el-checkbox label="B">《合格投资者》相关要求</el-checkbox>
+        </el-checkbox-group>
       </div>
       <!-- 补充信息 -->
       <div v-show="fill==2">
-        <el-form label-width="90px">
-          <el-form-item label="真实姓名：">
-            <el-input type="text" v-model="name"></el-input>
+        <el-form label-width="90px" :model="nameForm" :rules="ruForm" ref="nameForm">
+          <el-form-item label="真实姓名：" prop="name">
+            <el-input type="text" v-model="nameForm.name"></el-input>
           </el-form-item>
-          <el-form-item label="证件类型：">
-            <el-input type="text" v-model="certi"></el-input>
-          </el-form-item>
-          <el-form-item label="证件号码：">
-            <el-input type="number" v-model="ber"></el-input>
+          <!-- <el-form-item label="证件类型：" prop="certi">
+            <el-input type="text" v-model="nameForm.certi"></el-input>
+          </el-form-item> -->
+          <el-form-item label="证件类型：" prop="certi">
+                <el-select v-model="nameForm.certi" placeholder="请选择证件类型">
+                <el-option label="身份证" value="2"></el-option>
+                <el-option label="军人证" value="2"></el-option>
+                <el-option label="结婚证" value="3"></el-option>
+                </el-select>
+            </el-form-item>
+          <el-form-item label="证件号码：" prop="ber">
+            <el-input type="text" v-model="nameForm.ber"></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -60,15 +69,51 @@
         <div class="goods">恭喜您完成认证</div>
       </div>
       <div class="buttommagin">
-        <el-button type="primary" plain @click="next('ruleForm')" v-show="isShow==0">下一步</el-button>
-        <el-button type="primary" @click="getPhone" v-show="isShow==1">完成</el-button>
+        <el-button type="primary" plain @click="next('ruleForm')" v-if="isShow==0">下一步</el-button>
+        <el-button type="primary" @click="getPhone" v-if="isShow==1">提交完成</el-button>
+        <el-button type="primary" @click="getPhone" v-if="isShow==2" disabled>提交完成</el-button>
       </div>
     </div>
+    <!-- 展示已认证的用户信息 -->
     <div class="modify_title" v-show="Hang==1">
-        <div class="modify">
-            已认证页面，可以修改信息
-        </div>
+      <mt-header fixed title="个人信息">
+        <router-link to="/Publicfore" slot="left">
+          <mt-button icon="back">返回</mt-button>
+        </router-link>
+      </mt-header>
+      <div class="modify">已认证页面，可以修改信息</div>
+      <div class="messag">
+        <ul>
+          <li>姓名：{{information.name}}</li>
+          <li>手机：{{information.mobile}}</li>
+          <li>邮箱：{{information.email}}</li>
+          <li>客户类型：{{information.customerTypeName}}</li>
+          <li>证件类型：{{information.certificateTypeName}}</li>
+          <li>证件号：{{information.certificateNo}}</li>
+        </ul>
+      </div>
     </div>
+    <!-- 用户点击返回按钮，操作未完成提示框 -->
+    <el-dialog
+      title="提示"
+      :visible.sync="centerDialogVisible"
+      :append-to-body="true"
+      width="80%"
+      center
+    >
+      <span>实名认证流程还未走完，确定返回吗？</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="centerDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dssy">确 认</el-button>
+      </span>
+    </el-dialog>
+    <!-- 完成信息提交 -->
+    <el-dialog title="提示" :visible.sync="centerDialog" :append-to-body="true" width="80%" center>
+      <span>信息正在审核中，请耐心等待</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="plays">确 认</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -77,84 +122,155 @@ import ajax from "../../../api/https.js";
 export default {
   data() {
     return {
-      active: 0,
-      isShow: 0,
-      radio: 1,
-      name: "",
-      certi: "",
-      ber: "",
-      Hang:0,
-      dofig:'',
-      checkList: "",
-      fill: 1,
+      active: 0, // 步骤条
+      isShow: 0, //下一步跟完成提交两个按钮的切换
+      radio: "", //单选框
+      nameForm: {
+        //补充信息
+        name: "", //真实姓名
+        certi: "", //证件类型
+        ber: "" //证件号码
+      },
+      Hang: 0, //认证页面跟完成认证页面
+      dofig: "", //本地保存的数据
+      checkList: [], //协议资料阅读与确认
+      fill: 1, //填写信息、补充信息、确认完成3个页面的切换
       ruleForm: {
+        //填写信息的内容
         phone: "",
         short: "",
         mail: ""
       },
       rules: {
+        //form表单的输入提示
         phone: [
           { required: true, message: "请输入手机号", trigger: "blur" },
-          { min: 11, max: 11, message: "长度在 11 个字符", trigger: "blur" }
+          { min: 1, max: 11, message: "长度在 11 个字符", trigger: "blur" }
         ],
         short: [
           { required: true, message: "请输入验证码", trigger: "blur" },
-          { min: 6, max: 6, message: "长度在 6 到 6 个字符", trigger: "blur" }
+          { min: 1, max: 6, message: "长度在 6 个字符", trigger: "blur" }
         ],
         mail: [
-          { required: true, message: "请输入电子邮箱", trigger: "blur" }
-          // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+          { required: true, message: "请输入邮箱地址", trigger: "blur" },
+          { message: "请输入正确的邮箱地址", trigger: ["blur", "change"] }
         ]
-      }
+      },
+      ruForm: {
+        name: [
+          { required: true, message: "请输入真实姓名", trigger: "blur" },
+          { min: 1, message: "长度最小 2 个字符", trigger: "blur" }
+        ],
+        certi: [
+          { required: true, message: "请选择证件类型", trigger: "blur" },
+          { min: 1, message: "长度最小 3 个字符", trigger: "blur" }
+        ],
+        ber: [
+          { required: true, message: "请输入证件号", trigger: "blur" },
+          { min: 1, message: "长度最小 18 个字符", trigger: "blur" }
+        ]
+      },
+      centerDialogVisible: false, //提示弹窗
+      centerDialog: false,
+      retNo: true,
+      retGo: false,
+      information:{},
     };
   },
 
   methods: {
-    next(formName) {
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          // this.$message('提交成功');
-          if (this.active++ == 0 && this.phone != "") {
-            this.fill = 2;
-          } else if (this.active++ > 1) {
-            this.fill = 3;
-            this.isShow = 1;
-          }
-        } else {
-          return false;
-        }
-      });
+    Ret() {
+      //点击返回按钮
+      this.centerDialogVisible = true;
     },
-    getPhone() {
-      ajax.auth
-        .bind(this)({
-          openId: "87381ab5c89611e9aa52000c292381e8",
-          nickName: "关注"
-        })
-        .then(res => {
-        //   console.log(res);
-          let data ={customerType:this.radio,mobile:this.ruleForm.phone,email:this.ruleForm.mail}
-          ajax.authPost.bind(this)("/api/Information/Account/Save",data, (res) => {
-            console.log(res);
-            if(res.status==200){
-                this.dofig=res.data.code
-                console.log(this.dofig)
+    dssy() {
+      //弹窗确定返回按钮
+      this.$router.push({ path: "/Publicfore" });
+    },
+    plays() {
+      //信息已提交，确定耐心等待按钮
+      this.$router.push({ path: "/Publicfore" });
+    },
+    next(formName) {
+      if (this.radio == "" && this.checkList.length == 0) {
+        this.$message("您需要查看勾选协议");
+      } else {
+        this.$refs[formName].validate(valid => {
+          if (valid) {
+            if (this.active++ > 0) {
+              //这里踩了个坑，认证完成页面
+              this.fill = 3; //页面
+              this.isShow = 1; //完成按钮
+            } else if (this.active == 1) {
+              //补充信息页面
+              this.fill = 2;
+              this.isShow = 0; //下一步按钮
+            } else {
+              return;
             }
-            this.$router.push({ path: "/Publicfore" });
-            let feng =this.dofig
-            sessionStorage.setItem("feng",feng)
-          });
-        })
+          } else {
+            return false;
+          }
+        });
+      }
+    },
+    //  点击完成，实名认证信息提交
+    getPhone() {
+      //   填写信息
+      let servey = {
+        customerType:this.radio,
+        mobile: this.ruleForm.phone,
+        email: this.ruleForm.mail
+      };
+      ajax.authPost
+        .bind(this)("/api/Information/Account/Save", servey, res => {
+          console.log(res);
+          if (res.status == 200) {
+            this.dofig = res.data.code;
+          }
+          let feng = this.dofig;
+          sessionStorage.setItem("feng", feng);
+          }
+        )
+          //   补充信息
+          let data = {
+            name: this.nameForm.name,
+            certificateType: this.nameForm.certi,
+            certificateNo: this.nameForm.ber
+          };
+          ajax.authPost.bind(this)(
+            "/api/Information/Account/SaveOthers",
+            data,
+            r => {
+              console.log(r);
+            }
+          )
         .catch(error => {
           console.log(error);
         });
+      this.isShow = 2; //禁用按钮
+      this.centerDialog = true; //弹窗
+      this.retNo = false; //点击返回
+      this.retGo = true; //
+    },
+    getPersonal() {
+      ajax.authGet.bind(this)("/api/Information/Account/GetByOpenId", res => {
+        console.log(res);
+        if(res.data.code == 200){
+          this.information=res.data.data;
+          var listaktion=this.information;
+          listaktion=JSON.stringify(listaktion);
+          sessionStorage.setItem('listaktion',listaktion)
+        }
+      });
     }
   },
-  mounted(){
-      let lisee=sessionStorage.getItem("feng")
-      if(lisee){
-          this.Hang=1
-      }
+  mounted() {
+    let lisee = sessionStorage.getItem("feng");
+    if (lisee) {
+      this.Hang = 1;
+      this.getPersonal()
+    };
   }
 };
 </script>
@@ -201,10 +317,10 @@ export default {
     padding: 0;
   }
 }
-.modify_title{
-    margin-top: 50px;
-    .modify{
-        text-align: center;
-    }
+.modify_title {
+  margin-top: 50px;
+  .modify {
+    text-align: center;
+  }
 }
 </style>
