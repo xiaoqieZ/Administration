@@ -109,7 +109,7 @@
     </el-dialog>
     <!-- 完成信息提交 -->
     <el-dialog title="提示" :visible.sync="centerDialog" :append-to-body="true" width="80%" center>
-      <span>信息正在审核中，请耐心等待</span>
+      <span>信息正在审核中，请耐心等待...</span>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="plays">确 认</el-button>
       </span>
@@ -323,4 +323,10 @@ export default {
     text-align: center;
   }
 }
+.el-select-dropdown{
+    top: 215px !important;
+  }
+  .el-input__suffix{
+    height: 73%!important;
+  }
 </style>

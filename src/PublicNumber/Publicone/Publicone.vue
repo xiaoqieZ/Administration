@@ -86,11 +86,8 @@ export default {
         
         //获取轮播图
         getlisttu(){
-            ajax.get.bind(this)('/api/vue/lunbotu',(res) =>{
+            ajax.authGet.bind(this)('/api/System/Page/Rotary/3',res =>{
                 console.log(res);
-                if(res.status == 200){
-                    this.listtu = res.data.xiaowulang[0].images;
-                }
             }),
             (error=> {
                 console.log(error);
