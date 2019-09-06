@@ -4,8 +4,8 @@
         </mt-header>
         <!-- 轮播图 -->
         <van-swipe :autoplay="3000" indicator-color="white" :height="120" >
-            <van-swipe-item v-for="item in listtu" :key="item.index">
-                <img :src="item.url" alt />
+            <van-swipe-item v-for="item in listtu" :key="item.id">
+                <img :src="item.filePath" alt />
             </van-swipe-item>
         </van-swipe>
 
@@ -51,11 +51,6 @@
             <div>测试：</div>
             <div>我是vuex传过来的值 --  {{this.$store.state.count}}</div>
             <button @click="include">加1个吧</button> 
-           <!-- <button @click="dele">清除</button> -->
-            <div>
-                <span>本地储存:</span>
-                <input type="text" v-model="addspy" @keyup.enter="qued">
-            </div> 
         </div>  
         <tabbar-home></tabbar-home>
     </div>
@@ -69,7 +64,7 @@ export default {
     data(){
         return{
             listtu:[],         //轮播图
-            addspy:''         //sessionstorage保存下来的数据
+            addspy:'',         //sessionstorage保存下来的数据
         }
     },
     store,
@@ -81,26 +76,22 @@ export default {
             this.$router.push({path: '/Publicthree'})
         },
         ition(){
-            this.$router.push({path:'/Information'})
+            this.$router.push({path:'/Publicone/Information'})
         },
         
         //获取轮播图
         getlisttu(){
-            ajax.authGet.bind(this)('/api/System/Page/Rotary/3',res =>{
+            ajax.authGet.bind(this)('/api/Information/Present/Rotary/3',res =>{
                 console.log(res);
-            }),
-            (error=> {
-                console.log(error);
-            })
+                if(res.data.code==200){
+                   this.listtu=res.data.data
+                   console.log(this.listtu) 
+                }
+            }) 
         },
-        qued(){  //本地储存输入框的数据
-            var password=this.addspy
-            sessionStorage.setItem('password',password);//储存数据，前面的是变量名，后面的是赋给变量的值
-        }
     },
     created(){
         this.getlisttu();
-        this.addspy=sessionStorage.getItem('password');  //页面刷新时获取本地储存的数据
     },
     components:{
         'tabbar-home':tebbarhome

@@ -46,8 +46,6 @@ import Redeem from '@/PublicNumber/Publicfore/TransactionRecord/Redeem.vue'
 import Returnvisit from '@/PublicNumber/Publicfore/TransactionRecord/Returnvisit.vue'
 
 import Purchases from '@/PublicNumber/Publicthree/purchase/purchases.vue'
-
-
 import Login from '@/login/Login/'
 
 Vue.use(Router)
@@ -165,7 +163,7 @@ export default new Router({
       ]
     },
     {
-      path:'/Information',
+      path:'/Publicone/Information',
       name:'Information',
       title:'热门资讯',
       component:Information
@@ -178,23 +176,17 @@ export default new Router({
       name: 'Login',
       component: Login
     },
+    //公共导航栏
         {
           path: '/NavBar',
           name: 'NavBar',
-          component: NavBar,         //公共导航栏
+          component: NavBar,
           children: [
             // 首页
             {
-              path: '/Homepage',
-              name: 'Homepagehome',
-              component: Null,
-              children: [
-                {
-                  path: '/NavBar/Homepage/Homepage',
-                  name: 'Homepage',
-                  component: Homepage
-                }
-              ]
+              path: '/NavBar/Homepage/Homepage',
+              name: 'Homepage',
+              component: Homepage,
             },
             // 适当性管理
             {

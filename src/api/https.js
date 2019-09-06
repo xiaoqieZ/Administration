@@ -1,4 +1,4 @@
- //let domain="http://192.168.28.213:5000";
+//  let dom="http://192.168.28.213:5000";
  let domain="http://mx.maplegg.com";
  
  function post(url, data, then, cat) {
@@ -20,6 +20,9 @@
      }
      var url = domain + url;
      this.$axios.get(url,data).then(then).catch(cat)
+ }
+ function doms(url){
+    return "http://192.168.28.213:5000"+url;
  }
 
  //获取token的接口
@@ -91,5 +94,6 @@
      get,
      authGet,
      authPost,
-     auth
+     auth,
+     doms
  }

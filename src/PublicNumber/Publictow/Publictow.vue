@@ -6,7 +6,7 @@
             <p>Hello 碳链科技</p>
         </div>
         <div>
-            <input type="text" v-model="addspy">
+            
         </div>
         <tabbar-home></tabbar-home>
     </div>
@@ -15,6 +15,7 @@
 
 <script>
 import tebbarhome from '../../components/Publictebbar/Publictebbar'
+import ajax from "../../api/https.js";
 export default {
     data(){
         return{
@@ -24,9 +25,16 @@ export default {
     components:{
         'tabbar-home':tebbarhome
     },
-    created(){
-        this.addspy=sessionStorage.getItem('password');//把password数据取出来给addspy
+    methods:{
+        getAboutUs(){
+            ajax.authGet.bind(this)('/api/Information/Present/AboutUs/1',res=>{
+                console.log(res)
+            })
+        }
     },
+    mounted(){
+        this.getAboutUs()
+    }
 }
 </script>
 

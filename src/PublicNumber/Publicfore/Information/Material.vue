@@ -7,6 +7,7 @@
     </mt-header>
     <div class="imgs" v-show="inages==0">
       <span>审核记录</span>
+      <!-- 上传图片 -->
       <div class="imgs_List" v-for="item in getScience" :key="item.id">
         <span>{{item.name}}</span>
         <div class="images_flex">
@@ -14,12 +15,11 @@
             <div class="imgs_ch">
               <el-upload
                 class="avatar-uploader"
-                action="http://192.168.28.213:5000/api/Information/Account/Upload"
+                :action="action"
                 :show-file-list="false"
                 :on-success="(res,file)=>handleAvatarSuccess(res,file,newItem)"
                 :before-upload="beforeAvatarUpload"
                 :headers="access_token"
-                
               >
                 <img v-if="newItem.imageUrl" :src="newItem.imageUrl" class="avatar" />
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -41,6 +41,20 @@
         <el-button disabled>查看详情</el-button>
       </div>
     </div>
+    <!-- 弹窗 -->
+    <el-dialog
+      title="提示"
+      :visible.sync="centerDialogVisible"
+      :append-to-body="true"
+      width="80%"
+      center
+    >
+      <span>小茄子：需要先去信息采集才可以提交证明材料喔！</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="cancel">取 消</el-button>
+        <el-button type="primary" @click="dssy">信息采集</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -54,54 +68,98 @@ export default {
       getScience: [],
       access_token: {
         Authorization: "Bearer " + sessionStorage.getItem("access_token")
-      }
+      },
+      action: ajax.doms.bind(this)("/api/Information/Account/Upload"),
+      obj: [],
+      centerDialogVisible: false, //没有进行信息采集，弹出提示框
+      getImgId: {},
+      arrays:{},
     };
   },
   methods: {
-    audit() {
-      this.inages = 1;
-      let data=[{categoryId:1,materialTypeId:2,materialId:89}]
-      ajax.authPost.bind(this)('/api/Information/Account/Upload/Submit',data,res=>{
-          console.log(res)
-      })
+    dssy() {
+      //去信息采集
+      this.centerDialogVisible = false;
+      this.$router.push({ path: "/Publicfore/04/Acquisition" });
     },
-    material() {
+    // 弹出框取消按钮
+    cancel() {
+      this.centerDialogVisible = false;
       this.$router.push({ path: "/Publicfore" });
     },
-    handleAvatarSuccess(res, file,item) {
-        var arg=arguments;
-      item.imageUrl = URL.createObjectURL(file.raw);
-    },
-    beforeAvatarUpload(file) {
-      const isJPG = file.type === "image/jpeg";
-      const isLt2M = file.size / 1024 / 1024 < 2;
-
-      if (!isJPG) {
-        this.$message.error("上传头像图片只能是 JPG 格式!");
-      }
-      if (!isLt2M) {
-        this.$message.error("上传头像图片大小不能超过 2MB!");
-      }
-      return isJPG && isLt2M;
-    },
-    //获取结构
+    //获取证件分类和证件框架
     getMaterial() {
       ajax.authGet.bind(this)("/api/Information/Account/Material", res => {
         console.log(res);
         if (res.data.code == 200) {
           this.getScience = res.data.data.map(function(a) {
+            // console.log(123,a)
             a.materials.map(b => {
               b.imageUrl = undefined;
+              // console.log(b)
             });
             return a;
           });
-          //   console.log(this.getScience)
         }
       });
+    },
+    //提交材料
+    audit() {
+      var array = [];
+      for (var i = 0; i < this.getScience.length; i++) {
+        var category = this.getScience[i];
+        for (var j = 0; j < category.materials.length; j++) {
+          var m = category.materials[j];
+          if (m.img) {
+            array.push({
+              categoryId: category.id,
+              materialTypeId: m.id,
+              materialId: m.img.id
+            });
+          }
+        }
+      }
+      console.log(array)
+      this.arrays=array
+      ajax.authPost.bind(this)('/api/Information/Account/Upload/Submit',array,res=>{
+          console.log(res)
+      })
+      
+    },
+    material() {
+      this.$router.push({ path: "/Publicfore" });
+    },
+    //图片上传成功的回调，获取id
+    handleAvatarSuccess(res, file, newItem) {
+      newItem.imageUrl = URL.createObjectURL(file.raw);
+      newItem.img = res.data;
+      // console.log(res);
+      this.getImgId = res.data;
+      // let tanplat=JSON.stringify(this.getScience)
+      // sessionStorage.setItem('array',tanplat)
+    },
+    // 图片的格式
+    beforeAvatarUpload(file) {
+      // const isJPG = file.type === "image/jpeg";
+      const isLt2M = file.size / 1024 / 1024 < 2;
+      // if (!isJPG) {
+      //   this.$message.error("上传头像图片只能是 JPG 格式!");
+      // }
+      if (!isLt2M) {
+        this.$message.error("上传头像图片大小不能超过 2MB!");
+      }
+      return isLt2M;
     }
   },
   mounted() {
+    //获取结构
     this.getMaterial();
+    //判断信息采集页面是否完成提交
+    let acquis = sessionStorage.getItem("typeName");
+    acquis = JSON.parse(acquis);
+    if (acquis == null || acquis.length == 0) {
+      this.centerDialogVisible = true;
+    };
   }
 };
 </script>

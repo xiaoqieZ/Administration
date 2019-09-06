@@ -20,14 +20,17 @@
           <el-form-item label="姓名" prop="name" v-if="inputName">
             <el-input v-model="ruleForm.name" :disabled="true"></el-input>
           </el-form-item>
-          <el-form-item label="性别" prop="gender">
-            <el-input v-model="ruleForm.gender"></el-input>
+          <el-form-item label="性别" prop="name">
+            <el-radio-group v-model="radio">
+              <el-radio label="0">男</el-radio>
+              <el-radio label="1">女</el-radio>
+            </el-radio-group>
           </el-form-item>
           <el-form-item label="年龄" prop="age">
-            <el-input type="number" v-model="ruleForm.age"></el-input>
+            <el-input type="number" v-model="ruleForm.age" :disabled="true"></el-input>
           </el-form-item>
           <el-form-item label="国籍" prop="nationy">
-            <el-input v-model="ruleForm.nationy"></el-input>
+            <el-input v-model="ruleForm.nationy" :disabled="true"></el-input>
           </el-form-item>
           <el-form-item label="证件类型" prop="certificateTypeName" v-if="inputdisabled">
             <el-select v-model="ruleForm.certificateTypeName" placeholder="请选择证件类型">
@@ -88,9 +91,8 @@
               {{item.title}}
             </p>
             <!-- <el-radio-group v-model="listOption[index].radio"> -->
-            <el-radio-group v-model="item.radio" @change="ChangeRadio($event,i)">
-              <el-radio :label="item.yes">{{item.yesTitle}}</el-radio>
-              <el-radio :label="item.no">{{item.noTitle}}</el-radio>
+            <el-radio-group v-model="item.radio">
+              <el-radio :label="option.id" v-for="option in item.options"  @change="ChangeRadio($event,item,i,option)">{{option.content}}</el-radio>
             </el-radio-group>
           </div>
         </div>
@@ -138,7 +140,6 @@ export default {
     return {
       ruleForm: {
         name: "", //姓名
-        gender: "", //性别
         age: "", //年龄
         nationy: "", // 国籍
         certificateNo: "", // 证件号码
@@ -151,7 +152,7 @@ export default {
         address: "", // 地址
         landline: "" // 座机
       },
-      radio: "", //单选
+      radio: "", ////性别
       values: 0, //信息采集页面跟提交页面的变量
       list: "2",
       inputName: false, //禁用输入框
@@ -162,12 +163,9 @@ export default {
       listTypeName: "", //用户类型
       listOption: [], //拉取后台选择题
       RadioList: [], //选择题的数量
+                newlist : [],
       rules: {
         name: [{ required: true, message: "请输入姓名", trigger: "blur" }],
-        gender: [
-          { required: true, message: "请选择性别", trigger: "blur" },
-          { min: 1, max: 12, message: "长度在 11 个字符", trigger: "blur" }
-        ],
         certificateTypeName: [
           { required: true, message: "请选择证件类型", trigger: "change" }
         ],
@@ -226,12 +224,12 @@ export default {
         this.$refs[formName].validate(valid => {
           if (valid) {
             let data = {
-              sex: this.gender,
-              profession: this.occupation,
-              duty: this.post,
-              landline: this.landline,
-              postal: this.code,
-              address: this.address,
+              sex: this.radio,
+              profession: this.ruleForm.occupation,
+              duty: this.ruleForm.post,
+              landline: this.ruleForm.landline,
+              postal: this.ruleForm.code,
+              address: this.ruleForm.address,
               acquisitionResult: this.RadioList
             };
             ajax.authPost.bind(this)(
@@ -270,9 +268,13 @@ export default {
         }
       );
     },
-    //选择题的数量
-    ChangeRadio(e, index) {
-      this.RadioList[index] = e;
+    //选择题选中
+    ChangeRadio(e, index,i,o) {
+      this.RadioList[i] = {
+        itemId:index.id,
+        optionId:[o.id],
+      };
+      // console.log(this.RadioList)
     },
     //重置输入框
     // resetForm(formName) {
@@ -287,7 +289,7 @@ export default {
     conputy = JSON.parse(conputy);
     // conputy=this.listTypeName
     if (conputy) {
-      this.values = 1;  //信息采集完成界面
+      this.values = 1; //信息采集完成界面
       this.listTypeName = conputy;
     }
   },
