@@ -44,20 +44,14 @@
               :key="item.index"
             ></el-option>
           </el-select>
+          <el-input v-model="search" placeholder="搜索姓名/机构名称" prefix-icon="el-icon-search"></el-input>
+
           <el-button type="primary" @click="sureSearch">确定</el-button>
-        </div>
-        <div class="searchright">
-          <el-input v-model="search" placeholder="输入搜索内容" prefix-icon="el-icon-search"></el-input>
         </div>
       </div>
       <!-- 表格数据操作 -->
       <!-- .filter(data => !search || data.title.toLowerCase().includes(search.toLowerCase())) -->
-      <el-table
-        :data="tableData"
-        stripe
-        id="out-table"
-        style="width: 100%"
-      >
+      <el-table :data="tabelList" stripe id="out-table" style="width: 100%">
         <!-- 勾选框 -->
         <el-table-column type="selection" width="55"></el-table-column>
         <!-- 索引 -->
@@ -68,39 +62,39 @@
       label="序号"
       width="100">
         </el-table-column>-->
-        <el-table-column align="center" prop="data" label="姓名/机构名称" width="180">
+        <el-table-column align="center" prop="name" label="姓名/机构名称" width="180">
           <template slot-scope="scope">
-            <span>{{scope.row.created_at}}</span>
+            <span>{{scope.row.name}}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="data" label="用户名" width="180">
+        <el-table-column align="center" prop="nickName" label="用户名" width="180">
           <template slot-scope="scope">
-            <span>{{scope.row.title}}</span>
+            <span>{{scope.row.nickName}}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="data" label="客户类别">
+        <el-table-column align="center" prop="customerType" label="客户类别">
           <template slot-scope="scope">
-            <span>{{scope.row.content}}</span>
+            <span>{{scope.row.customerTypeName}}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="data" label="风险等级">
+        <el-table-column align="center" prop="riskLevel" label="风险等级">
           <template slot-scope="scope">
-            <span>{{scope.row.content}}</span>
+            <span>{{scope.row.riskLevelName}}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="data" label="客户状态">
+        <el-table-column align="center" prop="investorTypeName" label="客户状态">
           <template slot-scope="scope">
-            <span>{{scope.row.content}}</span>
+            <span>{{scope.row.investorTypeName}}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="data" label="投资者类别">
+        <el-table-column align="center" prop="investorType" label="投资者类别">
           <template slot-scope="scope">
-            <span>{{scope.row.content}}</span>
+            <span>{{scope.row.investorRoleName}}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="data" label="是否为合格投资者">
+        <el-table-column align="center" prop="isQualified" label="是否为合格投资者">
           <template slot-scope="scope">
-            <span>{{scope.row.content}}</span>
+            <span>{{scope.row.isQualified}}</span>
           </template>
         </el-table-column>
         <!-- <el-table-column
@@ -139,7 +133,7 @@
           :current-page="page"
           :page-size="num"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="totalCount"
+          :total="tabelCount.count"
         ></el-pagination>
       </div>
       <!-- 查看详情 -->
@@ -168,12 +162,9 @@ export default {
   data() {
     return {
       tableData: [], //请求过来的数据
-      // username:'',           //姓名
-      // address:'',           //地址
-      num: 7, //每页显示数据条数
+      num: 10, //每页显示数据条数
       page: 1, //默认第一页
       search: "", //搜索
-      totalCount: 100, //默认一百条
       currentRow: [], //选中的值
       editFormVisible: false, //设置默认弹出框  为false
       editForm: {
@@ -193,7 +184,9 @@ export default {
       InvestorRole: [], //投资者角色
       Category: [], //客户类别
       RiskLevel: [], //风险等级
-      Investortype: [] //投资者类型
+      Investortype: [], //投资者类型
+      tabelList: [], //数据
+      tabelCount: {} //数据条数
     };
   },
   methods: {
@@ -255,14 +248,23 @@ export default {
         }
       });
     },
+    //查询
     sureSearch() {
-      let data = {investorRole:this.nameForm.InvestorRole,
-      customerType:this.nameForm.Category,riskLevel:this.nameForm.RiskLevel,
-      investorType:this.nameForm.Investortype};
-      ajax.authPost.bind(this)("/api/Management/Customer/Query", data,res => {
+      let data = {
+        investorRole: this.nameForm.InvestorRole,
+        customerType: this.nameForm.Category,
+        riskLevel: this.nameForm.RiskLevel,
+        investorType: this.nameForm.Investortype,
+        pageIndex: this.page,
+        pageSize: this.num,
+        name: this.search
+      };
+      ajax.authPost.bind(this)("/api/Management/Customer/Query", data, res => {
         console.log(res);
-        if(res.data.code==200){
-          this.tableData=res.data.data.list
+        if (res.data.code == 200) {
+          this.tableData = res.data.data;
+          this.tabelList = this.tableData.list;
+          this.tabelCount = this.tableData.page;
         }
       });
     },
@@ -363,6 +365,7 @@ export default {
   },
   created() {
     this.getAllList();
+    this.sureSearch();
   }
 };
 </script>
@@ -376,15 +379,13 @@ export default {
   .el-input {
     width: 220px;
   }
-  .searchright {
-    right: 0;
+
     .el-input__icon {
       width: 75%;
     }
-  }
+  
   /deep/.el-button {
-    width: 70px;
-    height: 40px;
+    height: 75%;
   }
 }
 .el-dialog__wrapper {

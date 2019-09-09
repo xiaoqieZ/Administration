@@ -181,8 +181,9 @@ export default {
     //获取Token接口
     getName() {
       ajax.auth.bind(this)({
-        openId: "30db38c809344360b194f600b5d92eba",
-        nickName: "小茄子"
+        openId: "20827a99d07411e98213000c292381e8",
+        nickName: "小茄子",
+        portrait:'http://192.168.28.213:81/123.jpg'
       })
         .then(res => {
         //   console.log(res);

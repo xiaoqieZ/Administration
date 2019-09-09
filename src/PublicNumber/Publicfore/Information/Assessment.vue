@@ -10,7 +10,7 @@
             <div class="options" v-for="(item,i) in getQuestlist" :key="item.id">
                 <p>{{item.title}}</p>
                 <el-radio-group v-model="item.radio">
-                <el-radio :label="option.id" v-for="option in item.options" @change="ChangeRadio($event,item,i,option)">{{option.content}}</el-radio><br/>
+                <el-radio :label="option.id" v-for="option in item.options" :key="option.id" @change="ChangeRadio($event,item,i,option)">{{option.content}}</el-radio><br/>
                 </el-radio-group>
             </div>
             <el-button  type="primary" plain @click="go">提交</el-button>
@@ -29,11 +29,25 @@
             <el-button  type="primary" @click="Acquisition">信息采集</el-button>
             <p>投资者适当性基本信息采集</p>
         </div>
+        <el-dialog
+      title="提示"
+      :visible.sync="centerDialogVisible"
+      :append-to-body="true"
+      width="80%"
+      center
+    >
+      <span>小茄子：需要先实名认证才可以进行风险测评喔！</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="cancel">取 消</el-button>
+        <el-button type="primary" @click="dssy">去认证</el-button>
+      </span>
+    </el-dialog>
     </div>
 </template>
 
 <script>
 import ajax from "../../../api/https.js";
+import storage from "../../../api/storage.js";
 export default {
     data(){
         return{
@@ -41,7 +55,8 @@ export default {
             radio:'',
             getQuestlist:[],
             RadioList:[],
-            listoption:{}
+            listoption:{},
+            centerDialogVisible:false,
         }
     },
     methods:{
@@ -54,8 +69,8 @@ export default {
                     console.log(res)
                     if(res.data.code==200){
                         this.listoption=res.data.data
-                        let Risk =this.listoption.riskLevelName
-                        sessionStorage.setItem('Risk',Risk)
+                        let Risk =this.listoption
+                        storage.set('Risk',Risk)
                     }
                 })
             }else{
@@ -63,13 +78,15 @@ export default {
             }
             
         },
-        getpot(){
-            ajax.authGet.bind(this)('/api/Information/Account/Authentication',res=>{
-                    console.log(res)
-                    if(res.data.code==200){
-                        this.listoption=res.data.data
-                    }
-                })
+        dssy() {
+            //去实名认证
+            this.centerDialogVisible = false;
+            this.$router.push({ path: "/Publicfore/04/Authentication" });
+        },
+        //取消实名认证
+        cancel() {
+            this.centerDialogVisible = false;
+            this.$router.push({ path: "/Publicfore" });
         },
         Publicthree(){
             this.$router.push({path:'/Publicthree'})
@@ -98,9 +115,17 @@ export default {
     },
     mounted(){
         this.getQuesttion()
-        this.getpot()
-        if(this.listoption.riskLevelName!=''){
+        let listaktion=storage.get("listaktion");
+        if(!listaktion){
+            this.centerDialogVisible = true;
+        }
+        //已测评的界面
+        let listRisk=storage.get('Risk')
+        if(listRisk){
+            this.listoption=listRisk
             this.values=1
+        }else{
+            this.values=0
         }
     }
 }

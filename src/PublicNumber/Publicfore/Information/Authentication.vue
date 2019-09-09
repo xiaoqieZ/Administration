@@ -152,6 +152,7 @@
 
 <script>
 import ajax from "../../../api/https.js";
+import storage from "../../../api/storage.js";
 export default {
   data() {
     return {
@@ -167,7 +168,7 @@ export default {
         mechanismCertificateType: "", //机构证件类型
         mechanismCertificateNo: "" //机构证件号码
       },
-      mechanism:true,//用户类型为机构类型
+      mechanism:'',//用户类型为机构类型
       getswithy:true,//进入页面时，获取验证码功能
       getGun:false,//进入页面时，重亲获取功能隐藏
       getHide:true,//获取验证码按钮
@@ -298,7 +299,7 @@ export default {
           this.dofig = res.data.code;
         }
         let feng = this.dofig;
-        sessionStorage.setItem("feng", feng);
+        storage.set("feng", feng);
       });
       if (this.radio == 2) {
         //   补充信息
@@ -346,8 +347,7 @@ export default {
         if (res.data.code == 200) {
           this.information = res.data.data;
           var listaktion = this.information;
-          listaktion = JSON.stringify(listaktion);
-          sessionStorage.setItem("listaktion", listaktion);
+          storage.set("listaktion", listaktion);
         }
       });
     },
@@ -399,15 +399,17 @@ export default {
     }
   },
   mounted() {
-    let lisee = sessionStorage.getItem("feng");
+    let lisee = storage.get("feng");
     if (lisee) {
       this.Hang = 1;
       this.getPersonal();
     };
     //判断用户认证的时候选择的是‘个人’‘机构’‘产品’,如果选择的不是机构，那就隐藏。
-    if(this.radio == 2){
+    if(this.information.mechanismName == null && this.information.mechanismName==''){
       this.mechanism=false
-    };
+    }else{
+      this.mechanism=true
+    }
     this.getCustomer();
   }
 };

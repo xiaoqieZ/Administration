@@ -92,7 +92,7 @@
             </p>
             <!-- <el-radio-group v-model="listOption[index].radio"> -->
             <el-radio-group v-model="item.radio">
-              <el-radio :label="option.id" v-for="option in item.options"  @change="ChangeRadio($event,item,i,option)">{{option.content}}</el-radio>
+              <el-radio :label="option.id" v-for="option in item.options" :key="option.id"  @change="ChangeRadio($event,item,i,option)">{{option.content}}</el-radio>
             </el-radio-group>
           </div>
         </div>
@@ -135,6 +135,7 @@
 
 <script>
 import ajax from "../../../api/https.js";
+import storage from "../../../api/storage.js";
 export default {
   data() {
     return {
@@ -232,6 +233,7 @@ export default {
               address: this.ruleForm.address,
               acquisitionResult: this.RadioList
             };
+            // 客户信息
             ajax.authPost.bind(this)(
               "/api/Information/Account/Acquisition",
               data,
@@ -240,8 +242,7 @@ export default {
                 if (res.data.code == 200) {
                   this.listTypeName = res.data.data;
                   let typeName = this.listTypeName;
-                  typeName = JSON.stringify(typeName);
-                  sessionStorage.setItem("typeName", typeName);
+                  storage.set("typeName", typeName);
                 }
               }
             );
@@ -254,7 +255,7 @@ export default {
         });
       } else {
         this.$message("单选不能留空");
-      }
+      };
     },
     //获取后台选择题
     getAcquisitionOption() {
@@ -285,8 +286,7 @@ export default {
     }
   },
   created() {
-    var conputy = sessionStorage.getItem("typeName");
-    conputy = JSON.parse(conputy);
+    var conputy = storage.get("typeName");
     // conputy=this.listTypeName
     if (conputy) {
       this.values = 1; //信息采集完成界面
@@ -295,8 +295,7 @@ export default {
   },
   mounted() {
     this.getAcquisitionOption();
-    var lisat = sessionStorage.getItem("listaktion");
-    lisat = JSON.parse(lisat);
+    var lisat = storage.get("listaktion");
     if (lisat == null || lisat.length == 0) {
       this.inputName = false; //取消禁用输入框
       this.isShow = true;

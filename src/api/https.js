@@ -28,7 +28,7 @@
  //获取token的接口
  function auth(data) {
      return this.$axios({
-         url: "/api/Home/Get",
+         url: "/api/Home/Token",
          method: 'post',
          data: data,
          baseURL: "http://192.168.28.213:5000",
