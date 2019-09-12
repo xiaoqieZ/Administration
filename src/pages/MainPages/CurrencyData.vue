@@ -11,7 +11,6 @@
           <el-button type="primary" @click='getAdd'>添加</el-button>
           &nbsp;&nbsp;
           <el-button type="primary" @click="exportExcel">导出</el-button>-->
-
           <el-select v-model="nameForm.InvestorRole">
             <el-option
               :label="item.text"
@@ -137,16 +136,16 @@
         ></el-pagination>
       </div>
       <!-- 查看详情 -->
-      <el-dialog title="详情" :append-to-body="true" :visible.sync="checkDetail" width="80%">
+      <!-- <el-dialog title="详情" :append-to-body="true" :visible.sync="checkDetail" width="80%">
         <p>姓名：{{guid}}</p>
         <p>地址： {{diz}}</p>
         <p>填表时间：{{times}}</p>
         <p>新技能</p>
         <span slot="footer" class="dialog-footer">
-          <!-- <el-button @click="checkDetail = false">取 消</el-button> -->
+          <el-button @click="checkDetail = false">取 消</el-button>
           <el-button type="primary" @click="checkDetail = false">确 定</el-button>
         </span>
-      </el-dialog>
+      </el-dialog>-->
     </vue-scroll>
   </div>
 </template>
@@ -166,15 +165,15 @@ export default {
       page: 1, //默认第一页
       search: "", //搜索
       currentRow: [], //选中的值
-      editFormVisible: false, //设置默认弹出框  为false
+      // editFormVisible: false, //设置默认弹出框  为false
       editForm: {
         name: "",
         addres: ""
       },
-      guid: "",
-      diz: "",
-      times: "",
-      checkDetail: false,
+      // guid: "",
+      // diz: "",
+      // times: "",
+      // checkDetail: false,//查看详情
       nameForm: {
         InvestorRole: "0", //投资者角色
         Category: "0", //客户类别
@@ -191,13 +190,13 @@ export default {
   },
   methods: {
     // 查看详情
-    checkDe(index, row) {
-      console.log(index, row);
-      this.guid = row.title;
-      this.diz = row.content;
-      this.times = row.created_at;
-      this.checkDetail = !this.checkDetail;
-    },
+    // checkDe(index, row) {
+    //   console.log(index, row);
+    //   this.guid = row.title;
+    //   this.diz = row.content;
+    //   this.times = row.created_at;
+    //   this.checkDetail = !this.checkDetail;
+    // },
     getAllList() {
       //获取数据
       // let list = { num: this.num, page: this.page };
@@ -259,7 +258,7 @@ export default {
         pageSize: this.num,
         name: this.search
       };
-      ajax.authPost.bind(this)("/api/Management/Customer/Query", data, res => {
+      ajax.authPost.bind(this)("/api/Management/Query/Customer", data, res => {
         console.log(res);
         if (res.data.code == 200) {
           this.tableData = res.data.data;
@@ -372,27 +371,29 @@ export default {
  
  <style lang="less" >
 .currenminput {
-  height: 80px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  .left {
+    /deep/.el-input__suffix {
+      height: 70%;
+    }
+    // /deep/.el-popper {
+    //   margin-top: 0 !important;
+    // }
+  }
   .el-input {
     width: 220px;
   }
-
-    .el-input__icon {
-      width: 75%;
-    }
-  
+  /deep/.el-input__icon {
+    width: 100%;
+  }
   /deep/.el-button {
     height: 75%;
   }
 }
 .el-dialog__wrapper {
   z-index: 9999 !important;
-}
-/deep/.el-popper {
-  margin-top: 0;
 }
 </style>
  

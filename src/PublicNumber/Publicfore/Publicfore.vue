@@ -53,11 +53,11 @@
             <i class="el-icon-s-check"></i>
             <span>投资者认定</span>
           </p>
-          <router-link to="/Publicfore/04/Identification">
+          <router-link to="/Publicfore/Information/Identification">
             <el-button type="warning" size="mini">路演清单</el-button>
           </router-link>
         </div>
-        <router-link to="/Publicfore/04/Authentication">
+        <router-link to="/Publicfore/Information/Authentication">
           <div class="myhometupdey">
             <p>
               <i class="el-icon-user"></i>
@@ -66,7 +66,7 @@
             <i class="el-icon-arrow-right"></i>
           </div>
         </router-link>
-        <router-link to="/Publicfore/04/Assessment">
+        <router-link to="/Publicfore/Information/Assessment">
           <div class="myhometupdey">
             <p>
               <i class="el-icon-user"></i>
@@ -75,7 +75,7 @@
             <i class="el-icon-arrow-right"></i>
           </div>
         </router-link>
-        <router-link to="/Publicfore/04/Acquisition">
+        <router-link to="/Publicfore/Information/Acquisition">
           <div class="myhometupdey">
             <p>
               <i class="el-icon-user"></i>
@@ -84,7 +84,7 @@
             <i class="el-icon-arrow-right"></i>
           </div>
         </router-link>
-        <router-link to="/Publicfore/04/Material">
+        <router-link to="/Publicfore/Information/Material">
           <div class="myhometupdey">
             <p>
               <i class="el-icon-user"></i>
@@ -93,7 +93,7 @@
             <i class="el-icon-arrow-right"></i>
           </div>
         </router-link>
-        <router-link to="/Publicfore/04/Conversion">
+        <router-link to="/Publicfore/Information/Conversion">
           <div class="myhometupdey">
             <p>
               <i class="el-icon-user"></i>
@@ -112,7 +112,7 @@
             <span>交易记录</span>
           </p>
         </div>
-        <router-link to="/Publicfore/07/Reservation">
+        <router-link to="/Publicfore/TransactionRecord/Reservation">
           <div class="myhometupdey">
             <p>
               <i class="el-icon-user"></i>
@@ -121,7 +121,7 @@
             <i class="el-icon-arrow-right"></i>
           </div>
         </router-link>
-        <router-link to="/Publicfore/07/Purchase">
+        <router-link to="/Publicfore/TransactionRecord/Purchase">
           <div class="myhometupdey">
             <p>
               <i class="el-icon-user"></i>
@@ -130,7 +130,7 @@
             <i class="el-icon-arrow-right"></i>
           </div>
         </router-link>
-        <router-link to="/Publicfore/07/Redeem">
+        <router-link to="/Publicfore/TransactionRecord/Redeem">
           <div class="myhometupdey">
             <p>
               <i class="el-icon-user"></i>
@@ -139,7 +139,7 @@
             <i class="el-icon-arrow-right"></i>
           </div>
         </router-link>
-        <router-link to="/Publicfore/07/Returnvisit">
+        <router-link to="/Publicfore/TransactionRecord/Returnvisit">
           <div class="myhometupdey">
             <p>
               <i class="el-icon-user"></i>

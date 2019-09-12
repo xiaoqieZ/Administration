@@ -103,10 +103,8 @@
         <div class="Congratulations">
           <div class="Congratu">
             <p>恭喜您完成基本信息采集</p>
-            <p>
-              您将申请成为：
+            <span>您将申请成为：</span>
               <span style="color:red">{{listTypeName.investorTypeName}}</span>
-            </p>
           </div>
         </div>
         <el-button type="primary" @click="material">上传证明材料</el-button>
@@ -211,7 +209,7 @@ export default {
     dssy() {
       //去实名认证
       this.centerDialogVisible = false;
-      this.$router.push({ path: "/Publicfore/04/Authentication" });
+      this.$router.push({ path: "/Publicfore/Information/Authentication" });
     },
     cancel() {
       this.centerDialogVisible = false;
@@ -282,7 +280,7 @@ export default {
     //   this.$refs[formName].resetFields();
     // },
     material() {
-      this.$router.push({ path: "/Publicfore/04/Material" });
+      this.$router.push({ path: "/Publicfore/Information/Material" });
     }
   },
   created() {
@@ -331,6 +329,7 @@ export default {
       height: 300px;
       .Congratu {
         width: 66%;
+        text-align: center;
         margin: 0 auto;
         p {
           text-align: center;

@@ -60,6 +60,7 @@
 
 <script>
 import ajax from "../../../api/https.js";
+import storage from "../../../api/storage.js";
 export default {
   data() {
     return {
@@ -74,13 +75,14 @@ export default {
       centerDialogVisible: false, //没有进行信息采集，弹出提示框
       getImgId: {},
       arrays:{},
+      message:''
     };
   },
   methods: {
     dssy() {
       //去信息采集
       this.centerDialogVisible = false;
-      this.$router.push({ path: "/Publicfore/04/Acquisition" });
+      this.$router.push({ path: "/Publicfore/Information/Acquisition" });
     },
     // 弹出框取消按钮
     cancel() {
@@ -119,19 +121,24 @@ export default {
           }
         }
       }
-      console.log(array)
+      // console.log(array)
       this.arrays=array
       ajax.authPost.bind(this)('/api/Information/Account/Upload/Submit',array,res=>{
           console.log(res)
+          if(res.data.code==400){
+            this.message=res.data.message
+            this.$message(this.message);
+          }else if(res.data.code==200){
+            this.inages=1  //  您的信息正在审核中，请耐心等待
+          }
       })
-      
     },
     material() {
       this.$router.push({ path: "/Publicfore" });
     },
     //图片上传成功的回调，获取id
     handleAvatarSuccess(res, file, newItem) {
-      newItem.imageUrl = URL.createObjectURL(file.raw);
+      newItem.imageUrl =res.data.fullPath// URL.createObjectURL(file.raw);
       newItem.img = res.data;
       // console.log(res);
       this.getImgId = res.data;
@@ -155,8 +162,7 @@ export default {
     //获取结构
     this.getMaterial();
     //判断信息采集页面是否完成提交
-    let acquis = sessionStorage.getItem("typeName");
-    acquis = JSON.parse(acquis);
+    let acquis = storage.get("typeName");
     if (acquis == null || acquis.length == 0) {
       this.centerDialogVisible = true;
     };

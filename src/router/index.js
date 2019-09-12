@@ -64,6 +64,12 @@ export default new Router({
       component: Publicone
     },
     {
+      path:'/Publicone/Information',
+      name:'Information',
+      title:'热门资讯',
+      component:Information
+    },
+    {
       path: '/Publictow',
       name: 'Publictow',
       title:'关于我们',
@@ -76,97 +82,98 @@ export default new Router({
       component: Publicthree
     },
     {
+      path: '/Publicthree/Purchases',
+      name: 'Purchases',
+      title:'购买产品',
+      component:Purchases
+    },
+    // {
+    //   path: '/Publicfore',
+    //   name: 'Publicfore',
+    //   title:'我的',
+    //   component: Publicfore,
+    // },
+    {
       path: '/Publicfore',
       name: 'Publicfore',
       title:'我的',
       component: Publicfore,
     },
     {
-      path:'/Publicfore/04',
-      name: '04',
-      component: Null,
-      children: [
+      path:'/Publicfore/Information',
+      name: 'Informations',
+      title:'认证模块',
+      component:Null,
+      children:[
         {
-          path: '/Publicfore/04/Identification',
+          path: '/Publicfore/Information/Identification',
           name: 'Identification',
           title:'投资者认定',
           component: Identification
         },
         {
-          path: '/Publicfore/04/Authentication',
+          path: '/Publicfore/Information/Authentication',
           name: 'Authentication',
           title:'实名认证',
           component: Authentication
         },
         {
-          path: '/Publicfore/04/Assessment',
+          path: '/Publicfore/Information/Assessment',
           name: 'Assessment',
           title:'风险评测',
           component: Assessment
         },
         {
-          path: '/Publicfore/04/Acquisition',
+          path: '/Publicfore/Information/Acquisition',
           name: 'Acquisition',
           title:'信息采集',
           component: Acquisition
         },
         {
-          path: '/Publicfore/04/Material',
+          path: '/Publicfore/Information/Material',
           name: 'Material',
           title:'证明材料',
           component: Material
         },
         {
-          path: '/Publicfore/04/Conversion',
+          path: '/Publicfore/Information/Conversion',
           name: 'Conversion',
           title:'投资者转化',
           component: Conversion
         },
       ]
-    },
+    }, 
     {
-      path: '/Publicthree/Purchases',
-      name: 'Purchases',
-      title:'购买',
-      component:Purchases
-    },
-    {
-      path:'/Publicfore/07',
-      name: '07',
-      title:'交易记录',
+      path:'/Publicfore/TransactionRecord',
+      name: 'TransactionRecord',
+      title:'交易记录模块',
       component: Null,
       children: [
         {
-          path: '/Publicfore/07/Reservation',
+          path: '/Publicfore/TransactionRecord/Reservation',
           name: 'Reservation',
           title:'预约记录',
           component: Reservation
         },
         {
-          path: '/Publicfore/07/Purchase',
+          path: '/Publicfore/TransactionRecord/Purchase',
           name: 'Purchase',
           title:'购买申请记录',
           component: Purchase
         },
         {
-          path: '/Publicfore/07/Redeem',
+          path: '/Publicfore/TransactionRecord/Redeem',
           name: 'Redeem',
           title:'赎回记录',
           component: Redeem
         },
         {
-          path: '/Publicfore/07/Returnvisit',
+          path: '/Publicfore/TransactionRecord/Returnvisit',
           name: 'Returnvisit',
           title:'回访记录',
           component: Returnvisit
         },
       ]
-    },
-    {
-      path:'/Publicone/Information',
-      name:'Information',
-      title:'热门资讯',
-      component:Information
     },
 
 

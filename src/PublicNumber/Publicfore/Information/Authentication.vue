@@ -168,7 +168,7 @@ export default {
         mechanismCertificateType: "", //机构证件类型
         mechanismCertificateNo: "" //机构证件号码
       },
-      mechanism:'',//用户类型为机构类型
+      mechanism:false,//用户类型为机构类型
       getswithy:true,//进入页面时，获取验证码功能
       getGun:false,//进入页面时，重亲获取功能隐藏
       getHide:true,//获取验证码按钮
@@ -405,9 +405,7 @@ export default {
       this.getPersonal();
     };
     //判断用户认证的时候选择的是‘个人’‘机构’‘产品’,如果选择的不是机构，那就隐藏。
-    if(this.information.mechanismName == null && this.information.mechanismName==''){
-      this.mechanism=false
-    }else{
+    if(this.radio === 2){
       this.mechanism=true
     }
     this.getCustomer();
