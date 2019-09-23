@@ -11,6 +11,7 @@ import CCCCtallocation from '@/pages/MainPages/CCCCtallocation'
 import CCCCCtallocation from '@/pages/MainPages/CCCCCtallocation'
 import BbankData from '@/pages/BankData/BbankData'
 import BankData from '@/pages/BankData/BankData'
+import BankDataList from '@/pages/BankData/BankDataList'
 import AccountManage from '@/pages/UserManage/AccountManage'
 import UserFun from '@/pages/UserManage/UserFun'
 import UserRecord from '@/pages/UserManage/UserRecord'
@@ -252,6 +253,12 @@ export default new Router({
                   name: 'BankData',
                   title:'产品列表',
                   component: BankData
+                },
+                {
+                  path: '/NavBar/DataDitionary/BankDataList',
+                  name: 'BankDataList',
+                  title:'添加产品',
+                  component: BankDataList
                 },
                 {
                   path: '/NavBar/DataDitionary/BbankData',

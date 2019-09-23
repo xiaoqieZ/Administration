@@ -141,7 +141,6 @@ export default {
         name: "", //姓名
         age: "", //年龄
         nationy: "", // 国籍
-        certificateNo: "", // 证件号码
         certificateTypeName: "", // 证件类型
         occupation: "", //职业
         post: "", // 职务
@@ -162,45 +161,34 @@ export default {
       listTypeName: "", //用户类型
       listOption: [], //拉取后台选择题
       RadioList: [], //选择题的数量
-                newlist : [],
+      newlist : [],
       rules: {
         name: [{ required: true, message: "请输入姓名", trigger: "blur" }],
         certificateTypeName: [
           { required: true, message: "请选择证件类型", trigger: "change" }
         ],
-        certificateNo: [
-          { required: true, message: "请输入证件号码", trigger: "blur" },
-          {
-            min: 1,
-            max: 18,
-            message: "长度在 17 到 18 个字符",
-            trigger: "blur"
-          }
-        ],
         mobile: [
           { required: true, message: "请输入手机号", trigger: "blur" },
           { min: 1, max: 12, message: "长度在 11 个字符", trigger: "blur" }
         ],
-        address: [{ required: true, message: "请输入地址", trigger: "blur" }],
         occupation: [
-          { required: true, message: "请选择性别", trigger: "blur" },
+          { required: true, message: "请输入职业", trigger: "blur" },
           { min: 1, max: 12, message: "长度在 11 个字符", trigger: "blur" }
         ],
         post: [
-          { required: true, message: "请选择性别", trigger: "blur" },
+          { required: true, message: "请输入职务", trigger: "blur" },
           { min: 1, max: 12, message: "长度在 11 个字符", trigger: "blur" }
         ],
         landline: [
-          { required: true, message: "请选择性别", trigger: "blur" },
+          { required: true, message: "请输入座机", trigger: "blur" },
           { min: 1, max: 12, message: "长度在 11 个字符", trigger: "blur" }
         ],
         code: [
-          { required: true, message: "请选择性别", trigger: "blur" },
+          { required: true, message: "请输入邮编", trigger: "blur" },
           { min: 1, max: 12, message: "长度在 11 个字符", trigger: "blur" }
         ],
         address: [
-          { required: true, message: "请选择性别", trigger: "blur" },
-          { min: 1, max: 12, message: "长度在 11 个字符", trigger: "blur" }
+          { required: true, message: "请输入", trigger: "blur" },
         ]
       }
     };

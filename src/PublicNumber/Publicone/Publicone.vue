@@ -5,7 +5,7 @@
         <!-- 轮播图 -->
         <van-swipe :autoplay="3000" indicator-color="white" :height="120" >
             <van-swipe-item v-for="item in listtu" :key="item.id">
-                <img :src="item.filePath" alt />
+                <a :href="item.link"><img :src="item.filePath" alt /></a>
             </van-swipe-item>
         </van-swipe>
 
@@ -81,7 +81,8 @@ export default {
         
         //获取轮播图
         getlisttu(){
-            ajax.authGet.bind(this)('/api/Information/Present/Rotary/3',res =>{
+            var count=6;
+            ajax.authGet.bind(this)('/api/Information/Present/Rotary/'+count,res =>{
                 console.log(res);
                 if(res.data.code==200){
                    this.listtu=res.data.data

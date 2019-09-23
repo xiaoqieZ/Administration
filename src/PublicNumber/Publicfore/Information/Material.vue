@@ -79,6 +79,7 @@ export default {
     };
   },
   methods: {
+
     dssy() {
       //去信息采集
       this.centerDialogVisible = false;
@@ -156,6 +157,11 @@ export default {
         this.$message.error("上传头像图片大小不能超过 2MB!");
       }
       return isLt2M;
+    },
+    getcail(){
+      ajax.authGet.bind(this)('/api/Information/Account/CanSubmit',res=>{
+        console.log(res)
+      })
     }
   },
   mounted() {
@@ -166,6 +172,7 @@ export default {
     if (acquis == null || acquis.length == 0) {
       this.centerDialogVisible = true;
     };
+    this.getcail()
   }
 };
 </script>
