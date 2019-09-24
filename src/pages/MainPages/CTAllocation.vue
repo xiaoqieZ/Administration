@@ -274,7 +274,7 @@ export default {
       let id = row.id;
       this.id = row.id;
       this.lists("/api/Management/Audit/Material/Authentication/");
-      //审核通过
+      // //审核通过
       let auditStatus = row.authentication.auditStatus;
       if (auditStatus != 4) {
         this.checkDetail = !this.checkDetail;

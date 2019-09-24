@@ -63,7 +63,7 @@
         </el-table-column>-->
         <el-table-column align="center" prop="name" label="姓名/机构名称" width="180">
           <template slot-scope="scope">
-            <span>{{scope.row.name}}</span>
+            <span style="color: #409eff"  @click="personalData(scope.$index, scope.row)">{{scope.row.name}}</span>
           </template>
         </el-table-column>
         <el-table-column align="center" prop="nickName" label="用户名" width="180">
@@ -93,7 +93,7 @@
         </el-table-column>
         <el-table-column align="center" prop="isQualified" label="是否为合格投资者">
           <template slot-scope="scope">
-            <span>{{scope.row.isQualified}}</span>
+            <span>{{scope.row.isQualifiedName}}</span>
           </template>
         </el-table-column>
         <!-- <el-table-column
@@ -266,6 +266,11 @@ export default {
           this.tabelCount = this.tableData.page;
         }
       });
+    },
+    //点击姓名进入个人信息页
+    personalData(i,row){
+      let data = row.id
+      this.$router.push({path:'/NavBar/CParameter/personalData',query:{data}})
     },
     // 添加
     // getAdd(){

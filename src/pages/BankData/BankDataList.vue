@@ -180,7 +180,7 @@
                   </el-form-item>
 
                   <el-form-item label="风险等级文件" prop="RiskLD">
-                    <el-input :autofocus="true" v-model="ruleForm.RiskLD"></el-input>
+                    <el-input v-model="ruleForm.RiskLD"></el-input>
                     <el-upload
                       class="upload-demo"
                       ref="upload"
@@ -341,10 +341,11 @@
       <el-tab-pane v-if="edit" name="first" label="净值管理">
         <div>
           <el-button type="primary" @click="delNetWorth">删除</el-button>
-          <el-button type="primary">下载净值内容</el-button>
+          <el-button type="primary" @click="downloadContent">下载净值内容</el-button>
           <el-button type="primary" @click="exportExcel">下载模板</el-button>
-          <el-button type="primary">上传</el-button>
+          <el-button type="primary" @click="centerupload=true">上传</el-button>
           <el-button type="primary" @click="centerDialogVisible = true">添加</el-button>
+          <!-- 添加 -->
           <el-dialog title="提示" :visible.sync="centerDialogVisible" width="30%" center>
             <el-form label-width="100px" :model="formLabelAlign">
               <el-form-item label="单位净值">
@@ -375,6 +376,41 @@
             <span slot="footer" class="dialog-footer">
               <el-button @click="centerDialogVisible = false">取 消</el-button>
               <el-button type="primary" @click="addNetWorth">确 定</el-button>
+            </span>
+          </el-dialog>
+          <!-- 上传 -->
+          <el-dialog title="提示" :visible.sync="centerupload" width="30%" center>
+            <el-form label-width="100px" :model="formLabelAlign">
+              <el-form-item label="净值短信通知">
+                <el-input v-model="formLabelAlign.smsNotify"></el-input>
+              </el-form-item>
+              <el-form-item label="净值邮件通知">
+                <el-input v-model="formLabelAlign.emailNotify"></el-input>
+              </el-form-item>
+              <el-form-item label="净值微信通知">
+                <el-input v-model="formLabelAlign.weChatNotify"></el-input>
+              </el-form-item>
+              <el-upload
+              class="upload-demo"
+              ref="upload"
+              :data="uploadCenter"
+              :action="actionUpload"
+              :on-preview="handlePreview"
+              :on-remove="handleRemove"
+              :on-change="handleChange"
+              :on-success="SuccessWorth"
+              :on-error="errorWorth"
+              :limit="1"
+              :file-list="fileList"
+              :headers="access_token"
+              :auto-upload="false"
+            >
+              <el-button size="small" type="primary">点击上传附件</el-button>
+            </el-upload>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+              <el-button @click="centerupload = false">取 消</el-button>
+              <el-button type="primary" @click="uploadContent">确 定</el-button>
             </span>
           </el-dialog>
           <!-- 表格数据操作 -->
@@ -419,212 +455,369 @@
         </div>
       </el-tab-pane>
       <el-tab-pane v-if="edit" name="second" label="报表管理">
-          <el-button type="primary" @click="delNetReport">删除</el-button>
-          <el-button type="primary" @click="downloadReport">下载</el-button>
-          <el-button type="primary" @click="centerDialogReport=true">添加</el-button>
-          <el-dialog title="提示" :visible.sync="centerDialogReport" width="30%" center>
-            <el-form label-width="100px" :model="formLabelAlign">
-              <el-form-item label="报告类型">
-                <el-select v-model="formLabelAlign.reportType" placeholder="请选择报告类型">
-                      <el-option
-                        :label="item.text"
-                        :value="item.value"
-                        v-for="item in Managementtype"
-                        :key="item.value"
-                      ></el-option>
-                    </el-select>
-              </el-form-item>
-              <el-form-item label="报告时间">
-                <el-col :span="12">
-                  <el-form-item prop="dateOfWorth">
-                    <el-date-picker
-                      type="date"
-                      placeholder="选择日期"
-                      v-model="formLabelAlign.reportDate"
-                      value-format="yyyy-MM-dd HH:mm:ss"
-                      style="width: 100%;"
-                    ></el-date-picker>
-                  </el-form-item>
-                </el-col>
-              </el-form-item>
-              <el-form-item label="报告标题">
-                <el-input v-model="formLabelAlign.title"></el-input>
-              </el-form-item>
-              <el-upload
-                class="upload-demo"
-                ref="upload"
-                :data="uploadDataReport"
-                :action="actionReport"
-                :on-preview="handlePreview"
-                :on-remove="handleRemove"
-                :on-change="handleChange"
-                :on-success="chengecheng"
-                :limit="1"
-                :file-list="fileList"
-                :headers="access_token"
-                :auto-upload="false"
-                >
-            <el-button size="small" type="primary">点击上传报表附件</el-button>
+        <el-button type="primary" @click="delNetReport">删除</el-button>
+        <el-button type="primary" @click="downloadReport">下载</el-button>
+        <el-button type="primary" @click="centerDialogReport=true">添加</el-button>
+        <el-dialog title="提示" :visible.sync="centerDialogReport" width="30%" center>
+          <el-form label-width="100px" :model="formLabelAlign">
+            <el-form-item label="报告类型">
+              <el-select v-model="formLabelAlign.reportType" placeholder="请选择报告类型">
+                <el-option
+                  :label="item.text"
+                  :value="item.value"
+                  v-for="item in categoryData"
+                  :key="item.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="报告时间">
+              <el-col :span="12">
+                <el-form-item prop="dateOfWorth">
+                  <el-date-picker
+                    type="date"
+                    placeholder="选择日期"
+                    v-model="formLabelAlign.reportDate"
+                    value-format="yyyy-MM-dd HH:mm:ss"
+                    style="width: 100%;"
+                  ></el-date-picker>
+                </el-form-item>
+              </el-col>
+            </el-form-item>
+            <el-form-item label="报告标题">
+              <el-input v-model="formLabelAlign.title"></el-input>
+            </el-form-item>
+            <el-upload
+              class="upload-demo"
+              ref="upload"
+              :data="uploadDataReport"
+              :action="actionReport"
+              :on-preview="handlePreview"
+              :on-remove="handleRemove"
+              :on-change="handleChange"
+              :on-success="chengecheng"
+              :limit="1"
+              :file-list="fileList"
+              :headers="access_token"
+              :auto-upload="false"
+            >
+              <el-button size="small" type="primary">点击上传报表附件</el-button>
             </el-upload>
-            </el-form>
-            <span slot="footer" class="dialog-footer">
-              <el-button @click="centerDialogReport = false">取 消</el-button>
-              <el-button type="primary" @click="addReport">确 定</el-button>
-            </span>
-          </el-dialog>
-           <!-- 表格数据操作 -->
-          <el-table :data="tabelPresentationList" stripe id="out-table" style="width: 100%" @select="Check">
-            <!-- 勾选框 -->
-            <el-table-column type="selection" width="55"></el-table-column>
-            <!-- 索引 -->
-            <el-table-column align="center" type="index" prop="data" label="序号" width="60"></el-table-column>
-            <el-table-column align="center" prop="fundScale" label="报告类型">
-              <template slot-scope="scope">
-                <span>{{scope.row.reportTypeName}}</span>
-              </template>
-            </el-table-column>
-            <el-table-column align="center" prop="creationTime" label="报告时间">
-              <template slot-scope="scope">
-                <span>{{scope.row.reportDate}}</span>
-              </template>
-            </el-table-column>
-            <el-table-column align="center" prop="recommendName" label="报告标题">
-              <template slot-scope="scope">
-                <span>{{scope.row.title}}</span>
-              </template>
-            </el-table-column>
-            <el-table-column align="center" prop="recommendName" label="报告状态">
-              <template slot-scope="scope">
-                <span>{{scope.row.statusName}}</span>
-              </template>
-            </el-table-column>
-            <el-table-column align="center" prop="isQualified" label="操作">
-              <template slot-scope="scope">
-                <span class="spanColor" @click="clickPresentation(scope.$index, scope.row)">编辑</span>
-                <span class="spanColor" @click="clickRelease(scope.$index, scope.row)">发布</span>
-                <span class="spanColor" @click="clickcancel(scope.$index, scope.row)">取消发布</span>
-              </template>
-            </el-table-column>
-          </el-table>
-          <!-- 页码 -->
-          <div align="center">
-            <el-pagination
-              background
-              @size-change="handleSize"
-              @current-change="handleCurrent"
-              :current-page="page"
-              :page-size="num"
-              layout="total, prev, pager, next, jumper"
-              :total="tabelPresentationPage.count"
-            ></el-pagination>
-          </div>
+          </el-form>
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="centerDialogReport = false">取 消</el-button>
+            <el-button type="primary" @click="addReport">确 定</el-button>
+          </span>
+        </el-dialog>
+        <!-- 表格数据操作 -->
+        <el-table
+          :data="tabelPresentationList"
+          stripe
+          id="out-table"
+          style="width: 100%"
+          @select="Check"
+        >
+          <!-- 勾选框 -->
+          <el-table-column type="selection" width="55"></el-table-column>
+          <!-- 索引 -->
+          <el-table-column align="center" type="index" prop="data" label="序号" width="60"></el-table-column>
+          <el-table-column align="center" prop="fundScale" label="报告类型">
+            <template slot-scope="scope">
+              <span>{{scope.row.reportTypeName}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" prop="creationTime" label="报告时间">
+            <template slot-scope="scope">
+              <span>{{scope.row.reportDate}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" prop="recommendName" label="报告标题">
+            <template slot-scope="scope">
+              <span>{{scope.row.title}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" prop="recommendName" label="报告状态">
+            <template slot-scope="scope">
+              <span>{{scope.row.statusName}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" prop="isQualified" label="操作">
+            <template slot-scope="scope">
+              <span class="spanColor" @click="clickPresentation(scope.$index, scope.row)">编辑</span>
+              <span class="spanColor" v-if="onReport" @click="clickRelease(scope.$index, scope.row)">发布</span>
+              <span v-if="onfRep">发布</span>
+              <span class="spanColor" v-if="offReport" @click="clickcancel(scope.$index, scope.row)">取消发布</span>
+            </template>
+          </el-table-column>
+        </el-table>
+        <!-- 页码 -->
+        <div align="center">
+          <el-pagination
+            background
+            @size-change="handleSize"
+            @current-change="handleCurrent"
+            :current-page="page"
+            :page-size="num"
+            layout="total, prev, pager, next, jumper"
+            :total="tabelPresentationPage.count"
+          ></el-pagination>
+        </div>
       </el-tab-pane>
       <el-tab-pane v-if="edit" name="third" label="公告管理">
-          <el-button type="primary" @click="delNetNotice">删除</el-button>
-          <el-button type="primary" @click="downloadNotice">下载</el-button>
-          <el-button type="primary" @click="centerDialogNotice=true">添加</el-button>
-          <el-dialog title="提示" :visible.sync="centerDialogNotice" width="30%" center>
-            <el-form label-width="100px" :model="formLabelAlign">
-              <el-form-item label="公告标题">
-                <el-input v-model="formLabelAlign.Noticetitle"></el-input>
-              </el-form-item>
-              <el-form-item label="公告时间">
-                <el-col :span="12">
-                  <el-form-item prop="dateOfWorth">
-                    <el-date-picker
-                      type="date"
-                      placeholder="选择日期"
-                      v-model="formLabelAlign.noticeDate"
-                      value-format="yyyy-MM-dd HH:mm:ss"
-                      style="width: 100%;"
-                    ></el-date-picker>
-                  </el-form-item>
-                </el-col>
-              </el-form-item>
-              <el-form-item label="公告内容">
-                <el-input v-model="formLabelAlign.content"></el-input>
-              </el-form-item>
-              <el-form-item label="公告类型">
-                  <el-select v-model="formLabelAlign.noticeTypeName" placeholder="请选择报告类型">
-                      <el-option
-                        :label="item.text"
-                        :value="item.value"
-                        v-for="item in Managementtype"
-                        :key="item.value"
-                      ></el-option>
-                    </el-select>
-              </el-form-item>
-              <el-upload
-                class="upload-demo"
-                ref="upload"
-                :data="uploadDataNotice"
-                :action="actionNotice"
-                :on-preview="handlePreview"
-                :on-remove="handleRemove"
-                :on-change="handleChange"
-                :on-success="chengeNotice"
-                :limit="1"
-                :file-list="fileList"
-                :headers="access_token"
-                :auto-upload="false"
-                >
-            <el-button size="small" type="primary">点击上传公告管理附件</el-button>
+        <el-button type="primary" @click="delNetNotice">删除</el-button>
+        <el-button type="primary" @click="downloadNotice">下载</el-button>
+        <el-button type="primary" @click="centerDialogNotice=true">添加</el-button>
+        <el-dialog title="提示" :visible.sync="centerDialogNotice" width="30%" center>
+          <el-form label-width="100px" :model="formLabelAlign">
+            <el-form-item label="公告标题">
+              <el-input v-model="formLabelAlign.Noticetitle"></el-input>
+            </el-form-item>
+            <el-form-item label="公告时间">
+              <el-col :span="12">
+                <el-form-item prop="dateOfWorth">
+                  <el-date-picker
+                    type="date"
+                    placeholder="选择日期"
+                    v-model="formLabelAlign.noticeDate"
+                    value-format="yyyy-MM-dd HH:mm:ss"
+                    style="width: 100%;"
+                  ></el-date-picker>
+                </el-form-item>
+              </el-col>
+            </el-form-item>
+            <el-form-item label="公告内容">
+              <el-input v-model="formLabelAlign.content"></el-input>
+            </el-form-item>
+            <el-form-item label="公告类型">
+              <el-select v-model="formLabelAlign.noticeTypeName" placeholder="请选择报告类型">
+                <el-option
+                  :label="item.text"
+                  :value="item.value"
+                  v-for="item in NoticeData"
+                  :key="item.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-upload
+              class="upload-demo"
+              ref="upload"
+              :data="uploadDataNotice"
+              :action="actionNotice"
+              :on-preview="handlePreview"
+              :on-remove="handleRemove"
+              :on-change="handleChange"
+              :on-success="chengeNotice"
+              :limit="1"
+              :file-list="fileList"
+              :headers="access_token"
+              :auto-upload="false"
+            >
+              <el-button size="small" type="primary">点击上传公告管理附件</el-button>
             </el-upload>
-            </el-form>
-            <span slot="footer" class="dialog-footer">
-              <el-button @click="centerDialogNotice = false">取 消</el-button>
-              <el-button type="primary" @click="addNotice">确 定</el-button>
-            </span>
-          </el-dialog>
-           <!-- 表格数据操作 -->
-          <el-table :data="tabelNoticeList" stripe id="out-table" style="width: 100%" @select="CheckNotice">
-            <!-- 勾选框 -->
-            <el-table-column type="selection" width="55"></el-table-column>
-            <!-- 索引 -->
-            <el-table-column align="center" type="index" prop="data" label="序号" width="60"></el-table-column>
-            <el-table-column align="center" prop="fundScale" label="公告类型">
-              <template slot-scope="scope">
-                <span>{{scope.row.noticeTypeName}}</span>
-              </template>
-            </el-table-column>
-            <el-table-column align="center" prop="creationTime" label="公告时间">
-              <template slot-scope="scope">
-                <span>{{scope.row.noticeDate}}</span>
-              </template>
-            </el-table-column>
-            <el-table-column align="center" prop="recommendName" label="公告标题">
-              <template slot-scope="scope">
-                <span>{{scope.row.title}}</span>
-              </template>
-            </el-table-column>
-            <el-table-column align="center" prop="recommendName" label="公告状态">
-              <template slot-scope="scope">
-                <span>{{scope.row.statusName}}</span>
-              </template>
-            </el-table-column>
-            <el-table-column align="center" prop="isQualified" label="操作">
-              <template slot-scope="scope">
-                <span class="spanColor" @click="clickNotice(scope.$index, scope.row)">编辑</span>
-                <span class="spanColor" @click="clickReleaseNotice(scope.$index, scope.row)">发布</span>
-                <span class="spanColor" @click="clickcancelNotice(scope.$index, scope.row)">取消发布</span>
-              </template>
-            </el-table-column>
-          </el-table>
-          <!-- 页码 -->
-          <div align="center">
-            <el-pagination
-              background
-              @size-change="handleSize"
-              @current-change="handleCurrent"
-              :current-page="page"
-              :page-size="num"
-              layout="total, prev, pager, next, jumper"
-              :total="tabelPresentationPage.count"
-            ></el-pagination>
-          </div>
+          </el-form>
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="centerDialogNotice = false">取 消</el-button>
+            <el-button type="primary" @click="addNotice">确 定</el-button>
+          </span>
+        </el-dialog>
+        <!-- 表格数据操作 -->
+        <el-table
+          :data="tabelNoticeList"
+          stripe
+          id="out-table"
+          style="width: 100%"
+          @select="CheckNotice"
+        >
+          <!-- 勾选框 -->
+          <el-table-column type="selection" width="55"></el-table-column>
+          <!-- 索引 -->
+          <el-table-column align="center" type="index" prop="data" label="序号" width="60"></el-table-column>
+          <el-table-column align="center" prop="fundScale" label="公告类型">
+            <template slot-scope="scope">
+              <span>{{scope.row.noticeTypeName}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" prop="creationTime" label="公告时间">
+            <template slot-scope="scope">
+              <span>{{scope.row.noticeDate}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" prop="recommendName" label="公告标题">
+            <template slot-scope="scope">
+              <span>{{scope.row.title}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" prop="recommendName" label="公告状态">
+            <template slot-scope="scope">
+              <span>{{scope.row.statusName}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" prop="isQualified" label="操作">
+            <template slot-scope="scope">
+              <span class="spanColor" @click="clickNotice(scope.$index, scope.row)">编辑</span>
+              <span class="spanColor" v-if="onRelea" @click="clickReleaseNotice(scope.$index, scope.row)">发布</span>
+              <span v-if="onRelease">发布</span>
+              <span class="spanColor" v-if="offRelea" @click="clickcancelNotice(scope.$index, scope.row)">取消发布</span>
+            </template>
+          </el-table-column>
+        </el-table>
+        <!-- 页码 -->
+        <div align="center">
+          <el-pagination
+            background
+            @size-change="handleSize"
+            @current-change="handleCurrent"
+            :current-page="page"
+            :page-size="num"
+            layout="total, prev, pager, next, jumper"
+            :total="tabelNoticePage.count"
+          ></el-pagination>
+        </div>
       </el-tab-pane>
-      <el-tab-pane v-if="edit" name="fourth" label="投资管理">投资管理</el-tab-pane>
-      <el-tab-pane v-if="edit"  name="marketing" label="营销管理">营销管理</el-tab-pane>
+
+      <!-- 投资管理 -->
+      <el-tab-pane v-if="edit" name="fourth" label="投资管理">
+        <el-tabs type="card" v-model="activeName"  @tab-click="handleClick">
+          <el-tab-pane label="潜在投资人" name="first">
+            <div class="first">
+              <el-input
+                v-model="formLabelAlign.Investment"
+                placeholder="请输入内容"
+                suffix-icon="el-icon-search"
+              ></el-input>
+              <!-- 表格数据操作 -->
+              <el-table
+                :data="tabelInvestment"
+                stripe
+                id="out-table"
+                style="width: 100%"
+              >
+                <!-- 勾选框 -->
+                <el-table-column type="selection" width="55"></el-table-column>
+                <!-- 索引 -->
+                <el-table-column align="center" type="index" prop="data" label="序号" width="60"></el-table-column>
+                <el-table-column align="center" prop="fundScale" label="姓名/机构名">
+                  <template slot-scope="scope">
+                    <span class="spanColor" @click="personalData(scope.$index, scope.row)">{{scope.row.name}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column align="center" prop="creationTime" label="昵称">
+                  <template slot-scope="scope">
+                    <span>{{scope.row.nickName}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column align="center" prop="recommendName" label="手机号">
+                  <template slot-scope="scope">
+                    <span>{{scope.row.mobile}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column align="center" prop="recommendName" label="证件类型">
+                  <template slot-scope="scope">
+                    <span>{{scope.row.certificateTypeName}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column align="center" prop="recommendName" label="证件号码">
+                  <template slot-scope="scope">
+                    <span>{{scope.row.certificateNo}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column align="center" prop="recommendName" label="角色">
+                  <template slot-scope="scope">
+                    <span>{{scope.row.customerTypeName}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column align="center" prop="isQualified" label="操作">
+                  <template slot-scope="scope">
+                    <span class="spanColor" @click="clickInvestment(scope.$index, scope.row)">选为投资人</span>
+                  </template>
+                </el-table-column>
+              </el-table>
+              <!-- 页码 -->
+              <div align="center">
+                <el-pagination
+                  background
+                  @size-change="handleSize"
+                  @current-change="handleCurrent"
+                  :current-page="page"
+                  :page-size="num"
+                  layout="total, prev, pager, next, jumper"
+                  :total="tabelInvestmentPage.count"
+                ></el-pagination>
+              </div>
+            </div>
+          </el-tab-pane>
+          <el-tab-pane label="投资人" name="second">
+               <div class="first">
+              <el-input
+                v-model="formLabelAlign.potential"
+                placeholder="请输入内容"
+                suffix-icon="el-icon-search"
+              ></el-input>
+              <!-- 表格数据操作 -->
+              <el-table
+                :data="tabelPotentialList"
+                stripe
+                id="out-table"
+                style="width: 100%"
+              >
+                <!-- 勾选框 -->
+                <el-table-column type="selection" width="55"></el-table-column>
+                <!-- 索引 -->
+                <el-table-column align="center" type="index" prop="data" label="序号" width="60"></el-table-column>
+                <el-table-column align="center" prop="fundScale" label="姓名/机构名">
+                  <template slot-scope="scope">
+                    <span>{{scope.row.name}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column align="center" prop="creationTime" label="昵称">
+                  <template slot-scope="scope">
+                    <span>{{scope.row.nickName}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column align="center" prop="recommendName" label="手机号">
+                  <template slot-scope="scope">
+                    <span>{{scope.row.mobile}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column align="center" prop="recommendName" label="证件类型">
+                  <template slot-scope="scope">
+                    <span>{{scope.row.certificateTypeName}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column align="center" prop="recommendName" label="证件号码">
+                  <template slot-scope="scope">
+                    <span>{{scope.row.certificateNo}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column align="center" prop="recommendName" label="角色">
+                  <template slot-scope="scope">
+                    <span>{{scope.row.customerTypeName}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column align="center" prop="isQualified" label="操作">
+                  <template slot-scope="scope">
+                    <span class="spanColor" @click="delInvestor(scope.$index, scope.row)">删除投资人</span>
+                    <span class="spanColor" @click="holdPositions(scope.$index, scope.row)">持仓管理</span>
+                    <span class="spanColor" @click="returnVisit(scope.$index, scope.row)">适当性回访</span>
+                  </template>
+                </el-table-column>
+              </el-table>
+              <!-- 页码 -->
+              <div align="center">
+                <el-pagination
+                  background
+                  @size-change="handleSize"
+                  @current-change="handleCurrent"
+                  :current-page="page"
+                  :page-size="num"
+                  layout="total, prev, pager, next, jumper"
+                  :total="tabelPotentialListPage.count"
+                ></el-pagination>
+              </div>
+            </div>
+          </el-tab-pane>
+        </el-tabs>
+      </el-tab-pane>
+      <el-tab-pane v-if="edit" name="marketing" label="营销管理">营销管理</el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -635,43 +828,57 @@ import ajax from "../../api/https.js";
 export default {
   data() {
     return {
-        uploadDataNotice:{},
-        actionNotice:ajax.doms.bind(this)("/api/Management/Product/Notice/Save"),
-      tabelData: [], //净值管理页面数据
+        uploadCenter:{},
+        actionUpload: ajax.doms.bind(this)("/api/Management/Product/Worth/Upload"),
+        categoryData:[],//报告类型下拉框
+        NoticeData:[],//公告类型下拉框
+        tabelPotentialList:[],//投资人数据集表
+        tabelPotentialListPage:'',//数据条数
+        activeName:'first',//潜在投资人框
+      tabelInvestmentPage: "", //数据条数
+      tabelInvestment: [], //潜在投资管理数据
+      noticeEvent: {},
+      uploadDataNotice: {},
+      actionNotice: ajax.doms.bind(this)("/api/Management/Product/Notice/Save"),
       tabelList: [], //净值管理页面数据
       tabelPage: "", //数据条数
       page: 1,
       num: 8,
       edit: false, //管理页面
       centerDialogVisible: false,
-      centerDialogReport:false,
-      centerDialogNotice:false,
+      centerDialogReport: false,
+      centerDialogNotice: false,
+      centerupload:false,
       formLabelAlign: {
+          smsNotify:'',
+          emailNotify:'',
+          weChatNotify:'',
         unitWorth: "",
         cumulativeWorth: "",
         dateOfWorth: "",
-        reportType:'',
-        reportDate:'',
-        title:'',
-        Noticetitle:'',
-        noticeDate:'',
-        content:'',
-        noticeTypeName:'',
+        reportType: "",
+        reportDate: "",
+        title: "",
+        Noticetitle: "",
+        noticeDate: "",
+        content: "",
+        noticeTypeName: "",
+        Investment: "",//潜在投资人输入框
+        potential:'',//投资人输入框
       },
-      tabelPresentation:[],//报告管理数据
-      tabelPresentationList:[],//报告管理数据
+      tabelPresentationList: [], //报告管理数据
       tabelPresentationPage: "", //数据条数
       checkList: [],
       uploadData: {},
-      uploadDataReport:{},
+      uploadDataReport: {},
       action: ajax.doms.bind(this)("/api/Management/Product/Save"),
-      actionReport:ajax.doms.bind(this)("/api/Management/Product/Report/Save"),
+      actionReport: ajax.doms.bind(this)("/api/Management/Product/Report/Save"),
       access_token: {
         Authorization: "Bearer " + sessionStorage.getItem("access_token")
       },
-      tabelNoticeData:[],//报告管理数
-      tabelNoticeList:[],//报告管理数据
-      tabelNoticePage:'',//数据条数
+      tabelNoticeData: [], //报告管理数
+      tabelNoticeList: [], //报告管理数据
+      tabelNoticePage: "", //数据条数
       fileList: [],
       ruleForm: {
         name: "", //基金名称
@@ -817,7 +1024,13 @@ export default {
       product: [],
       queryId: "",
       netWorthId: [], //勾选后获得的ID
-      NoticeId:[],//公告勾选后获得的ID
+      NoticeId: [], //公告勾选后获得的ID
+      onRelease:false,//公告灰发布
+      onRelea:true,//公告发布
+      offRelea:false,//公告取消发布
+      onReport:true,//报告发布
+      onfRep:false,//报告灰发布
+      offReport:false,//报告取消发布
     };
   },
   methods: {
@@ -1020,23 +1233,22 @@ export default {
         res => {
           console.log(res);
           if (res.data.code == 200) {
-            this.tabelData = res.data.data;
-            this.tabelList = this.tabelData.list;
-            this.tabelPage = this.tabelData.page;
+            this.tabelList = res.data.data.list;
+            this.tabelPage = res.data.data.page;
           }
         }
       );
     },
-//         smsNotify:?1:0,
-//         emailNotify:,
-//         weChatNotify:,
+    //   smsNotify:?1:0,
+    //   emailNotify:,
+    //   weChatNotify:,
     // 添加净值
     addNetWorth() {
       let data = {
         productId: this.queryId,
         unitWorth: this.formLabelAlign.unitWorth,
         cumulativeWorth: this.formLabelAlign.cumulativeWorth,
-        dateOfWorth: this.formLabelAlign.dateOfWorth,
+        dateOfWorth: this.formLabelAlign.dateOfWorth
       };
       ajax.authPost.bind(this)(
         "/api/Management/Product/Worth/Save",
@@ -1048,6 +1260,8 @@ export default {
             this.formLabelAlign.unitWorth = this.formLabelAlign.cumulativeWorth = this.formLabelAlign.dateOfWorth =
               "";
             this.centerDialogVisible = false;
+          } else if (res.data.code == 400) {
+            this.$message(res.data.message);
           }
         }
       );
@@ -1075,51 +1289,93 @@ export default {
       // console.log(this.netWorthId)
     },
     //报表获取勾选的id
-    Check(selection, row){
-        this.netWorthId.splice(0);
+    Check(selection, row) {
+      this.netWorthId.splice(0);
       for (var item of selection) {
         this.netWorthId.push(item.id);
-      } 
+      }
     },
-    CheckNotice(selection, row){
-         this.netWorthId.splice(0);
-        for (var item of selection) {
+    CheckNotice(selection, row) {
+      this.NoticeId.splice(0);
+      for (var item of selection) {
         this.NoticeId.push(item.id);
-      } 
+      }
     },
     //点击标题后的回调
-    netValuePage(tab, event){
-        this.getNetWorth();
-        this.getPresentation();
-        this.getNotice();//公告数据
+    netValuePage(tab, event) {
+      this.getNetWorth();
+      this.getPresentation();
+      this.getNotice(); //公告数据
+      this.getInvestment();
     },
-    //定义导出Excel表格事件
+    //投资管理点击标题后的回调
+    handleClick(tab, event) {
+        this.getInvestment(); //潜在投资者管理数据
+    this.getpotential();//投资者管理数据
+    },
+    //下载净值模板
     exportExcel() {
-
+         let url = 'http://192.168.28.213:5000/api/Management/Product/Worth/Template?productId='+this.queryId
+         window.open(url, '_blank');
+    },
+    //下载净值模板内容
+    downloadContent(){
+         var a,b;
+        a = new Array(this.netWorthId);
+        b = a.join(',')
+        console.log(b)
+        let url = 'http://192.168.28.213:5000/api/Management/Product/Worth/Download?ids='+b
+         window.open(url, '_blank');
+    },
+    // 上传净值
+    uploadContent(){
+        this.uploadCenter.productId=this.queryId
+        this.uploadCenter.smsNotify=this.formLabelAlign.smsNotify;
+        this.uploadCenter.emailNotify=this.formLabelAlign.emailNotify;
+        this.uploadCenter.weChatNotify=this.formLabelAlign.weChatNotify;
+        this.$refs.upload.submit();
     },
     // 净值管理页面的编辑按钮
-    clickEdit() {
-      console.log("编辑");
+    clickEdit(i, row) {
+      this.centerDialogVisible = !this.centerDialogVisible;
+      let data = {
+        worthId: row.id
+      };
+      ajax.authGet.bind(this)("/api/Management/Product/Worth", data, res => {
+        console.log(res);
+        if (res.data.code == 200) {
+          this.formLabelAlign.unitWorth = res.data.data.unitWorth;
+          this.formLabelAlign.cumulativeWorth = res.data.data.cumulativeWorth;
+          this.formLabelAlign.dateOfWorth = res.data.data.dateOfWorth;
+        }
+      });
     },
-    // 报表管理数据
-    getPresentation(){
-        let pages = { pageIndex: this.page, pageSize: this.num };
+    // 报告管理数据
+    getPresentation() {
+      let pages = { pageIndex: this.page, pageSize: this.num };
       ajax.authPost.bind(this)(
         "/api/Management/Product/Report/" + this.queryId,
         pages,
         res => {
           console.log(res);
           if (res.data.code == 200) {
-            this.tabelPresentation = res.data.data;
-            this.tabelPresentationList = this.tabelPresentation.list;
-            this.tabelPresentationPage = this.tabelPresentation.page;
+            this.tabelPresentationList = res.data.data.list;
+            this.tabelPresentationPage = res.data.data.page;
           }
         }
       );
     },
-    //报告管理数据
-    getNotice(){
-        let pages = { pageIndex: this.page, pageSize: this.num };
+    //报告类型下拉框
+    getcategoryData(){
+        ajax.authGet.bind(this)('/api/Common/17',res=>{
+            if(res.data.code==200){
+                this.categoryData=res.data.data
+            }
+        })
+    },
+    //公告管理数据
+    getNotice() {
+      let pages = { pageIndex: this.page, pageSize: this.num };
       ajax.authPost.bind(this)(
         "/api/Management/Product/Notice/" + this.queryId,
         pages,
@@ -1133,102 +1389,227 @@ export default {
         }
       );
     },
+    //公告类型下拉框
+    getNoticeData(){
+        ajax.authGet.bind(this)('/api/Common/16',res=>{
+            if(res.data.code==200){
+                this.NoticeData=res.data.data
+            }
+        })
+    },
+    //潜在投资者管理数据
+    getInvestment() {
+        this.getpot('/api/Management/Query/Potential',res => {
+        console.log(res);
+        if (res.data.code == 200) {
+          this.tabelInvestment = res.data.data.list;
+          this.tabelInvestmentPage = res.data.data.page;
+        }
+      })
+    },
+    //投资者管理数据
+    getpotential(){
+         this.getpot('/api/Management/Query/InvestorAsset',res => {
+        console.log(res);
+        if (res.data.code == 200) {
+          this.tabelPotentialList = res.data.data.list;
+          this.tabelPotentialListPage = res.data.data.page;
+        }
+      })
+    },
+    
+    //封装潜在投资人跟投资人的方法
+    getpot(url,r){
+        let data = {
+        productId: this.queryId,
+        pageIndex: this.page,
+        pageSize: this.num
+      };
+      ajax.authPost.bind(this)(url, data, r);
+    },
+    clickInvestment(i, row) {
+        
+    },
     //报告编辑报表
-    clickPresentation(i,row){
-        let data = {
-            id:row.id,
-            productId:this.queryId,
-            reportType:row.reportType,
-            title:row.title,
-            reportDate:row.reportDate,
+    clickPresentation(i, row) {
+      this.centerDialogReport = !this.centerDialogReport;
+      let data = {
+        reportId: row.id
+      };
+      ajax.authGet.bind(this)("/api/Management/Product/Report", data, res => {
+        console.log(res);
+        if (res.data.code == 200) {
+          this.formLabelAlign.reportType = res.data.data.reportTypeName;
+          this.formLabelAlign.title = res.data.data.title;
+          this.formLabelAlign.reportDate = res.data.data.reportDate;
         }
-        ajax.authPost.bind(this)('/api/Management/Product/Report/Save',data,res=>{
-            console.log(res)
+      });
+    },
+    //报表发布
+    clickRelease(i,row) {
+        ajax.authPostForm.bind(this)('/api/Management/Product/Report/Publish',{id:row.id},res=>{
+            console.log(res);
+            if(res.data.code==200){
+                this.onReport=false;
+                this.onfRep=true;
+                this.offReport=true;
+            }
         })
     },
-    //发布
-    clickRelease(){
-
-    },
-    //取消发布
-    clickcancel(){
-
-    },
-    //公告编辑报表
-    clickNotice(i,row){
-        // console.log(row)
-        let data = {
-            id:row.id,
-            productId:this.queryId,
-            title:row.Noticetitle,
-            noticeType:row.noticeTypeName,
-            content:row.content,
-            noticeDate:row.noticeDate,
-        }
-        ajax.authPost.bind(this)('/api/Management/Product/Notice/Save',data,res=>{
-            console.log(res)
+    //取消报表发布
+    clickcancel(i,row) {
+        ajax.authPostForm.bind(this)('/api/Management/Product/Report/Private',{id:row.id},res=>{
+            console.log(res);
+            if(res.data.code==200){
+                this.offReport=false;
+                this.onReport=true;
+                this.onfRep=false;
+            }
         })
     },
-    //发布
-    clickReleaseNotice(){
+    //公告编辑
+    clickNotice(i, row) {
+      this.centerDialogNotice = !this.centerDialogNotice;
+      // console.log(row)
+      let data = {
+        noticeId: row.id
+      };
+      ajax.authGet.bind(this)("/api/Management/Product/Notice", data, res => {
+        console.log(res);
+        if (res.data.code == 200) {
+          this.noticeEvent = res.data.data;
+          this.formLabelAlign.Noticetitle = this.noticeEvent.title;
+          this.formLabelAlign.noticeDate = this.noticeEvent.noticeDate;
+          this.formLabelAlign.content = this.noticeEvent.content;
+          this.formLabelAlign.noticeTypeName = this.noticeEvent.noticeTypeName;
 
+        }
+      });
     },
-    //取消发布
-    clickcancelNotice(){
-
+    //公告发布
+    clickReleaseNotice(i,row) {
+        ajax.authPostForm.bind(this)('/api/Management/Product/Notice/Publish',{id:row.id},res=>{
+            console.log(res)
+            if(res.data.code==200){
+                this.onRelea=false;
+                this.onRelease=true;
+                this.offRelea=true;
+            }
+        })
+    },
+    //取消公告发布
+    clickcancelNotice(i,row) {
+        ajax.authPostForm.bind(this)('/api/Management/Product/Notice/Private',{id:row.id},res=>{
+            console.log(res);
+             if(res.data.code==200){
+                this.offRelea=false;
+                this.onRelea=true;
+                this.onRelease=false;
+            }
+        })
     },
     //报表添加
-    addReport(){
-      this.centerDialogReport = false;
-      this.uploadDataReport.queryId = this.queryId;
-      this.uploadDataReport.reportType=this.formLabelAlign.reportType;
-      this.uploadDataReport.title=this.formLabelAlign.title;
-      this.uploadDataReport.reportDate=this.formLabelAlign.reportDate;
+    addReport() {
+      this.uploadDataReport.productId = this.queryId;
+      this.uploadDataReport.reportType = this.formLabelAlign.reportType;
+      this.uploadDataReport.title = this.formLabelAlign.title;
+      this.uploadDataReport.reportDate = this.formLabelAlign.reportDate;
       this.$refs.upload.submit();
     },
+    //删除投资人
+    delInvestor(){},
+    //持仓管理
+    holdPositions(){},
+    //适当性回访
+    returnVisit(){},
+    // 清空文件列表
+    clearUploadedImage() {
+      this.$refs.upload.clearFiles();
+    },
     //报表文件上传成功回调
-    chengecheng(response, file, fileList){
-        this.getPresentation();
+    chengecheng(response, file, fileList) {
+      this.centerDialogReport = false;
+      this.getPresentation();
+      this.formLabelAlign.reportType = this.formLabelAlign.title = this.formLabelAlign.reportDate =
+        "";
+      this.clearUploadedImage();
+    },
+    //净值上传成功的回调
+    SuccessWorth(response, file, fileList){
+        this.centerupload=false;
+        this.clearUploadedImage();
+        this.formLabelAlign.smsNotify=this.formLabelAlign.emailNotify=this.formLabelAlign.weChatNotify=''
+
+    },
+    //文件上传失败的回调
+    errorWorth(err, file, fileList){
+        this.$message('上传出错')
     },
     //公告添加
-    addNotice(){
-        this.centerDialogNotice = false;
-      this.uploadDataNotice.queryId = this.queryId;
-      this.uploadDataNotice.title=this.formLabelAlign.Noticetitle;
-      this.uploadDataNotice.noticeType=this.formLabelAlign.noticeTypeName;
-      this.uploadDataNotice.content=this.formLabelAlign.content;
-      this.uploadDataNotice.noticeDate=this.formLabelAlign.noticeDate;
+    addNotice() {
+      this.uploadDataNotice.productId = this.queryId;
+      this.uploadDataNotice.title = this.formLabelAlign.Noticetitle;
+      this.uploadDataNotice.noticeType = this.formLabelAlign.noticeTypeName;
+      this.uploadDataNotice.content = this.formLabelAlign.content;
+      this.uploadDataNotice.noticeDate = this.formLabelAlign.noticeDate;
       this.$refs.upload.submit();
     },
     //公告文件上传成功的回调
-    chengeNotice(response, file, fileList){
-        this.getNotice();
+    chengeNotice(response, file, fileList) {
+      this.getNotice();
+      this.centerDialogNotice = false;
+      this.formLabelAlign.Noticetitle = this.formLabelAlign.noticeTypeName = this.formLabelAlign.content = this.formLabelAlign.noticeDate =
+        "";
+      this.clearUploadedImage();
     },
     //报表删除
-    delNetReport(){
-        ajax.authPost.bind(this)('/api/Management/Product/Report/Remove',this.netWorthId,res=>{
-            console.log(res)
-            if(res.data.code==200){
-                this.getPresentation();
-            }
-        })
+    delNetReport() {
+      ajax.authPost.bind(this)(
+        "/api/Management/Product/Report/Remove",
+        this.netWorthId,
+        res => {
+          console.log(res);
+          if (res.data.code == 200) {
+            this.getPresentation();
+          }
+        }
+      );
     },
-    //下载
-    downloadReport(){
-
+    //报表下载
+    downloadReport() {
+        var a,b;
+        a = new Array(this.netWorthId);
+        b = a.join(',')
+        console.log(b)
+        let url = 'http://192.168.28.213:5000/api/Management/Product/Report/Download?ids='+b
+         window.open(url, '_blank');
     },
     //公告删除
-    delNetNotice(){
-        ajax.authPost.bind(this)('/api/Management/Product/Notice/Remove',this.NoticeId,res=>{
-            console.log(res)
-            if(res.data.code==200){
-                this.getNotice();
-            }
-        })
+    delNetNotice() {
+      ajax.authPost.bind(this)(
+        "/api/Management/Product/Notice/Remove",
+        this.NoticeId,
+        res => {
+          console.log(res);
+          if (res.data.code == 200) {
+            this.getNotice();
+          }
+        }
+      );
     },
-    //下载
-    downloadNotice(){
-
+    //公告下载
+    downloadNotice() {
+        var a,b;
+        a = new Array(this.NoticeId);
+        b = a.join(',')
+        console.log(b)
+        let url = 'http://192.168.28.213:5000/api/Management/Product/Notice/Download?ids='+b
+         window.open(url, '_blank');
+    },
+    //点击姓名进入个人资料页面
+    personalData(i,row){
+        let data = row.userId
+        this.$router.push({path:'/NavBar/CParameter/personalData',query:{data}})
     },
     //每页显示数据量变更
     handleSizeChange: function(val) {
@@ -1256,55 +1637,64 @@ export default {
     this.adds();
     this.getSeeOne();
     this.getNetWorth();
-    this.getPresentation();//报表
-    this.getNotice();//公告数据
+    this.getPresentation(); //报告数据
+    this.getNoticeData();//公告类型下拉数据
+    this.getcategoryData();//报告类型下拉数据
+    this.getNotice(); //公告数据
+    this.getInvestment(); //潜在投资者管理数据
+    this.getpotential();//投资者管理数据
   }
 };
 </script>
 
 <style lang="less" >
-.data_title{
-.AddList {
-  max-height: 576px;
-  overflow: scroll;
-  background: #fff;
-  /deep/.el-row {
-    // 不同分类线
-    padding-top: 20px;
-    border-top: 3px solid;
-  }
-  /deep/.el-input {
-    //输入框
-    width: 60%;
-  }
-  /deep/.el-textarea {
-    width: 60%;
-  }
-  /deep/.el-form-item__label {
-    //输入框前面的文字
-    width: 185px !important;
+.data_title {
+  .AddList {
+    max-height: 576px;
+    overflow: scroll;
+    background: #fff;
+    /deep/.el-row {
+      // 不同分类线
+      padding-top: 20px;
+      border-top: 3px solid;
+    }
+    /deep/.el-input {
+      //输入框
+      width: 60%;
+    }
+    /deep/.el-textarea {
+      width: 60%;
+    }
+    /deep/.el-form-item__label {
+      //输入框前面的文字
+      width: 185px !important;
+    }
+    /deep/.el-input__icon {
+      //选择框图标
+      height: 75%;
+    }
+    /deep/.el-form-item__error {
+      //输入框提示
+      top: 70%;
+      left: 85px;
+    }
+    /deep/.el-upload-list--text {
+      position: absolute;
+      bottom: 60px;
+      left: 85px;
+    }
   }
   /deep/.el-input__icon {
     //选择框图标
     height: 75%;
   }
-  /deep/.el-form-item__error {
-    //输入框提示
-    top: 70%;
-    left: 85px;
-  }
-  /deep/.el-upload-list--text {
-    position: absolute;
-    bottom: 60px;
-    left: 85px;
-  }
-}
-/deep/.el-input__icon{
-     //选择框图标
-    height: 75%; 
-  }
   .spanColor {
     color: #409eff;
+  }
+  .first {
+    /deep/.el-input {
+      width: 25%;
+    }
   }
 }
 </style>

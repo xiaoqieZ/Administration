@@ -9,6 +9,7 @@ import CCTAllocation from '@/pages/MainPages/CCTAllocation'
 import CCCtallocation from '@/pages/MainPages/CCCtallocation'
 import CCCCtallocation from '@/pages/MainPages/CCCCtallocation'
 import CCCCCtallocation from '@/pages/MainPages/CCCCCtallocation'
+import personalData from '@/pages/MainPages/personalData'
 import BbankData from '@/pages/BankData/BbankData'
 import BankData from '@/pages/BankData/BankData'
 import BankDataList from '@/pages/BankData/BankDataList'
@@ -239,6 +240,12 @@ export default new Router({
                   name: 'CCCCCtallocation',
                   title:'智能自查',
                   component: CCCCCtallocation
+                },
+                {
+                  path: '/NavBar/CParameter/personalData',
+                  name: 'personalData',
+                  title:'个人资料',
+                  component: personalData
                 }
               ]
             },

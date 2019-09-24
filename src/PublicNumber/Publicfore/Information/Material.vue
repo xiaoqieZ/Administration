@@ -78,8 +78,7 @@ export default {
       message:''
     };
   },
-  methods: {
-
+  methods: {  
     dssy() {
       //去信息采集
       this.centerDialogVisible = false;
@@ -134,6 +133,7 @@ export default {
           }
       })
     },
+    //报表文件上传成功回调
     material() {
       this.$router.push({ path: "/Publicfore" });
     },

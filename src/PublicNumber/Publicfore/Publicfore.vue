@@ -15,7 +15,7 @@
     <div class="myhomettop">
       <div class="myhometimg">
         <div class="imges">
-          <img src="../../../static/img/youliya.jpg" alt="头像" />
+          <img :src="storageList.portrait" alt="头像" />
           <div class="imgtime">
             <p>专业投资者</p>
           </div>
@@ -24,11 +24,11 @@
       <div class="myhomerequrey">
         <p>
           姓名：
-          <span>小茄子</span>
+          <span>{{storageList.name}}</span>
         </p>
         <p>
           手机：
-          <span>10010</span>
+          <span>{{storageList.mobile}}</span>
         </p>
         <p>
           资产：
@@ -36,7 +36,7 @@
         </p>
         <p>
           类别：
-          <span>个人投资者</span>
+          <span>{{storageList.customerTypeName}}</span>
         </p>
       </div>
     </div>
@@ -167,9 +167,11 @@
 <script>
 import tebbarhome from "../../components/Publictebbar/Publictebbar";
 import ajax from "../../api/https.js";
+import storage from "../../api/storage.js";
 export default {
   data() {
     return {
+      storageList:'',
       dialogVisible: false, //弹窗
       messagesName: [] //用户信息
     };
@@ -181,7 +183,7 @@ export default {
     //获取Token接口
     getName() {
       ajax.auth.bind(this)({
-        openId: "ca727290d1d144299ffdca42fe5cc66b",
+        openId: "adf45003cb1511e9aa52000c292381e8",
         nickName: "如来大boss",
         portrait:'http://192.168.28.213:81/123.jpg'
       })
@@ -197,10 +199,15 @@ export default {
         .catch(error => {
           console.log(error);
         });
-    }
+    },
+    getStorage(){
+      var data = storage.get('listaktion')
+      this.storageList = data
+    },
   },
   mounted() {
     this.getName();
+    this.getStorage()
   },
   components: {
     "tabbar-home": tebbarhome

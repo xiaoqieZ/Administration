@@ -537,30 +537,27 @@ export default {
             this.getList();
         })
     },
+    // 清空文件列表
+    clearUploadedImage () {
+      this.$refs.upload.clearFiles();
+    },
     // 上传成功的回调
     chenggeing(response, file, fileList) {
       this.supplement(0, this.productId);
       this.$message(response.message);
-      // console.log(response)
-      // console.log(file)
-      // console.log(fileList)
+      this.clearUploadedImage();
+      this.UploadFile = false;
     },
     // 提交上传招募书
     SubmitUploadFile() {
-      this.UploadFile = false;
       this.uploadData.productId = this.productId;
       this.$refs.upload.submit();
     },
     //文件上传个数
     handleChange(file, fileList) {
-      debugger;
       this.fileList = fileList.length > 1 ? fileList.splice(0, 1) : fileList;
-      console.log(this.fileList);
+    //   console.log(this.fileList);
     },
-    //文件上传个数的钩子
-    // handleExceed(files, fileList) {
-    //   this.$message.warning(`当前限制选择 1 个文件喔！`);
-    // },
     //移除文件钩子
     handleRemove(file, fileList) {
       //   this.ruleForm.RiskLD = "";
