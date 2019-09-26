@@ -7,7 +7,7 @@
           <vue-scroll>
             <div class="currenminput">
               <div class="left">
-                <van-button type="info" size="small" @click="editFormVisible = true">添加</van-button>
+                <van-button type="info" size="small" @click="addChart">添加</van-button>
                 <van-button type="danger" size="small" @click="del">删除</van-button>
               </div>
             </div>
@@ -38,9 +38,9 @@
                   :action="action"
                   :on-preview="handlePreview"
                   :on-remove="handleRemove"
+                  :on-success="chengecheng"
                   :file-list="fileList"
                   :headers="access_token"
-                  :auto-upload="false"
                   list-type="picture"
                 >
                   <el-button size="small" type="primary">点击上传</el-button>
@@ -51,7 +51,7 @@
                 <el-button type="primary" @click.native="submit('editForm')">提交</el-button>
               </div>
             </el-dialog>
-            <!-- 表格数据操作 -->
+            <!-- 轮播图表格数据操作 -->
             <el-table
               :data="listData"
               stripe
@@ -85,6 +85,11 @@
                   </el-tooltip>
                 </template>
               </el-table-column>
+              <el-table-column align="center" prop="data" label="操作" width="100">
+                <template slot-scope="scope">
+                  <span class="spanColor" @click="clickChart(scope.$index, scope.row)">编辑</span>
+                </template>
+              </el-table-column>
             </el-table>
           </vue-scroll>
         </van-tab>
@@ -92,7 +97,7 @@
           <vue-scroll>
             <div class="currenminput">
               <div class="left">
-                <van-button type="info" size="small" @click="editFormlism = true">添加</van-button>
+                <van-button type="info" size="small" @click="addJournalism">添加</van-button>
                 <van-button type="danger" size="small" @click="del">删除</van-button>
               </div>
             </div>
@@ -124,12 +129,12 @@
                   class="upload-demo"
                   ref="upload"
                   :data="uploadjournalism"
-                  :action="actionJournalism"
+                  :action="action"
                   :on-preview="handlePreview"
                   :on-remove="handleRemove"
+                  :on-success="chengecheng"
                   :file-list="fileList"
                   :headers="access_token"
-                  :auto-upload="false"
                   list-type="picture"
                 >
                   <el-button size="small" type="primary">点击上传</el-button>
@@ -137,7 +142,7 @@
               </el-form>
               <div slot="footer" class="dialog-footer">
                 <el-button @click.native="editFormlism = false">取消</el-button>
-                <el-button type="primary" @click.native="clickJournalism(editrules)">提交</el-button>
+                <el-button type="primary" @click.native="clickJournalism('editrules')">提交</el-button>
               </div>
             </el-dialog>
             <!-- 表格数据操作 -->
@@ -182,7 +187,6 @@
                     v-model="scope.row.isHotSpot"
                     :active-value="1"
                     :inactive-value="0"
-                    
                     active="#00A854"
                     inactive="#F04134"
                     @change="Switch(scope.row.isHotSpot,scope.row.id)"
@@ -192,6 +196,11 @@
               <el-table-column align="center" prop="data" label="链接" width="180">
                 <template slot-scope="scope">
                   <span>{{scope.row.link}}</span>
+                </template>
+              </el-table-column>
+              <el-table-column align="center" prop="data" label="操作" width="180">
+                <template slot-scope="scope">
+                  <span class="spanColor" @click="clickJournalismEdit(scope.$index, scope.row)">编辑</span>
                 </template>
               </el-table-column>
             </el-table>
@@ -212,7 +221,7 @@
           <vue-scroll>
             <div class="currenminput">
               <div class="left">
-                <van-button type="info" size="small" @click="editFormname = true">添加</van-button>
+                <van-button type="info" size="small" @click="addAbout">添加</van-button>
                 <van-button type="danger" size="small" @click="del">删除</van-button>
               </div>
             </div>
@@ -239,12 +248,12 @@
                   class="upload-demo"
                   ref="upload"
                   :data="uploadAbout"
-                  :action="actionAbout"
+                  :action="action"
                   :on-preview="handlePreview"
                   :on-remove="handleRemove"
+                  :on-success="chengecheng"
                   :file-list="fileList"
                   :headers="access_token"
-                  :auto-upload="false"
                   list-type="picture"
                 >
                   <el-button size="small" type="primary">点击上传</el-button>
@@ -296,6 +305,11 @@
                   <span>{{scope.row.content}}</span>
                 </template>
               </el-table-column>
+              <el-table-column align="center" prop="data" label="操作">
+                <template slot-scope="scope">
+                  <span class="spanColor" @click="clickaboutEdit(scope.$index, scope.row)">编辑</span>
+                </template>
+              </el-table-column>
             </el-table>
             <!-- 页码 -->
             <div align="center">
@@ -322,7 +336,7 @@ export default {
       uploadData: {},
       uploadjournalism: {},
       uploadAbout: {},
-      action: ajax.doms.bind(this)("/api/System/Page/AddRotary"),
+      action: ajax.doms.bind(this)("/api/System/Page/Upload"),
       actionJournalism: ajax.doms.bind(this)("/api/System/Page/AddNews"),
       actionAbout: ajax.doms.bind(this)("/api/System/Page/AddAboutUs"),
       Popular: 1, //热门切换按钮
@@ -372,7 +386,12 @@ export default {
       delId: "",
       delLink: "",
       delTitle: "",
-      delFilePath: ""
+      delFilePath: "",
+      currentFileId: 0,//轮播图的ID
+      chartId:0,//轮播图里面的row.ID
+      JournalismId:0,
+      aboutId:0,
+
     };
   },
   methods: {
@@ -414,26 +433,75 @@ export default {
         }
       });
     },
+    //报表文件上传成功回调
+    chengecheng(response, file, fileList) {
+      this.currentFileId = response.data.id;//轮播图的ID
+      this.JournalismId = response.data.id;//新闻图的ID
+      this.aboutId = response.data.id;//关于图的ID
+    },
+    //清空上传成功后的文件列表
+    clearUploadedImage () {
+      this.$refs.upload.clearFiles();
+    },
     //提交图片资料
     submit(editForm) {
       this.$refs[editForm].validate(valid => {
         if (valid) {
-          this.uploadData.link = this.editForm.link;
-          this.$refs.upload.submit();
-          this.editForm.link = "";
+          var data = {
+        link: this.editForm.link,
+        materialId: this.currentFileId,
+        id:this.chartId
+      };
+      ajax.authPost.bind(this)("/api/System/Page/Rotary/Save", data, res => {
+        this.editFormVisible = false;
+        this.getData();
+        this.clearUploadedImage()
+        this.editForm.link=''
+
+      });
         } else {
           return false;
         }
       });
     },
+    //添加轮播图
+    addChart(){
+      this.editFormVisible=true;
+      this.chartId=0
+      this.clearUploadedImage();
+      this.editForm.link=''
+    },
+    //添加新闻
+    addJournalism(){
+      this.editFormlism=true;
+      this.chartId=0;
+      this.clearUploadedImage()
+      this.editrules.urls=this.editrules.title=this.editrules.content=''
+    },
+    //添加关于
+    addAbout(){
+      this.editFormname=true;
+      this.chartId=0;
+      this.clearUploadedImage()
+      this.aboutForm.usurl=this.aboutForm.ustitle=this.aboutForm.uscontent=''
+    },
     //提交新闻资料
     clickJournalism(editrules) {
       this.$refs[editrules].validate(valid => {
         if (valid) {
-          this.uploadjournalism.link = this.editrules.url;
-          this.uploadjournalism.title = this.editrules.title;
-          this.uploadjournalism.content = this.editrules.content;
-          this.$refs.upload.submit();
+          let data = {
+            link:this.editrules.urls,
+            title:this.editrules.title,
+            content:this.editrules.content,
+            materialId:this.JournalismId,
+            id:this.chartId
+          }
+        ajax.authPost.bind(this)("/api/System/Page/News/Save", data, res => {
+        this.editFormlism = false;
+        this.getJournalism();
+        this.clearUploadedImage()
+        this.editrules.urls=this.editrules.title=this.editrules.content=''
+      });
         } else {
           return false;
         }
@@ -443,11 +511,19 @@ export default {
     clickAbout(aboutForm) {
       this.$refs[aboutForm].validate(valid => {
         if (valid) {
-          this.uploadAbout.link = this.aboutForm.usurl;
-          this.uploadAbout.title = this.aboutForm.ustitle;
-          this.uploadAbout.content = this.aboutForm.uscontent;
-          this.$refs.upload.submit();
-          //  this.$message("提交成功");
+          let data = {
+            link:this.aboutForm.usurl,
+            title:this.aboutForm.ustitle,
+            content:this.aboutForm.uscontent,
+            id:this.chartId,
+            materialId:this.aboutId
+          }
+          ajax.authPost.bind(this)("/api/System/Page/AboutUs/Save", data, res => {
+        this.editFormname = false;
+        this.getAbout();
+        this.clearUploadedImage()
+        this.aboutForm.usurl=this.aboutForm.ustitle=this.aboutForm.uscontent=''
+      });
         } else {
           return false;
         }
@@ -457,6 +533,32 @@ export default {
     handleRemove(file, fileList) {
       console.log(file, fileList);
     },
+    //编辑轮播图
+    clickChart(i,row) {
+      this.chartId=row.id
+      this.editFormVisible=true
+      this.editForm.link=row.link
+      this.currentFileId=row.fileId
+    },
+    //编辑新闻
+    clickJournalismEdit(i,row) {
+      this.chartId=row.id;
+      this.JournalismId=row.fileId;
+      this.editFormlism=true;
+      this.editrules.urls=row.link;
+      this.editrules.title=row.title;
+      this.editrules.content=row.content;
+    },
+    //编辑关于我们
+    clickaboutEdit(i,row) {
+      this.editFormname=true
+      this.aboutForm.usurl=row.link;
+      this.aboutForm.ustitle=row.title;
+      this.aboutForm.uscontent=row.content;
+      this.chartId=row.id;
+      this.aboutId=row.fileId;
+    },
+    // 图片文件
     handlePreview(file) {
       console.log(file);
     },
@@ -484,11 +586,11 @@ export default {
       // this.getAllList(this.search, this.page, this.num);
     },
     // 开关
-    Switch(i,row) {
-      let data= {id:row,isHotSpot:i}
-      ajax.authPostForm.bind(this)('/api/System/Page/HotSpot',data,res=>{
-        console.log(res)
-      })
+    Switch(i, row) {
+      let data = { id: row, isHotSpot: i };
+      ajax.authPostForm.bind(this)("/api/System/Page/HotSpot", data, res => {
+        console.log(res);
+      });
     }
   },
   mounted() {
@@ -528,6 +630,9 @@ export default {
       height: 397px;
       overflow: hidden scroll;
     }
+  }
+  .spanColor {
+    color: #409eff;
   }
 }
 // height: 397px;

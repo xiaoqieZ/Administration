@@ -13,6 +13,7 @@ import personalData from '@/pages/MainPages/personalData'
 import BbankData from '@/pages/BankData/BbankData'
 import BankData from '@/pages/BankData/BankData'
 import BankDataList from '@/pages/BankData/BankDataList'
+import PositionManagement from '@/pages/BankData/PositionManagement'
 import AccountManage from '@/pages/UserManage/AccountManage'
 import UserFun from '@/pages/UserManage/UserFun'
 import UserRecord from '@/pages/UserManage/UserRecord'
@@ -260,6 +261,12 @@ export default new Router({
                   name: 'BankData',
                   title:'产品列表',
                   component: BankData
+                },
+                {
+                  path: '/NavBar/DataDitionary/PositionManagement',
+                  name: 'PositionManagement',
+                  title:'持仓管理',
+                  component: PositionManagement
                 },
                 {
                   path: '/NavBar/DataDitionary/BankDataList',

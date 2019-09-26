@@ -1,6 +1,16 @@
 //  let dom="http://192.168.28.213:5000";
 let domain = "http://mx.maplegg.com";
 
+function thenCallBack(res, then) {
+    console.log(res);
+    if (res.data.code == 200) {
+        then.call(this, res);
+    } else {
+        this.$message(res.data.message)
+    }
+
+}
+
 function post(url, data, then, cat) {
     if (data instanceof Function) {
         cat = then;
@@ -10,7 +20,9 @@ function post(url, data, then, cat) {
         cat = res => {};
     }
     var url = domain + url;
-    this.$axios.post(url, data).then(then).catch(cat)
+    this.$axios.post(url, data).then(res => {
+        thenCallBack.call(this,res,then);
+    }).catch(cat)
 }
 
 function get(url, data, then, cat) {
@@ -19,7 +31,9 @@ function get(url, data, then, cat) {
         then = data;
     }
     var url = domain + url;
-    this.$axios.get(url, data).then(then).catch(cat)
+    this.$axios.get(url, data).then(res => {
+        thenCallBack.call(this,res,then);
+    }).catch(cat)
 }
 
 function doms(url) {
@@ -58,7 +72,9 @@ function authGet(url, params, then, cat) {
             method: 'get',
             params: params,
             baseURL: "http://192.168.28.213:5000",
-        }).then(then).catch(cat)
+        }).then(res => {
+            thenCallBack.call(this,res,then);
+        }).catch(cat)
     } else {
         //异常页面
     }
@@ -84,7 +100,9 @@ function authPost(url, data, then, cat) {
             method: 'post',
             data: data,
             baseURL: "http://192.168.28.213:5000",
-        }).then(then).catch(cat)
+        }).then(res => {
+            thenCallBack.call(this,res,then);
+        }).catch(cat)
     } else {
         //异常页面
     }
@@ -120,7 +138,9 @@ function authPostForm(url, data, then, cat) {
                 method: 'post',
                 //data: value,
                 baseURL: "http://192.168.28.213:5000",
-            }).then(then).catch(cat)
+            }).then(res => {
+                thenCallBack.call(this,res,then);
+            }).catch(cat)
         } else {
             //异常页面
         }

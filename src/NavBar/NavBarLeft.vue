@@ -351,7 +351,7 @@ export default {
         /*如果cookie不存在，则自动跳转到登录页*/
         if(uname == ""){
             //  this.$router.push({path:'/login'})  //接口无效
-            this.$router.push({path: '/NavBar/Homepage/Homepage'})
+            // this.$router.push({path: '/NavBar/Homepage/Homepage'})
             }
         },
   methods: {

@@ -179,6 +179,7 @@ export default {
   methods: {
     gos() {
       this.$router.push({ path: "/NavBar/Homepage/Homepage" });
+      // console.log(121212)
     },
     //获取Token接口
     getName() {
