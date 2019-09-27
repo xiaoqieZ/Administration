@@ -91,7 +91,7 @@
           :total="tabelPage.count"
         ></el-pagination>
       </div>
-
+      <!-- 招募说明书上传 -->
       <el-dialog title="提示" :visible.sync="centerDialogVisible" width="50%" center>
         <div class="upload">
           <el-button type="primary" @click="UploadFile = true">选择上传文件</el-button>
@@ -144,7 +144,7 @@
           <el-button type="primary" @click="SubmitUploadFile">确 定</el-button>
         </span>
       </el-dialog>
-      <!-- // 查看对话框 -->
+      <!-- // 操作里面查看产品对话框 -->
       <el-dialog title="产品信息" :visible.sync="DialogSee" width="50%" center>
         <el-row>
           <div style="font-weight:600">
@@ -491,7 +491,7 @@ export default {
     };
   },
   methods: {
-    //获取数据
+    //获取产品数据
     getList() {
       let data = { pageIndex: this.page, pageSize: this.num };
       ajax.authPost.bind(this)("/api/Management/Query/Product", data, res => {

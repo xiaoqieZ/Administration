@@ -9,11 +9,11 @@
           <mt-button icon="back">返回</mt-button>
         </div>
       </mt-header>
-      <el-steps :active="active" finish-status="success" align-center>
-        <el-step title="填写信息"></el-step>
-        <el-step title="补充信息"></el-step>
-        <el-step title="认证完成"></el-step>
-      </el-steps>
+      <Steps :current="current">
+        <Step title="步骤1"></Step>
+        <Step title="步骤2"></Step>
+        <Step title="步骤3"></Step>
+      </Steps>
       <!-- 填写信息 -->
       <div class="Authencenter" v-show="fill==1">
         <div class="Authenradio">
@@ -31,7 +31,7 @@
             <el-form-item class="phoneShort" label="短信验证：" prop="short">
               <el-input type="number" v-model="ruleForm.short"></el-input>
               <div v-if="getswithy">
-                  <van-count-down
+                <van-count-down
                   ref="countDown"
                   :time="5000"
                   :auto-start="false"
@@ -42,13 +42,13 @@
               </div>
               <div v-if="getGun">
                 <van-count-down
-                ref="countDown"
-                :time="5000"
-                :auto-start="true"
-                format="ss"
-                @finish="finished"
-              />
-              <el-button @click="reset" class="buttonShort" v-if="getagain">重新获取</el-button>
+                  ref="countDown"
+                  :time="5000"
+                  :auto-start="true"
+                  format="ss"
+                  @finish="finished"
+                />
+                <el-button @click="reset" class="buttonShort" v-if="getagain">重新获取</el-button>
               </div>
             </el-form-item>
             <el-form-item label="电子邮件：" prop="mail">
@@ -71,7 +71,12 @@
           </el-form-item>
           <el-form-item label="证件类型：" prop="certi">
             <el-select v-model="nameForm.certi" placeholder="请选择证件类型">
-              <el-option :label="item.text" :value="item.value" v-for="item in getDocument" :key="item.index"></el-option>
+              <el-option
+                :label="item.text"
+                :value="item.value"
+                v-for="item in getDocument"
+                :key="item.index"
+              ></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="证件号码：" prop="ber">
@@ -83,7 +88,12 @@
             </el-form-item>
             <el-form-item label="证件类型：" prop="mechanismCertificateType">
               <el-select v-model="nameForm.mechanismCertificateType" placeholder="请选择证件类型">
-                <el-option :label="item.text" :value="item.value" v-for="item in Business" :key="item.index"></el-option>
+                <el-option
+                  :label="item.text"
+                  :value="item.value"
+                  v-for="item in Business"
+                  :key="item.index"
+                ></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="证件号码：" prop="mechanismCertificateNo">
@@ -96,10 +106,7 @@
         <div class="goods">恭喜您完成认证</div>
       </div>
       <div class="buttommagin">
-        <el-button type="primary" plain @click="next('ruleForm')" v-if="isShow==0">下一步</el-button>
-        <!-- <el-button type="primary" @click="getnext('nameForm')" v-if="isShow==3">下一步</el-button> -->
-        <el-button type="primary" @click="getPhone" v-if="isShow==1">提交完成</el-button>
-        <el-button type="primary" @click="getPhone" v-if="isShow==2" disabled>提交完成</el-button>
+        <Button type="primary" @click="nextss">下一步</Button>
       </div>
     </div>
     <!-- 展示已认证的用户信息 -->
@@ -157,7 +164,6 @@ export default {
   data() {
     return {
       active: 0, // 步骤条
-      isShow: 0, //下一步跟完成提交两个按钮的切换
       radio: "", //单选框
       nameForm: {
         //补充信息
@@ -168,12 +174,12 @@ export default {
         mechanismCertificateType: "", //机构证件类型
         mechanismCertificateNo: "" //机构证件号码
       },
-      mechanism:false,//用户类型为机构类型
-      getswithy:true,//进入页面时，获取验证码功能
-      getGun:false,//进入页面时，重亲获取功能隐藏
-      getHide:true,//获取验证码按钮
-      getagain:false,//重新获取验证码按钮
-      Hang: 0, //认证页面跟完成认证页面
+      mechanism: false, //用户类型为机构类型
+      getswithy: true, //进入页面时，获取验证码功能
+      getGun: false, //进入页面时，重亲获取功能隐藏
+      getHide: true, //获取验证码按钮
+      getagain: false, //重新获取验证码按钮
+      Hang: 0, //认证页面跟完成认证页面，0代表未认证
       dofig: "", //本地保存的数据
       checkList: [], //协议资料阅读与确认
       fill: 1, //填写信息、补充信息、确认完成3个页面的切换
@@ -183,9 +189,9 @@ export default {
         short: "",
         mail: ""
       },
-      getDocument:[],//用户证件类型
-      Customer:[],//用户类型，个人、机构、产品
-      Business:[],//机构证件类型，如营业执照
+      getDocument: [], //用户证件类型
+      Customer: [], //用户类型，个人、机构、产品
+      Business: [], //机构证件类型，如营业执照
       rules: {
         //form表单的输入提示
         phone: [
@@ -230,7 +236,8 @@ export default {
       retNo: true,
       retGo: false,
       information: {},
-      mechanismName: false //机构input
+      mechanismName: false, //机构input
+      current: 0
     };
   },
   computed: {
@@ -250,11 +257,11 @@ export default {
     },
     plays() {
       //信息已提交，确定耐心等待按钮
-      this.Hang=1;
-      this.centerDialog=false
-      this.getPersonal()
+      this.Hang = 1;
+      this.centerDialog = false;
+      this.getPersonal();
     },
-    next(Ref) {
+    nextss() {
       if (
         this.checkList != "" &&
         this.checkList.length > 1 &&
@@ -262,20 +269,18 @@ export default {
       ) {
         this.$refs[this.Ref].validate(valid => {
           if (valid) {
-            if (this.active++ > 0) {
-              //认证完成页面
-              this.fill = 3;
-              this.isShow = 1; //完成按钮
-            } else if (this.active == 1 && this.radio == 2) {
-              //补充信息页面
-              this.mechanismName = true;
-              this.fill = 2;
-              this.isShow = 0; //下一步按钮
-            } else if (this.active == 1) {
-              this.fill = 2;
-              this.isShow = 0; //下一步按钮
-            } else {
-              return;
+            if (this.current == 0) {
+              //第一个下一步按钮
+              this.getPs();
+              if (this.radio == 2) {
+                this.mechanismName = true; //机构
+              }
+            } else if (this.current == 1) {
+              //第二个下一步按钮
+              this.getB();
+            } else if (this.current == 2) {
+              //第三个下一步按钮
+              this.centerDialog = true;
             }
           } else {
             return false;
@@ -285,60 +290,45 @@ export default {
         this.$message("您需要查看勾选协议");
       }
     },
-    //  点击完成，实名认证信息提交
-    getPhone() {
-      //   填写信息
+    //进入完成页面前验证补充材料
+    getB() {
+      let data = {
+        name: this.nameForm.name,
+        certificateType: this.nameForm.certi,
+        certificateNo: this.nameForm.ber,
+        mechanismName: this.nameForm.mechanismName,
+        mechanismCertificateType: this.nameForm.mechanismCertificateType,
+        mechanismCertificateNo: this.nameForm.mechanismCertificateNo
+      };
+      ajax.authPost.bind(this)(
+        "/api/Information/Account/SaveOthers",
+        data,
+        res => {
+          this.current = 2;
+          this.fill = 3;
+        }
+      );
+    },
+    //进入补充材料前验证填写的信息
+    getPs(res) {
       let servey = {
         customerType: this.radio,
         mobile: this.ruleForm.phone,
+        captcha: this.ruleForm.short,
         email: this.ruleForm.mail
       };
-      ajax.authPost.bind(this)("/api/Information/Account/Save", servey, res => {
-        console.log(res);
-        if (res.status == 200) {
-          this.dofig = res.data.code;
-        }
-        let feng = this.dofig;
-        storage.set("feng", feng);
-      });
-      if (this.radio == 2) {
-        //   补充信息
-        let data = {
-          name: this.nameForm.name,
-          certificateType: this.nameForm.certi,
-          certificateNo: this.nameForm.ber,
-          mechanismName: this.nameForm.mechanismName,
-          mechanismCertificateType: this.nameForm.mechanismCertificateType,
-          mechanismCertificateNo: this.nameForm.mechanismCertificateNo
-        };
-        ajax.authPost.bind(this)(
-          "/api/Information/Account/SaveOthers",
-          data,
-          r => {
-            console.log(r);
-          }
-        );
-      } else {
-        let data = {
-          name: this.nameForm.name,
-          certificateType: this.nameForm.certi,
-          certificateNo: this.nameForm.ber,
-        };
-        ajax.authPost.bind(this)(
-          "/api/Information/Account/SaveOthers",
-          data,
-          r => {
-            console.log(r);
-          }
-        );
-      }
-      // .catch(error => {
-      //   console.log(error);
-      // });
-      this.isShow = 2; //禁用按钮
-      this.centerDialog = true; //弹窗
-      this.retNo = false; //点击返回
-      this.retGo = true; //
+      ajax.authPost.bind(this)(
+        "/api/Information/Account/Save",
+        servey,
+        res => {
+          this.dofig = res.data.data;
+          this.current = 1;
+          this.fill = 2;
+          var feng = this.dofig
+          storage.set('feng',feng)
+        },
+        res => {}
+      );
     },
     //展示已认证的用户信息
     getPersonal() {
@@ -353,60 +343,67 @@ export default {
     },
     //获取验证码
     getShort() {
-      this.getHide=false;
+      this.getHide = false;
       this.$refs.countDown.start();
-      ajax.authPost.bind(this)("/api/Information/Account/Save/Sms", res => {
-        console.log(res);
-      });
+      ajax.authPost.bind(this)(
+        "/api/Information/Account/Save/Sms?phone=" + this.ruleForm.phone,
+        res => {
+          console.log(res);
+        }
+      );
     },
     //重新获取验证码
-     reset() {
-       this.getagain=false;//重新获取验证码
+    reset() {
+      this.getagain = false; //重新获取验证码
       this.$refs.countDown.reset();
-      ajax.authPost.bind(this)("/api/Information/Account/Save/Sms", res => {
-        console.log(res);
-      });
+      ajax.authPost.bind(this)(
+        "/api/Information/Account/Save/Sms?phone=" + this.ruleForm.phone,
+        res => {
+          console.log(res);
+        }
+      );
     },
     //倒计时结束的回调
     finished() {
-      this.getagain=true;//重新获取验证码按钮
-      this.getHide=false;//获取验证码按钮
-      this.getswithy=false;//进入页面时，获取验证码功能
-      this.getGun=true;//进入页面时，重新获取验证码功能
+      this.getagain = true; //重新获取验证码按钮
+      this.getHide = false; //获取验证码按钮
+      this.getswithy = false; //进入页面时，获取验证码功能
+      this.getGun = true; //进入页面时，重新获取验证码功能
     },
     // 用户类型个人、机构还是产品
-    getCustomer(){
-      ajax.authGet.bind(this)('/api/Common/6',res=>{
+    getCustomer() {
+      ajax.authGet.bind(this)("/api/Common/6", res => {
         // console.log(res)
-        if(res.data.code==200){
-          this.Customer=res.data.data
+        if (res.data.code == 200) {
+          this.Customer = res.data.data;
         }
       });
       //用户证件类型
-      ajax.authGet.bind(this)('/api/Common/1',res=>{
+      ajax.authGet.bind(this)("/api/Common/1", res => {
         // console.log(res)
-        if(res.data.code == 200){
-          this.getDocument=res.data.data
+        if (res.data.code == 200) {
+          this.getDocument = res.data.data;
         }
       });
       //机构证件类型
-      ajax.authGet.bind(this)('/api/Common/11',res=>{
+      ajax.authGet.bind(this)("/api/Common/11", res => {
         // console.log(res)
-        if(res.data.code==200){
-          this.Business=res.data.data
+        if (res.data.code == 200) {
+          this.Business = res.data.data;
         }
       });
     }
   },
   mounted() {
+    //判断用户是否注册
     let lisee = storage.get("feng");
     if (lisee) {
       this.Hang = 1;
       this.getPersonal();
-    };
+    }
     //判断用户认证的时候选择的是‘个人’‘机构’‘产品’,如果选择的不是机构，那就隐藏。
-    if(this.radio === 2){
-      this.mechanism=true
+    if (this.radio === 2) {
+      this.mechanism = true;
     }
     this.getCustomer();
   }
@@ -441,12 +438,12 @@ export default {
         right: 0;
         bottom: 0;
       }
-      /deep/.van-count-down{
+      /deep/.van-count-down {
         width: 98px;
         height: 40px;
-        line-height: 40px; 
+        line-height: 40px;
         text-align: center;
-        border: 1px solid #DCDFE6;      
+        border: 1px solid #dcdfe6;
         position: absolute;
         top: 0;
         right: 0;
@@ -481,7 +478,7 @@ export default {
   .modify {
     text-align: center;
   }
-  .messagul{
+  .messagul {
     padding: 0 10px;
   }
 }
@@ -491,7 +488,7 @@ export default {
 .el-input__suffix {
   height: 73% !important;
 }
-/deep/.el-popper{
-      margin-top: 0;
-    }
+/deep/.el-popper {
+  margin-top: 0;
+}
 </style>

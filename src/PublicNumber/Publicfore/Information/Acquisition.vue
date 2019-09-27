@@ -62,8 +62,8 @@
           <el-form-item label="职务" prop="post">
             <el-input v-model="ruleForm.post"></el-input>
           </el-form-item>
-          <el-form-item label="座机" prop="landline">
-            <el-input v-model="ruleForm.landline"></el-input>
+          <el-form-item label="座机" prop="landlinePit">
+            <el-input v-model="ruleForm.landlinePit"></el-input>
           </el-form-item>
           <el-form-item label="手机" prop="mobile" v-if="inputdisabled">
             <el-input v-model="ruleForm.mobile"></el-input>
@@ -80,8 +80,8 @@
           <el-form-item label="电子邮件" prop="email" v-if="inputName">
             <el-input type="email" v-model="ruleForm.email" :disabled="true"></el-input>
           </el-form-item>
-          <el-form-item label="地址" prop="address">
-            <el-input v-model="ruleForm.address"></el-input>
+          <el-form-item label="地址" prop="addressPit">
+            <el-input v-model="ruleForm.addressPit"></el-input>
           </el-form-item>
         </el-form>
         <div class="radios">
@@ -147,8 +147,8 @@ export default {
         mobile: "", // 手机
         code: "", // 邮编
         email: "", // 电子邮箱
-        address: "", // 地址
-        landline: "" // 座机
+        addressPit: "", // 地址
+        landlinePit: "" // 座机
       },
       radio: "", ////性别
       values: 0, //信息采集页面跟提交页面的变量
@@ -179,7 +179,7 @@ export default {
           { required: true, message: "请输入职务", trigger: "blur" },
           { min: 1, max: 12, message: "长度在 11 个字符", trigger: "blur" }
         ],
-        landline: [
+        landlinePit: [
           { required: true, message: "请输入座机", trigger: "blur" },
           { min: 1, max: 12, message: "长度在 11 个字符", trigger: "blur" }
         ],
@@ -187,7 +187,7 @@ export default {
           { required: true, message: "请输入邮编", trigger: "blur" },
           { min: 1, max: 12, message: "长度在 11 个字符", trigger: "blur" }
         ],
-        address: [
+        addressPit: [
           { required: true, message: "请输入", trigger: "blur" },
         ]
       }
@@ -214,9 +214,9 @@ export default {
               sex: this.radio,
               profession: this.ruleForm.occupation,
               duty: this.ruleForm.post,
-              landline: this.ruleForm.landline,
+              landline: this.ruleForm.landlinePit,
               postal: this.ruleForm.code,
-              address: this.ruleForm.address,
+              address: this.ruleForm.addressPit,
               acquisitionResult: this.RadioList
             };
             // 客户信息

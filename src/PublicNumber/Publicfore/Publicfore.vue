@@ -15,7 +15,7 @@
     <div class="myhomettop">
       <div class="myhometimg">
         <div class="imges">
-          <img :src="storageList.portrait" alt="头像" />
+          <img src="../../../static/img/youliya.jpg" alt="头像" />
           <div class="imgtime">
             <p>专业投资者</p>
           </div>
@@ -24,11 +24,11 @@
       <div class="myhomerequrey">
         <p>
           姓名：
-          <span>{{storageList.name}}</span>
+          <span>小茄子</span>
         </p>
         <p>
           手机：
-          <span>{{storageList.mobile}}</span>
+          <span>{{storageList==null||storageList.mobile==null?'- -':storageList.mobile}}</span>
         </p>
         <p>
           资产：
@@ -36,7 +36,7 @@
         </p>
         <p>
           类别：
-          <span>{{storageList.customerTypeName}}</span>
+          <span>{{storageList==null||storageList.customerTypeName==null?'- -':storageList.customerTypeName}}</span>
         </p>
       </div>
     </div>
@@ -171,7 +171,7 @@ import storage from "../../api/storage.js";
 export default {
   data() {
     return {
-      storageList:'',
+      storageList:{mobile:null},
       dialogVisible: false, //弹窗
       messagesName: [] //用户信息
     };
@@ -190,9 +190,9 @@ export default {
       })
         .then(res => {
         //   console.log(res);
-          ajax.authGet.bind(this)("/api/Information/Account",r=>{
-            console.log(r);
-            if (res.status == 200) {
+          ajax.authGet.bind(this)("/api/Information/Account",res=>{
+            console.log(res);
+            if (res.data.code == 200) {
             this.messagesName = res.data.data;
           }  
           })

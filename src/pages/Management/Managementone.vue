@@ -464,25 +464,22 @@ export default {
         }
       });
     },
-    //添加轮播图
+    //添加轮播图按钮
     addChart(){
       this.editFormVisible=true;
       this.chartId=0
-      this.clearUploadedImage();
       this.editForm.link=''
     },
-    //添加新闻
+    //添加新闻按钮
     addJournalism(){
       this.editFormlism=true;
       this.chartId=0;
-      this.clearUploadedImage()
       this.editrules.urls=this.editrules.title=this.editrules.content=''
     },
-    //添加关于
+    //添加关于按钮
     addAbout(){
       this.editFormname=true;
       this.chartId=0;
-      this.clearUploadedImage()
       this.aboutForm.usurl=this.aboutForm.ustitle=this.aboutForm.uscontent=''
     },
     //提交新闻资料

@@ -49,6 +49,7 @@ import Redeem from '@/PublicNumber/Publicfore/TransactionRecord/Redeem.vue'
 import Returnvisit from '@/PublicNumber/Publicfore/TransactionRecord/Returnvisit.vue'
 
 import Purchases from '@/PublicNumber/Publicthree/purchase/purchases.vue'
+import riskIdentification from '@/PublicNumber/Publicthree/purchase/riskIdentification.vue'
 import Login from '@/login/Login/'
 
 Vue.use(Router)
@@ -90,12 +91,12 @@ export default new Router({
       title:'购买产品',
       component:Purchases
     },
-    // {
-    //   path: '/Publicfore',
-    //   name: 'Publicfore',
-    //   title:'我的',
-    //   component: Publicfore,
-    // },
+    {
+      path: '/Publicthree/Purchases/riskIdentification',
+      name: 'riskIdentification',
+      title:'风险确认',
+      component:riskIdentification
+    },
     {
       path: '/Publicfore',
       name: 'Publicfore',
