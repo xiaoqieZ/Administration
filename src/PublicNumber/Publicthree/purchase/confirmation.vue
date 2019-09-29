@@ -1,0 +1,245 @@
+<template>
+  <div>
+    <mt-header fixed title="投资者购买信息确认">
+      <router-link to="/Publicthree/Purchases" slot="left">
+        <mt-button icon="back" @click="Return">返回</mt-button>
+      </router-link>
+    </mt-header>
+    <div class="confirmation" v-if="list">
+      <!-- 投资者确认 -->
+      <div class="confirm">
+        <div class="confirm_title">投资者确认</div>
+        <div class="confirm_list">
+          <p>机构名称</p>
+          <span>{{confirmData.mechanismName}}</span>
+        </div>
+        <div class="confirm_list">
+          <p>操作人员</p>
+          <span>_ _</span>
+        </div>
+        <div class="confirm_list">
+          <p>机构证件号</p>
+          <span>{{confirmData.mechanismCertificateNo}}</span>
+        </div>
+        <div class="confirm_list">
+          <p>投资者风险承受等级</p>
+          <span>{{risk.remark}}</span>
+        </div>
+        <div class="confirm_list">
+          <p>产品风险等级</p>
+          <span>{{risk.riskLevelName}}</span>
+        </div>
+        <div class="confirm_list">
+          <p>投资者类型</p>
+          <span>{{confirmData.customerTypeName}}</span>
+        </div>
+        <div class="confirm_list">
+          <p>投资者资格</p>
+          <span></span>
+        </div>
+        <div class="confirm_list">
+          <p>合同协议确认</p>
+          <p>
+            <span></span>
+            <span></span>
+            <span></span>
+          </p>
+        </div>
+      </div>
+      <!-- 补充材料 -->
+      <div class="confirm">
+        <div class="confirm_title">补充材料</div>
+        <el-form class="demo-ruleForm" label-width="100px">
+          <el-form-item label="账户名称">
+            <el-input v-model="name"></el-input>
+          </el-form-item>
+          <el-form-item  label="缴款账号">
+          <el-input v-model="account"></el-input>
+          </el-form-item>
+          <el-form-item  label="开户行信息">
+          <el-input v-model="bank"></el-input>
+          </el-form-item>
+          <el-form-item  label="缴款证明">
+          <el-upload
+            class="upload-demo"
+            ref="upload"
+            :action="action"
+            :on-success="uploadPayment"
+            :file-list="fileList"
+            :headers="access_token"
+          >
+            <el-button size="small" type="primary">上传</el-button>
+          </el-upload>
+          </el-form-item>
+          <el-form-item  label="银行卡照">
+          <el-upload
+            class="upload-demo"
+            ref="upload"
+            :action="action"
+            :on-success="uploadPayment"
+            :file-list="fileList"
+            :headers="access_token"
+          >
+            <el-button size="small" type="primary">上传</el-button>
+          </el-upload>
+          </el-form-item>
+        </el-form>
+      </div>
+      <!-- 金额确认 -->
+      <div class="confirm">
+        <div class="confirm_title">金额确认</div>
+        <div class="confirm_tow">
+          <p>申请买入金额(人民币.单位：元)</p>
+          <el-input v-model="rmb"></el-input>
+        </div>
+        <div class="confirm_tow">
+          <p>短信验证码</p>
+          <div class="confirm_button">
+            <el-input v-model="Code"></el-input>
+            <button class="buttom_huo">获取验证码</button>
+          </div>
+        </div>
+      </div>
+      <div class="buttom">
+        <el-button type="primary" @click="submit">确认</el-button>
+      </div>
+    </div>
+    <div class="apply " v-if="fill">
+        <div class="successfully">
+            <p>都买申请提交成功</p>
+        </div>
+        <el-button type="primary" @click="complete">完成</el-button>
+    </div>
+  </div>
+</template>
+<script>
+import ajax from "../../../api/https.js";
+import storage from "../../../api/storage.js";
+export default {
+  data() {
+    return {
+        list:true,//申购资料填写页面
+        fill:false,//申购成功页面
+      id: "", //产品Id
+      name: "", //账户名称
+      account: "", //缴款账号
+      bank: "", //开户行信息
+      rmb: "", //申请买入金额
+      Code: "", //短信验证码
+      confirmData: {}, // 获取投资者确认信息
+      risk: {}, //产品风险等级
+      access_token: {
+        Authorization: "Bearer " + sessionStorage.getItem("access_token")
+      },
+      fileList: [],
+      action: ajax.doms.bind(this)(
+        "/api/Information/Present/Product/Apply/Material/" +
+          this.$route.query.data
+      ),
+      ReportId: "", //缴款文件id
+      BankcardId: "", //银行卡id
+      confirmationMaterialId: 1 //申购确认书
+    };
+  },
+  methods: {
+    //返回产品Id
+    Return() {
+      let data = this.id;
+      this.$router.push({ path: "/Publicthree/purchases", query: { data } });
+    },
+    // 获取投资者确认信息
+    getConfirm() {
+      ajax.authGet.bind(this)("/api/Information/Account", res => {
+        this.confirmData = res.data.data;
+      });
+    },
+    //获取产品风险等级
+    getStorage() {
+      this.risk = storage.get("Risk");
+    },
+    //文件上传成功的回调
+    uploadPayment(response, file, fileList) {
+      this.ReportId = response.data.id;
+    },
+    //银行卡
+    uploadBankcard(response, file, fileList) {
+      this.BankcardId = response.data.id;
+    },
+    //提交
+    submit() {
+      let data = {
+        productId: this.id,
+        moneyAmount: this.rmb,
+        accountName: this.name,
+        account: this.account,
+        accountBank: this.bank,
+        paymentMaterialId: this.ReportId,
+        bankCardMaterialId: this.BankcardId,
+        confirmationMaterialId: this.confirmationMaterialId
+      };
+      ajax.authPost.bind(this)(
+        "/api/Information/Present/Product/Apply",
+        data,
+        res => {
+            this.fill=true
+            this.list=false
+        }
+      );
+    },
+    //完成
+    complete(){
+        this.$router.push({path:'/Publicthree'})
+    }
+  },
+  mounted() {
+    this.id = this.$route.query.data;
+    this.getConfirm();
+    this.getStorage();
+  }
+};
+</script>
+<style lang="less">
+.confirmation {
+  padding-top: 50px;
+  .confirm {
+    padding: 0 10px 20px 10px;
+    .confirm_title {
+      font-weight: 600;
+      border-left: 2px solid red;
+    }
+    .confirm_list {
+      height: 46px;
+      line-height: 45px;
+      border-bottom: 1px solid;
+      display: flex;
+      justify-content: space-between;
+    }
+    .confirm_button {
+      position: relative;
+      .buttom_huo {
+        right: 0;
+        bottom: 15px;
+        height: 40px;
+        position: absolute;
+      }
+    }
+  }
+}
+.buttom{
+          text-align: center;
+    padding-top: 53px;
+    /deep/.el-button--primary{
+        width: 100%;
+    }
+  }
+.apply{
+      text-align: center;
+    .successfully{
+        width: 100%;
+      height: 400px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+  }
+  }
+</style>

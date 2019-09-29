@@ -182,7 +182,6 @@
                     <el-upload
                       class="upload-demo"
                       ref="upload"
-                      :data="uploadData"
                       :action="action"
                       :on-preview="handlePreview"
                       :on-remove="handleRemove"
@@ -957,32 +956,32 @@
                 >{{scope.row.name}}</span>
               </template>
             </el-table-column>
-            <el-table-column align="center" prop="creationTime" label="投资者类型">
+            <el-table-column align="center" prop="investorType" label="投资者类型">
               <template slot-scope="scope">
-                <span>{{scope.row.investorType}}</span>
+                <span>{{scope.row.investorTypeName}}</span>
               </template>
             </el-table-column>
-            <el-table-column align="center" prop="recommendName" label="操作金额/份额">
+            <el-table-column align="center" prop="amount" label="操作金额/份额">
               <template slot-scope="scope">
                 <span>{{scope.row.amount}}</span>
               </template>
             </el-table-column>
-            <el-table-column align="center" prop="recommendName" label="操作类型">
+            <el-table-column align="center" prop="orderType" label="操作类型">
               <template slot-scope="scope">
-                <span>{{scope.row.orderType}}</span>
+                <span>{{scope.row.orderTypeName}}</span>
               </template>
             </el-table-column>
-            <el-table-column align="center" prop="recommendName" label="购买/赎回时间">
+            <el-table-column align="center" prop="creationTime" label="购买/赎回时间">
               <template slot-scope="scope">
                 <span>{{scope.row.creationTime}}</span>
               </template>
             </el-table-column>
-            <el-table-column align="center" prop="recommendName" label="操作时间">
+            <el-table-column align="center" prop="modifiedTime" label="操作时间">
               <template slot-scope="scope">
                 <span>{{scope.row.modifiedTime}}</span>
               </template>
             </el-table-column>
-            <el-table-column align="center" prop="recommendName" label="状态">
+            <el-table-column align="center" prop="orderStatusName" label="状态">
               <template slot-scope="scope">
                 <span>{{scope.row.orderStatusName}}</span>
               </template>
@@ -990,7 +989,7 @@
             <el-table-column align="center" prop="isQualified" label="操作">
               <template slot-scope="scope">
                 <div>
-                  {{scope.row.orderStatusName='待处理'?'（this.effective=true)':'this.effective=false'}}
+                  {{scope.row.orderStatusName='待处理'?'this.effective=true':'this.effective=false'}}
                   <div v-if="effective">
                     <span class="spanColor">{{effectiveButton}}</span>
                     <span class="spanColor">{{voidButton}}</span>
@@ -1170,7 +1169,6 @@ export default {
       tabelPresentationList: [], //报告管理数据
       tabelPresentationPage: "", //数据条数
       checkList: [],
-      uploadData: {},
       action: ajax.doms.bind(this)("/api/Management/Product/Upload"),
       actionReport: ajax.doms.bind(this)(
         "/api/Management/Product/Report/Upload"
@@ -1431,7 +1429,7 @@ export default {
             res => {
               this.$router.push({
                 path: "/NavBar/DataDitionary/BankData",
-                query: { nav }
+                // query: { nav }
               });
             }
           );

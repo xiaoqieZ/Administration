@@ -50,6 +50,9 @@ import Returnvisit from '@/PublicNumber/Publicfore/TransactionRecord/Returnvisit
 
 import Purchases from '@/PublicNumber/Publicthree/purchase/purchases.vue'
 import riskIdentification from '@/PublicNumber/Publicthree/purchase/riskIdentification.vue'
+import PurchaseFund from '@/PublicNumber/Publicthree/purchase/purchaseFund.vue'
+import Confirmation from '@/PublicNumber/Publicthree/purchase/Confirmation.vue'
+
 import Login from '@/login/Login/'
 
 Vue.use(Router)
@@ -92,9 +95,21 @@ export default new Router({
       component:Purchases
     },
     {
+      path: '/Publicthree/Purchases/purchaseFund',
+      name: 'purchaseFund',
+      title:'确认购买产品',
+      component:PurchaseFund
+    },
+    {
+      path: '/Publicthree/Purchases/confirmation',
+      name: 'confirmation',
+      title:'投资者购买信息确认',
+      component:Confirmation
+    },
+    {
       path: '/Publicthree/Purchases/riskIdentification',
       name: 'riskIdentification',
-      title:'风险确认',
+      title:'基金档案',
       component:riskIdentification
     },
     {

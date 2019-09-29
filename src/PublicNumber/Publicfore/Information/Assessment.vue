@@ -125,7 +125,8 @@ export default {
         itemId: index.id,
         optionId: [o.id]
       };
-      //   console.log(this.RadioList)
+        console.log(this.RadioList[i])
+
     },
     //重新测试
     retest() {

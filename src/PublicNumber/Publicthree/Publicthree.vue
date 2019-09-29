@@ -4,8 +4,9 @@
     <div class="raise" v-show="muj==0">
       <div class="aggre">
         <p>
-          您现在是
-          <span style="color:red">{{riskName.riskLevelName}}</span>投资者推荐下列产品
+          <span>您现在是</span>
+          <span style="color:red">{{riskName==null || riskName.riskLevelName == null?'- -':riskName.riskLevelName}}</span>
+          <span>投资者推荐下列产品</span>
         </p>
       </div>
       <div class="plops" v-for="(item,index) in popularData" :key="item.productId">       
@@ -112,6 +113,7 @@ export default {
     //拿到用户的风险等级
     getStorage() {
       this.riskName = storage.get("Risk");
+
     },
     //判断用户是否实名注册过
     getRealName() {

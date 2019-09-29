@@ -1,7 +1,7 @@
 <template>
   <div class="goshoping">
     <div class="shopings">
-      <mt-header fixed>
+      <mt-header fixed title="基金产品">
         <router-link to="/Publicthree" slot="left">
           <mt-button icon="back">返回</mt-button>
         </router-link>
@@ -17,7 +17,7 @@
       <span>{{productData.riskLevelName}}</span>
     </div>
     <div class="fund">
-      <van-collapse  v-model="activeNames">
+      <van-collapse v-model="activeNames">
         <van-collapse-item title="投资范围" name="1">{{productRange.scale}}</van-collapse-item>
       </van-collapse>
     </div>
@@ -30,7 +30,7 @@
       </div>
     </div>
     <P style="height:10px;background:#d4d2d2;"></P>
-    <div class="fund">
+    <div class="fund" @click="archives">
       <span>基金档案</span>
       <van-icon name="arrow" />
     </div>
@@ -48,15 +48,15 @@ export default {
     return {
       productData: [],
       textarea: "",
-      activeNames: ['0'],
-      productRange:{},//投资范围
-      docuId:'',
+      activeNames: ["0"],
+      productRange: {}, //投资范围
+      docuId: ""
     };
   },
   methods: {
-      getid(){
-          this.docuId=this.$route.query.data
-      },
+    getid() {
+      this.docuId = this.$route.query.data;
+    },
     //获取产品基本信息
     getProduct() {
       ajax.authGet.bind(this)(
@@ -67,22 +67,35 @@ export default {
       );
     },
     //投资范围
-    getRange(){
-        ajax.authGet.bind(this)('/api/Information/Present/Product/Investment/'+ this.$route.query.data,
-        res=>{
-            this.productRange = res.data.data;
-        })
+    getRange() {
+      ajax.authGet.bind(this)(
+        "/api/Information/Present/Product/Investment/" + this.$route.query.data,
+        res => {
+          this.productRange = res.data.data;
+        }
+      );
+    },
+    // 基金档案
+    archives() {
+      let data = this.docuId;
+      this.$router.push({
+        path: "/Publicthree/Purchases/riskIdentification",
+        query: { data }
+      });
     },
     //购买
-    purchase(){
-        let data = this.docuId
-        this.$router.push({path:'/Publicthree/Purchases/riskIdentification',query:{data}})  
+    purchase() {
+      let data = this.docuId;
+      this.$router.push({
+        path: "/Publicthree/Purchases/purchaseFund",
+        query: { data }
+      });
     }
   },
   mounted() {
     this.getProduct();
     this.getRange();
-    this.getid()
+    this.getid();
   }
 };
 </script>
@@ -102,8 +115,8 @@ export default {
     border-bottom: 1px solid;
     display: flex;
     justify-content: space-between;
-    .van-icon-arrow{
-        line-height: 50px;
+    .van-icon-arrow {
+      line-height: 50px;
     }
   }
   .funds {
