@@ -989,10 +989,9 @@
             <el-table-column align="center" prop="isQualified" label="操作">
               <template slot-scope="scope">
                 <div>
-                  {{scope.row.orderStatusName='待处理'?'this.effective=true':'this.effective=false'}}
                   <div v-if="effective">
-                    <span class="spanColor">{{effectiveButton}}</span>
-                    <span class="spanColor">{{voidButton}}</span>
+                    <span class="spanColor" @click="Available(scope.$index,scope.row)">{{effectiveButton}}</span>
+                    <span class="spanColor" @click="Inavailable(scope.$index,scope.row)">{{voidButton}}</span>
                   </div>
                   <div v-if="!effective">
                     <span class="spanColor">——</span>
@@ -2098,10 +2097,20 @@ export default {
         data,
         res => {
           this.PurchaseList = res.data.data.list;
+          for(var i=0;i<this.PurchaseList.length;i++){
+            this.liii = this.PurchaseList[i].orderStatusName
+          }
           this.PurchaseDataPage = res.data.data.page;
+          if(this.liii=='待处理'){
+            this.effective=true;
+          }
         }
       );
       this.getOrder();
+    },
+    //订单有效
+    Available(){
+      
     },
     //获取有效/无效订单
     getOrder() {
@@ -2257,14 +2266,11 @@ export default {
       justify-content: space-between;
       align-items: center;
       .Marketing_list {
-        .Marketing_title {
-        }
+        
         .Marketing_Record {
           font-size: 14px;
           color: #409eff;
         }
-      }
-      .Marketing_switch {
       }
     }
   }

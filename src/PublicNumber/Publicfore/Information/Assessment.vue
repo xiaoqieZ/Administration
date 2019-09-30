@@ -158,6 +158,10 @@ export default {
     margin-top: 50px;
     .options {
       padding: 10px 0;
+      .el-radio{
+            white-space: normal;
+    word-break: break-all;
+      }
     }
   }
   /deep/.el-button--primary {
