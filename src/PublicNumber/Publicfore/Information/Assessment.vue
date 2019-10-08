@@ -7,14 +7,14 @@
     </mt-header>
 
     <div class="radios" v-show="values==0">
-      <div class="options" v-for="(item,i) in getQuestlist" :key="item.id">
+      <div class="options" v-for="(item,index) in getQuestlist" :key="item.id">
         <p>{{item.title}}</p>
         <el-radio-group v-model="item.radio">
           <el-radio
             :label="option.id"
             v-for="option in item.options"
             :key="option.id"
-            @change="ChangeRadio($event,item,i,option)"
+            @change="ChangeRadio($event,item,index,option)"
           >{{option.content}}</el-radio>
           <br />
         </el-radio-group>
@@ -120,12 +120,12 @@ export default {
       });
     },
     //选择题选中
-    ChangeRadio(e, index, i, o) {
-      this.RadioList[i] = {
-        itemId: index.id,
+    ChangeRadio(e, item, index, o) {
+      this.RadioList[index] = {
+        itemId: item.id,
         optionId: [o.id]
       };
-        console.log(this.RadioList[i])
+        console.log(this.RadioList[index])
 
     },
     //重新测试

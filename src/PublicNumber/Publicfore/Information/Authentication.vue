@@ -10,11 +10,11 @@
         </div>
       </mt-header>
       <Steps :current="current">
-        <Step title="步骤1"></Step>
-        <Step title="步骤2"></Step>
-        <Step title="步骤3"></Step>
+        <Step title="填写信息"></Step>
+        <Step title="补充信息"></Step>
+        <Step title="完成"></Step>
       </Steps>
-      <!-- 填写信息 -->
+      <!-- 填写信息类型 -->
       <div class="Authencenter" v-show="fill==1">
         <div class="Authenradio">
           <span>投资者类型：</span>
@@ -64,7 +64,7 @@
         </el-checkbox-group>
       </div>
       <!-- 补充信息 -->
-      <div v-show="fill==2">
+      <div v-show="fill==2" style="padding-top:10px">
         <el-form label-width="90px" :model="nameForm" :rules="ruForm" ref="nameForm">
           <el-form-item label="真实姓名：" prop="name">
             <el-input type="text" v-model="nameForm.name"></el-input>
@@ -324,8 +324,8 @@ export default {
           this.dofig = res.data.data;
           this.current = 1;
           this.fill = 2;
-          var feng = this.dofig
-          storage.set('feng',feng)
+          var feng = this.dofig;
+          storage.set("feng", feng);
         },
         res => {}
       );
@@ -413,13 +413,13 @@ export default {
 <style lang="less">
 .Authentitle {
   margin-top: 50px;
+  padding: 0 10px;
   .Authencenter {
     margin: 20px 0;
     .Authenradio {
       padding: 0 0 20px 10px;
     }
     /deep/.el-radio-group {
-      width: 95%;
       margin: 0 10px;
       /deep/.el-checkbox__label {
         font-size: 12px;
@@ -449,6 +449,10 @@ export default {
         right: 0;
       }
     }
+    /deep/.el-checkbox__label {
+      display: inline;
+      white-space: normal;
+    }
   }
   .goods {
     width: 100%;
@@ -457,13 +461,9 @@ export default {
     line-height: 400px;
   }
   .buttommagin {
-    /deep/.el-button--primary.is-plain {
-      width: 95%;
-      margin: 0 10px;
-    }
-    .el-button--primary {
-      width: 95%;
-      margin: 0 10px;
+    text-align: center;
+    /deep/.ivu-btn-primary {
+      width: 100%;
     }
   }
   .el-form-item__content {
@@ -471,6 +471,9 @@ export default {
   }
   .el-form-item__label {
     padding: 0;
+  }
+  /deep/.ivu-steps-horizontal {
+    text-align: center;
   }
 }
 .modify_title {

@@ -989,13 +989,18 @@
             <el-table-column align="center" prop="isQualified" label="操作">
               <template slot-scope="scope">
                 <div>
-                  <div v-if="effective">
-                    <span class="spanColor" @click="Available(scope.$index,scope.row)">{{effectiveButton}}</span>
-                    <span class="spanColor" @click="Inavailable(scope.$index,scope.row)">{{voidButton}}</span>
+                  <div v-if="scope.row.orderStatus==2">
+                    <span
+                      class="spanColor"
+                      @click="Available(scope.$index,scope.row)"
+                    >{{effectiveButton}}</span>
+                    <span
+                      class="spanColor"
+                      @click="Inavailable(scope.$index,scope.row)"
+                    >{{voidButton}}</span>
                   </div>
-                  <div v-if="!effective">
-                    <span class="spanColor">——</span>
-                    <span class="spanColor">——</span>
+                  <div v-else>
+                    <span class="spanColor">— —</span>
                   </div>
                 </div>
               </template>
@@ -1112,7 +1117,6 @@ export default {
       settingsPage: false, //功能设置页面
       effectiveButton: "", //有效
       voidButton: "", //无效
-      effective: false, //订单有效/无效
       orderList: [], //订单有效/无效
       PurchaseDataPage: "", //购买记录分页查询数据总条数
       PurchaseList: [], //购买记录分页查询数据
@@ -1336,7 +1340,8 @@ export default {
       RecommendSwitch: false, //开关
       salableSwitch: false, //开关
       consignmentSwitch: false, //开关
-      redeemSwitch: false //开关
+      redeemSwitch: false, //开关
+      Array: {} //订单状态
     };
   },
   methods: {
@@ -1427,7 +1432,7 @@ export default {
             data,
             res => {
               this.$router.push({
-                path: "/NavBar/DataDitionary/BankData",
+                path: "/NavBar/DataDitionary/BankData"
                 // query: { nav }
               });
             }
@@ -2097,20 +2102,28 @@ export default {
         data,
         res => {
           this.PurchaseList = res.data.data.list;
-          for(var i=0;i<this.PurchaseList.length;i++){
-            this.liii = this.PurchaseList[i].orderStatusName
-          }
           this.PurchaseDataPage = res.data.data.page;
-          if(this.liii=='待处理'){
-            this.effective=true;
-          }
         }
       );
       this.getOrder();
     },
     //订单有效
-    Available(){
-      
+    Available(index, row) {
+      ajax.authPost.bind(this)(
+        "/api/Management/Product/Market/Trade/Available/" + row.tradeId,
+        res => {
+          this.clickPurchase();
+        }
+      );
+    },
+    //订单无效
+    Inavailable(index, row) {
+      ajax.authPost.bind(this)(
+        "/api/Management/Product/Market/Trade/Inavailable/" + row.tradeId,
+        res => {
+          this.clickPurchase();
+        }
+      );
     },
     //获取有效/无效订单
     getOrder() {
@@ -2121,8 +2134,8 @@ export default {
           this.effectiveButton = this.orderList[2].text;
           this.voidButton = this.orderList[3].text;
         }
-        console.log(this.effectiveButton);
-        console.log(this.voidButton);
+        // console.log(this.effectiveButton);
+        // console.log(this.voidButton);
       });
     },
     // 购买记录返回上一级
@@ -2266,7 +2279,6 @@ export default {
       justify-content: space-between;
       align-items: center;
       .Marketing_list {
-        
         .Marketing_Record {
           font-size: 14px;
           color: #409eff;

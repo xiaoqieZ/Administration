@@ -5,94 +5,75 @@
         <mt-button icon="back">返回</mt-button>
       </router-link>
     </mt-header>
-    <div class="visit_title">
-      <p>
-        尊敬的投资者
-        <span>- -</span>,您好！
-      </p>
-      <p>
-        以下内容为您购买的产品：
-        <span>- -</span>的回访确认问卷，请您如实作答：
-      </p>
-    </div>
-    <div class="visit_id" v-for="(item,index) in radioData" :key="item.id">
-      <p>{{item.title}}</p>
-      <el-radio-group v-model="item.radio" @change="chenge">
-        <el-radio :label="open.score" v-for="open in item.options" :key="open.id">{{open.content}}</el-radio>
-      </el-radio-group>
-    </div>
-    <div class="primary">
-      <el-button type="primary" @click="submi">提交</el-button>
-    </div>
-    <div>
-      <el-dialog title="提示" :visible.sync="centerDialogVisible" width="80%" center>
-        <span>您的回访已完成！</span>
-        <span slot="footer" class="dialog-footer">
-          <el-button @click="centerDialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="centerDialog">确 定</el-button>
-        </span>
-      </el-dialog>
+    <div class="list">
+      <div class="cou" v-for="item in returnVisit" :key="item.Id">
+        <div class="coutent" @click="answer(item)">
+          <span>{{item.productName}}</span>
+          <span>
+            {{item.operationTypeName}}
+            <Icon type="ios-arrow-forward" size="24" />
+          </span>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import ajax from "../../../api/https.js";
+import storage from "../../../api/storage.js";
 export default {
   data() {
     return {
-      radio: "",
-      radioData: [],
-      lii: [],
-      centerDialogVisible:false,
+      page: 1,
+      num: 10,
+      returnVisit: [], //用于回去回访Id
+      Id: "",
+      productName: "",
+      returnId:''
     };
   },
   methods: {
-    getRadio() {
-      ajax.authGet.bind(this)(
-        "/api/Information/Present/Product/VisitBack/Questionnaire?visitId=" + 1,
+    //获取回访记录
+    getVisitBack() {
+      let data = {
+        pageIndex: this.page,
+        pageSize: this.num
+      };
+      ajax.authPost.bind(this)(
+        "/api/Information/Present/Product/VisitBack",
+        data,
         res => {
-          this.radioData = res.data.data;
+          this.returnVisit = res.data.data.list;
+          this.returnId = this.returnVisit.forEach((index,row)=>{
+
+          })
         }
       );
     },
-    //选择题答案
-    chenge(e) {
-      this.lii.push(e);
-      // console.log(this.lii)
+    //按钮，进入单选界面
+    answer(data){
+      // console.log(data.id);return;
+      let productName = {productName:data.productName,visitId:data.id};
+      this.$router.push({path: '/Publicfore/TransactionRecord/ReturnvisitAnswer',query:{productName}})
     },
-    //提交回访单
-    submi() {
-      if (this.lii.length > 7) {
-          this.centerDialogVisible=true
-        // this.radio=''
-      } else {
-        this.$message("容我三思");
-      }
-    },
-    //对话框
-    centerDialog(){
-        this.centerDialogVisible=false;
-        this.$router.push({path:'/Publicfore'})
-    }
   },
   mounted() {
-    this.getRadio();
+    this.getVisitBack();
   }
 };
 </script>
 
 <style lang='less'>
-.visit_title {
-  padding-top: 50px;
-}
-.visit_id {
-  padding: 10px;
-}
-.primary {
-  padding-top: 50px;
-  .el-button--primary {
-    width: 100%;
+.list {
+  padding: 50px 10px 10px 10px;
+  .coutent {
+    height: 40px;
+    line-height: 40px;
+    border-bottom: 1px solid;
+    display: flex;
+    justify-content: space-between;
   }
 }
+
 </style>

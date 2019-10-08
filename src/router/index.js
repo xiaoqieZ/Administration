@@ -47,6 +47,8 @@ import Reservation from '@/PublicNumber/Publicfore/TransactionRecord/Reservation
 import Purchase from '@/PublicNumber/Publicfore/TransactionRecord/Purchase.vue'
 import Redeem from '@/PublicNumber/Publicfore/TransactionRecord/Redeem.vue'
 import Returnvisit from '@/PublicNumber/Publicfore/TransactionRecord/Returnvisit.vue'
+import ReturnvisitAnswer from '@/PublicNumber/Publicfore/TransactionRecord/ReturnvisitAnswer.vue'
+
 
 import Purchases from '@/PublicNumber/Publicthree/purchase/purchases.vue'
 import riskIdentification from '@/PublicNumber/Publicthree/purchase/riskIdentification.vue'
@@ -192,6 +194,12 @@ export default new Router({
           title:'回访记录',
           component: Returnvisit
         },
+        {
+          path: '/Publicfore/TransactionRecord/ReturnvisitAnswer',
+          name: 'ReturnvisitAnswer',
+          title:'回访记录单选',
+          component: ReturnvisitAnswer
+        }
       ]
     },
 

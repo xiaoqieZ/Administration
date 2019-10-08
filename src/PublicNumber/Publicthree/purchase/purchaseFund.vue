@@ -134,7 +134,7 @@ export default {
     },
     //14个单选题点击确定
     submitRadio() {
-      console.log(this.RadioList);
+      // console.log(this.RadioList);
       if (this.RadioList.length > 13) {
         this.centerDialogVisible = false;
       } else {
@@ -208,6 +208,9 @@ export default {
     /deep/.el-button--primary{
         width: 100%;
     }
+  }
+  /deep/.el-checkbox__label{
+    display: inline
   }
 }
 </style>

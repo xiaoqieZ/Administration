@@ -32,7 +32,7 @@
         </p>
         <p>
           资产：
-          <span style="font-weight: 600;color:red">7000.000.00￥</span>
+          <span style="font-weight: 600;color:red"><span>{{TotalAssets}}</span>￥</span>
         </p>
         <p>
           类别：
@@ -116,7 +116,7 @@
           <div class="myhometupdey">
             <p>
               <i class="el-icon-user"></i>
-              <span>预约记录</span>
+              <span>持仓记录</span>
             </p>
             <i class="el-icon-arrow-right"></i>
           </div>
@@ -173,7 +173,8 @@ export default {
     return {
       storageList:{mobile:null},
       dialogVisible: false, //弹窗
-      messagesName: [] //用户信息
+      messagesName: [], //用户信息
+      TotalAssets:''//用户资产
     };
   },
   methods: {
@@ -201,6 +202,12 @@ export default {
           console.log(error);
         });
     },
+    //用户资产
+    getTotalAssets(){
+      ajax.authGet.bind(this)('/api/Information/Present/Asset',res=>{
+        this.TotalAssets=res.data.data
+      })
+    },
     getStorage(){
       var data = storage.get('listaktion')
       this.storageList = data
@@ -208,7 +215,8 @@ export default {
   },
   mounted() {
     this.getName();
-    this.getStorage()
+    this.getStorage();
+    this. getTotalAssets();
   },
   components: {
     "tabbar-home": tebbarhome
