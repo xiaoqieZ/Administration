@@ -19,7 +19,9 @@
           <br />
         </el-radio-group>
       </div>
-      <el-button type="primary" plain @click="go">提交</el-button>
+      <div class="button_submit">
+        <el-button type="primary" plain @click="submit">提交</el-button>
+      </div>
     </div>
     <div class="radiosplay" v-show="values==1">
       <div class="Congratulations">
@@ -71,22 +73,19 @@ export default {
   },
   methods: {
     //提交答案
-    go() {
+    submit() {
       if (this.RadioList != "" && this.RadioList.length > 11) {
         let data = this.RadioList;
         ajax.authPost.bind(this)(
           "/api/Information/Account/Questionnaire",
           data,
           res => {
-            console.log(res);
-            if (res.data.code == 200) {
-              this.listoption = res.data.data;
-              let Risk = this.listoption;
-              storage.set("Risk", Risk);
-            }
+            this.listoption = res.data.data;
+            let Risk = this.listoption;
+            storage.set("Risk", Risk);
+            this.values = 1;
           }
         );
-        this.values = 1;
       } else {
         this.$message("不能为空");
       }
@@ -96,7 +95,7 @@ export default {
       this.centerDialogVisible = false;
       this.$router.push({ path: "/Publicfore/Information/Authentication" });
     },
-    determine(){
+    determine() {
       this.$router.push({ path: "/Publicfore" });
     },
     //取消实名认证
@@ -125,8 +124,7 @@ export default {
         itemId: item.id,
         optionId: [o.id]
       };
-        console.log(this.RadioList[index])
-
+      // console.log(this.RadioList[index])
     },
     //重新测试
     retest() {
@@ -158,10 +156,13 @@ export default {
     margin-top: 50px;
     .options {
       padding: 10px 0;
-      .el-radio{
-            white-space: normal;
-    word-break: break-all;
+      .el-radio {
+        white-space: normal;
+        word-break: break-all;
       }
+    }
+    .button_submit {
+      padding: 50px 0
     }
   }
   /deep/.el-button--primary {

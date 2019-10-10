@@ -108,7 +108,6 @@
           </div>
         </div>
         <el-button type="primary" @click="material">上传证明材料</el-button>
-        <a>稍后上传</a>
       </div>
     </div>
     <!-- 返回上一页 -->

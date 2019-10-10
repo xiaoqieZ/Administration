@@ -26,6 +26,10 @@ import Managementone from '@/pages/Management/Managementone'
 import Managementtow from '@/pages/Management/Managementtow'
 import Managementthree from '@/pages/Management/Managementthree'
 import Managementfour from '@/pages/Management/Managementfour'
+import RiskQuestionnaire from '@/pages/Management/RiskQuestionnaire'
+import KnowledgeAssessment from '@/pages/Management/KnowledgeAssessment'
+import BackaccessVolume from '@/pages/Management/BackaccessVolume'
+import EditorialQuestionnai from '@/pages/Management/EditorialQuestionnai'
 import Managementfive from '@/pages/Management/Managementfive'
 import Managementsix from '@/pages/Management/Managementsix'
 import Managementseven from '@/pages/Management/Managementseven'
@@ -60,376 +64,391 @@ import Login from '@/login/Login/'
 Vue.use(Router)
 
 export default new Router({
-  routes: [
-    {
-      path:'/',
+  routes: [{
+      path: '/',
       redirect: '/Publicfore',
     },
     // 前台
     {
       path: '/Publicone',
       name: 'Publicone',
-      title:'首页',
+      title: '首页',
       component: Publicone
     },
     {
-      path:'/Publicone/Information',
-      name:'Information',
-      title:'热门资讯',
-      component:Information
+      path: '/Publicone/Information',
+      name: 'Information',
+      title: '热门资讯',
+      component: Information
     },
     {
       path: '/Publictow',
       name: 'Publictow',
-      title:'关于我们',
+      title: '关于我们',
       component: Publictow
     },
     {
       path: '/Publicthree',
       name: 'Publicthree',
-      title:'私募产品',
+      title: '私募产品',
       component: Publicthree
     },
     {
       path: '/Publicthree/Purchases',
       name: 'Purchases',
-      title:'购买产品',
-      component:Purchases
+      title: '购买产品',
+      component: Purchases
     },
     {
       path: '/Publicthree/Purchases/purchaseFund',
       name: 'purchaseFund',
-      title:'确认购买产品',
-      component:PurchaseFund
+      title: '确认购买产品',
+      component: PurchaseFund
     },
     {
       path: '/Publicthree/Purchases/confirmation',
       name: 'confirmation',
-      title:'投资者购买信息确认',
-      component:Confirmation
+      title: '投资者购买信息确认',
+      component: Confirmation
     },
     {
       path: '/Publicthree/Purchases/riskIdentification',
       name: 'riskIdentification',
-      title:'基金档案',
-      component:riskIdentification
+      title: '基金档案',
+      component: riskIdentification
     },
     {
       path: '/Publicfore',
       name: 'Publicfore',
-      title:'我的',
+      title: '我的',
       component: Publicfore,
     },
     {
-      path:'/Publicfore/Information',
+      path: '/Publicfore/Information',
       name: 'Informations',
-      title:'认证模块',
-      component:Null,
-      children:[
-        {
+      title: '认证模块',
+      component: Null,
+      children: [{
           path: '/Publicfore/Information/Identification',
           name: 'Identification',
-          title:'投资者认定',
+          title: '投资者认定',
           component: Identification
         },
         {
           path: '/Publicfore/Information/Authentication',
           name: 'Authentication',
-          title:'实名认证',
+          title: '实名认证',
           component: Authentication
         },
         {
           path: '/Publicfore/Information/Assessment',
           name: 'Assessment',
-          title:'风险评测',
+          title: '风险评测',
           component: Assessment
         },
         {
           path: '/Publicfore/Information/Acquisition',
           name: 'Acquisition',
-          title:'信息采集',
+          title: '信息采集',
           component: Acquisition
         },
         {
           path: '/Publicfore/Information/Material',
           name: 'Material',
-          title:'证明材料',
+          title: '证明材料',
           component: Material
         },
         {
           path: '/Publicfore/Information/Conversion',
           name: 'Conversion',
-          title:'投资者转化',
+          title: '投资者转化',
           component: Conversion
         },
       ]
-    }, 
+    },
     {
-      path:'/Publicfore/TransactionRecord',
+      path: '/Publicfore/TransactionRecord',
       name: 'TransactionRecord',
-      title:'交易记录模块',
+      title: '交易记录模块',
       component: Null,
-      children: [
-        {
+      children: [{
           path: '/Publicfore/TransactionRecord/Reservation',
           name: 'Reservation',
-          title:'预约记录',
+          title: '预约记录',
           component: Reservation
         },
         {
           path: '/Publicfore/TransactionRecord/Purchase',
           name: 'Purchase',
-          title:'购买申请记录',
+          title: '购买申请记录',
           component: Purchase
         },
         {
           path: '/Publicfore/TransactionRecord/Redeem',
           name: 'Redeem',
-          title:'赎回记录',
+          title: '赎回记录',
           component: Redeem
         },
         {
           path: '/Publicfore/TransactionRecord/Returnvisit',
           name: 'Returnvisit',
-          title:'回访记录',
+          title: '回访记录',
           component: Returnvisit
         },
         {
           path: '/Publicfore/TransactionRecord/ReturnvisitAnswer',
           name: 'ReturnvisitAnswer',
-          title:'回访记录单选',
+          title: '回访记录单选',
           component: ReturnvisitAnswer
         }
       ]
     },
 
 
-// 后台
+    // 后台
     {
       path: '/Login',
       name: 'Login',
       component: Login
     },
     //公共导航栏
+    {
+      path: '/NavBar',
+      name: 'NavBar',
+      component: NavBar,
+      children: [
+        // 首页
         {
-          path: '/NavBar',
-          name: 'NavBar',
-          component: NavBar,
-          children: [
-            // 首页
-            {
-              path: '/NavBar/Homepage/Homepage',
-              name: 'Homepage',
-              component: Homepage,
+          path: '/NavBar/Homepage/Homepage',
+          name: 'Homepage',
+          component: Homepage,
+        },
+        // 适当性管理
+        {
+          path: 'CParameter',
+          name: 'CParameter',
+          component: Null,
+          children: [{
+              path: '/NavBar/CParameter/CurrencyData',
+              name: 'CurrencyData',
+              meta: {
+                title: '客户信息'
+              },
+              component: CurrencyData
             },
-            // 适当性管理
             {
-              path: 'CParameter',
-              name: 'CParameter',
-              component: Null,
-              children: [
-                {
-                  path: '/NavBar/CParameter/CurrencyData',
-                  name: 'CurrencyData',
-                  meta: {
-                    title: '客户信息'
-                  },
-                  component: CurrencyData
-                },
-                {
-                  path: '/NavBar/CParameter/CTAllocation',
-                  name: 'CTAllocation',
-                  title:'客户审核',
-                  component: CTAllocation
-                },
-                {
-                  path: '/NavBar/CParameter/CCTAllocation',
-                  name: 'CCTAllocation',
-                  title:'投资者份额',
-                  component: CCTAllocation
-                },
-                {
-                  path: '/NavBar/CParameter/CCCtallocation',
-                  name: 'CCCtallocation',
-                  title:'投资者导入',
-                  component: CCCtallocation
-                },
-                {
-                  path: '/NavBar/CParameter/CCCCtallocation',
-                  name: 'CCCCtallocation',
-                  title:'理财顾问',
-                  component: CCCCtallocation
-                },
-                {
-                  path: '/NavBar/CParameter/CCCCCtallocation',
-                  name: 'CCCCCtallocation',
-                  title:'智能自查',
-                  component: CCCCCtallocation
-                },
-                {
-                  path: '/NavBar/CParameter/personalData',
-                  name: 'personalData',
-                  title:'个人资料',
-                  component: personalData
-                }
-              ]
+              path: '/NavBar/CParameter/CTAllocation',
+              name: 'CTAllocation',
+              title: '客户审核',
+              component: CTAllocation
             },
-            // 信息披露
             {
-              path: 'DataDitionary',
-              name: 'DataDitionary',
-              component: Null,
-              children: [
-                {
-                  path: '/NavBar/DataDitionary/BankData',
-                  name: 'BankData',
-                  title:'产品列表',
-                  component: BankData
-                },
-                {
-                  path: '/NavBar/DataDitionary/PositionManagement',
-                  name: 'PositionManagement',
-                  title:'持仓管理',
-                  component: PositionManagement
-                },
-                {
-                  path: '/NavBar/DataDitionary/BankDataList',
-                  name: 'BankDataList',
-                  title:'添加产品',
-                  component: BankDataList
-                },
-                {
-                  path: '/NavBar/DataDitionary/BbankData',
-                  name: 'BbankData',
-                  title:'日历提醒',
-                  component: BbankData
-                }
-              ]
+              path: '/NavBar/CParameter/CCTAllocation',
+              name: 'CCTAllocation',
+              title: '投资者份额',
+              component: CCTAllocation
             },
-            // 电子签约
             {
-              path: 'UserManage',
-              name: 'UserManage',
-              component: Null,
-              children: [
-                {
-                  path: '/NavBar/UserManage/AccountManage',
-                  name: 'AccountManage',
-                  title:'去签约',
-                  component: AccountManage
-                },
-                {
-                  path: '/NavBar/UserManage/UserFun',
-                  name: 'UserFun',
-                  title:'基金合同',
-                  component: UserFun
-                },
-                {
-                  path: '/NavBar/UserManage/UserRecord',
-                  name: 'UserRecord',
-                  title:'公文文件',
-                  component: UserRecord
-                },
-                {
-                  path: '/NavBar/UserManage/UserInfo',
-                  name: 'UserInfo',
-                  title:'账户设置',
-                  component: UserInfo
-                }
-              ]
+              path: '/NavBar/CParameter/CCCtallocation',
+              name: 'CCCtallocation',
+              title: '投资者导入',
+              component: CCCtallocation
             },
-            // 备案材料
             {
-              path: 'MemberManage',
-              name: 'MemberManage',
-              component: Null,
-              children: [
-                {
-                  path: '/NavBar/MemberManage/Aparameters',
-                  name: 'Aparameters',
-                  title:'下载中心',
-                  component: Aparameters
-                }
-              ]
+              path: '/NavBar/CParameter/CCCCtallocation',
+              name: 'CCCCtallocation',
+              title: '理财顾问',
+              component: CCCCtallocation
             },
-            // 信息推送
             {
-              path: 'Pushmessages',
-              name: 'Pushmessages',
-              component: Null,
-              children: [
-                {
-                  path: '/NavBar/Pushmessages/Pushmessage',
-                  name: 'Pushmessage',
-                  title:'发送信息',
-                  component: Pushmessage
-                },
-                {
-                  path: '/NavBar/Pushmessages/Pushmessagetow',
-                  name: 'Pushmessagetow',
-                  title:'接收消息',
-                  component: Pushmessagetow
-                },
-                {
-                  path: '/NavBar/Pushmessages/Pushmessagethree',
-                  name: 'Pushmessagethree',
-                  title:'模板消息',
-                  component: Pushmessagethree
-                }
-              ]
+              path: '/NavBar/CParameter/CCCCCtallocation',
+              name: 'CCCCCtallocation',
+              title: '智能自查',
+              component: CCCCCtallocation
             },
-            // 系统管理
             {
-              path: 'Managements',
-              name: 'Managements',
-              component: Null,
-              children: [
-                {
-                  path: '/NavBar/Managements/Managementone',
-                  name: 'Managementone',
-                  title:'页面设置',
-                  component: Managementone
-                },
-                {
-                  path: '/NavBar/Managements/Managementtow',
-                  name: 'Managementtow',
-                  title:'投资者统计',
-                  component: Managementtow
-                },
-                {
-                  path: '/NavBar/Managements/Managementthree',
-                  name: 'Managementthree',
-                  title:'权限管理',
-                  component: Managementthree
-                },
-                {
-                  path: '/NavBar/Managements/Managementfour',
-                  name: 'Managementfour',
-                  title:'问卷管理',
-                  component: Managementfour
-                },
-                {
-                  path: '/NavBar/Managements/Managementfive',
-                  name: 'Managementfive',
-                  title:'使用统计',
-                  component: Managementfive
-                },
-                {
-                  path: '/NavBar/Managements/Managementsix',
-                  name: 'Managementsix',
-                  title:'同步设置',
-                  component: Managementsix
-                },
-                {
-                  path: '/NavBar/Managements/Managementseven',
-                  name: 'Managementseven',
-                  title:'认证管理',
-                  component: Managementseven
-                }
-              ]
+              path: '/NavBar/CParameter/personalData',
+              name: 'personalData',
+              title: '个人资料',
+              component: personalData
             }
           ]
-        } 
-    ],
-  linkActiveClass:'mui-active'//覆盖默认路由的高亮
+        },
+        // 信息披露
+        {
+          path: 'DataDitionary',
+          name: 'DataDitionary',
+          component: Null,
+          children: [{
+              path: '/NavBar/DataDitionary/BankData',
+              name: 'BankData',
+              title: '产品列表',
+              component: BankData
+            },
+            {
+              path: '/NavBar/DataDitionary/PositionManagement',
+              name: 'PositionManagement',
+              title: '持仓管理',
+              component: PositionManagement
+            },
+            {
+              path: '/NavBar/DataDitionary/BankDataList',
+              name: 'BankDataList',
+              title: '添加产品',
+              component: BankDataList
+            },
+            {
+              path: '/NavBar/DataDitionary/BbankData',
+              name: 'BbankData',
+              title: '日历提醒',
+              component: BbankData
+            }
+          ]
+        },
+        // 电子签约
+        {
+          path: 'UserManage',
+          name: 'UserManage',
+          component: Null,
+          children: [{
+              path: '/NavBar/UserManage/AccountManage',
+              name: 'AccountManage',
+              title: '去签约',
+              component: AccountManage
+            },
+            {
+              path: '/NavBar/UserManage/UserFun',
+              name: 'UserFun',
+              title: '基金合同',
+              component: UserFun
+            },
+            {
+              path: '/NavBar/UserManage/UserRecord',
+              name: 'UserRecord',
+              title: '公文文件',
+              component: UserRecord
+            },
+            {
+              path: '/NavBar/UserManage/UserInfo',
+              name: 'UserInfo',
+              title: '账户设置',
+              component: UserInfo
+            }
+          ]
+        },
+        // 备案材料
+        {
+          path: 'MemberManage',
+          name: 'MemberManage',
+          component: Null,
+          children: [{
+            path: '/NavBar/MemberManage/Aparameters',
+            name: 'Aparameters',
+            title: '下载中心',
+            component: Aparameters
+          }]
+        },
+        // 信息推送
+        {
+          path: 'Pushmessages',
+          name: 'Pushmessages',
+          component: Null,
+          children: [{
+              path: '/NavBar/Pushmessages/Pushmessage',
+              name: 'Pushmessage',
+              title: '发送信息',
+              component: Pushmessage
+            },
+            {
+              path: '/NavBar/Pushmessages/Pushmessagetow',
+              name: 'Pushmessagetow',
+              title: '接收消息',
+              component: Pushmessagetow
+            },
+            {
+              path: '/NavBar/Pushmessages/Pushmessagethree',
+              name: 'Pushmessagethree',
+              title: '模板消息',
+              component: Pushmessagethree
+            }
+          ]
+        },
+        // 系统管理
+        {
+          path: 'Managements',
+          name: 'Managements',
+          component: Null,
+          children: [{
+              path: '/NavBar/Managements/Managementone',
+              name: 'Managementone',
+              title: '页面设置',
+              component: Managementone
+            },
+            {
+              path: '/NavBar/Managements/Managementtow',
+              name: 'Managementtow',
+              title: '投资者统计',
+              component: Managementtow
+            },
+            {
+              path: '/NavBar/Managements/Managementthree',
+              name: 'Managementthree',
+              title: '权限管理',
+              component: Managementthree
+            },
+            {
+              path: '/NavBar/Managements/Managementfour',
+              name: 'Managementfour',
+              title: '问卷管理',
+              component: Managementfour,
+              children: [{
+                  path: '/NavBar/Managements/Managementfour/RiskQuestionnaire',
+                  name: 'RiskQuestionnaire',
+                  title: '风险调查问卷',
+                  component: RiskQuestionnaire,
+                },
+                {
+                  path: '/NavBar/Managements/Managementfour/KnowledgeAssessment',
+                  name: 'KnowledgeAssessment',
+                  title: '知识评测',
+                  component: KnowledgeAssessment,
+                },
+                {
+                  path: '/NavBar/Managements/Managementfour/BackaccessVolume',
+                  name: 'BackaccessVolume',
+                  title: '回访问卷',
+                  component: BackaccessVolume,
+                }
+              ]
+            },
+            {
+              path: '/NavBar/Managements/EditorialQuestionnai',
+              name: 'EditorialQuestionnai',
+              title: '编辑问卷',
+              component: EditorialQuestionnai
+            },
+            {
+              path: '/NavBar/Managements/Managementfive',
+              name: 'Managementfive',
+              title: '使用统计',
+              component: Managementfive
+            },
+            {
+              path: '/NavBar/Managements/Managementsix',
+              name: 'Managementsix',
+              title: '同步设置',
+              component: Managementsix
+            },
+            {
+              path: '/NavBar/Managements/Managementseven',
+              name: 'Managementseven',
+              title: '认证管理',
+              component: Managementseven
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  linkActiveClass: 'mui-active' //覆盖默认路由的高亮
 })

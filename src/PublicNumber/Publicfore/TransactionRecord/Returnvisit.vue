@@ -16,6 +16,9 @@
         </div>
       </div>
     </div>
+    <div class="nothing" v-if="message">
+            暂无回访记录
+        </div>
   </div>
 </template>
 
@@ -30,7 +33,8 @@ export default {
       returnVisit: [], //用于回去回访Id
       Id: "",
       productName: "",
-      returnId:''
+      returnId:'',
+      message: "",
     };
   },
   methods: {
@@ -46,8 +50,10 @@ export default {
         res => {
           this.returnVisit = res.data.data.list;
           this.returnId = this.returnVisit.forEach((index,row)=>{
-
           })
+          if (this.returnVisit.length == 0) {
+            this.message = true;
+          }
         }
       );
     },
@@ -75,5 +81,7 @@ export default {
     justify-content: space-between;
   }
 }
-
+.nothing {
+  text-align: center;
+}
 </style>

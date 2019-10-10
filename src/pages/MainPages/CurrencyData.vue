@@ -1,102 +1,104 @@
  <template>
   <div id="app">
     <div slot="客户信息" style="font-size:16px;">客户信息</div>
-    <vue-scroll>
-      <div class="currenminput">
-        <div class="left">
-          <!-- <el-input v-model="username" placeholder="请输入姓名"></el-input>
+    <div class="currenminput">
+      <div class="left">
+        <!-- <el-input v-model="username" placeholder="请输入姓名"></el-input>
           &nbsp;&nbsp;
           <el-input v-model="address" placeholder="请输入地址" @keyup.native.enter='getAdd'></el-input>
           &nbsp;&nbsp;
           <el-button type="primary" @click='getAdd'>添加</el-button>
           &nbsp;&nbsp;
-          <el-button type="primary" @click="exportExcel">导出</el-button>-->
-          <el-select v-model="nameForm.InvestorRole">
-            <el-option
-              :label="item.text"
-              :value="item.value"
-              v-for="item in InvestorRole"
-              :key="item.index"
-            ></el-option>
-          </el-select>
-          <el-select v-model="nameForm.Category">
-            <el-option
-              :label="item.text"
-              :value="item.value"
-              v-for="item in Category"
-              :key="item.index"
-            ></el-option>
-          </el-select>
-          <el-select v-model="nameForm.RiskLevel">
-            <el-option
-              :label="item.text"
-              :value="item.value"
-              v-for="item in RiskLevel"
-              :key="item.index"
-            ></el-option>
-          </el-select>
-          <el-select v-model="nameForm.Investortype">
-            <el-option
-              :label="item.text"
-              :value="item.value"
-              v-for="item in Investortype"
-              :key="item.index"
-            ></el-option>
-          </el-select>
-          <el-input v-model="search" placeholder="搜索姓名/机构名称" prefix-icon="el-icon-search"></el-input>
+        <el-button type="primary" @click="exportExcel">导出</el-button>-->
+        <el-select v-model="nameForm.InvestorRole">
+          <el-option
+            :label="item.text"
+            :value="item.value"
+            v-for="item in InvestorRole"
+            :key="item.index"
+          ></el-option>
+        </el-select>
+        <el-select v-model="nameForm.Category">
+          <el-option
+            :label="item.text"
+            :value="item.value"
+            v-for="item in Category"
+            :key="item.index"
+          ></el-option>
+        </el-select>
+        <el-select v-model="nameForm.RiskLevel">
+          <el-option
+            :label="item.text"
+            :value="item.value"
+            v-for="item in RiskLevel"
+            :key="item.index"
+          ></el-option>
+        </el-select>
+        <el-select v-model="nameForm.Investortype">
+          <el-option
+            :label="item.text"
+            :value="item.value"
+            v-for="item in Investortype"
+            :key="item.index"
+          ></el-option>
+        </el-select>
+        <el-input v-model="search" placeholder="搜索姓名/机构名称"></el-input>
 
-          <el-button type="primary" @click="sureSearch">确定</el-button>
-        </div>
+        <el-button type="primary" @click="sureSearch">确定</el-button>
       </div>
-      <!-- 表格数据操作 -->
-      <!-- .filter(data => !search || data.title.toLowerCase().includes(search.toLowerCase())) -->
-      <el-table :data="tabelList" stripe id="out-table" style="width: 100%">
-        <!-- 勾选框 -->
-        <el-table-column type="selection" width="55"></el-table-column>
-        <!-- 索引 -->
-        <!-- <el-table-column
+    </div>
+    <!-- 表格数据操作 -->
+    <!-- .filter(data => !search || data.title.toLowerCase().includes(search.toLowerCase())) -->
+    <el-table :data="tabelList" stripe id="out-table" style="width: 100%">
+      <!-- 勾选框 -->
+      <el-table-column type="selection" width="55"></el-table-column>
+      <!-- 索引 -->
+      <!-- <el-table-column
       align="center"
       type="index"
       prop="data"
       label="序号"
       width="100">
-        </el-table-column>-->
-        <el-table-column align="center" prop="name" label="姓名/机构名称" width="180">
-          <template slot-scope="scope">
-            <span style="color: #409eff"  @click="personalData(scope.$index, scope.row)">{{scope.row.name}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" prop="nickName" label="用户名" width="180">
-          <template slot-scope="scope">
-            <span>{{scope.row.nickName}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" prop="customerType" label="客户类别">
-          <template slot-scope="scope">
-            <span>{{scope.row.customerTypeName}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" prop="riskLevel" label="风险等级">
-          <template slot-scope="scope">
-            <span>{{scope.row.riskLevelName}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" prop="investorTypeName" label="客户状态">
-          <template slot-scope="scope">
-            <span>{{scope.row.investorTypeName}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" prop="investorType" label="投资者类别">
-          <template slot-scope="scope">
-            <span>{{scope.row.investorRoleName}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" prop="isQualified" label="是否为合格投资者">
-          <template slot-scope="scope">
-            <span>{{scope.row.isQualifiedName}}</span>
-          </template>
-        </el-table-column>
-        <!-- <el-table-column
+      </el-table-column>-->
+      <el-table-column align="center" prop="name" label="姓名/机构名称" width="180">
+        <template slot-scope="scope">
+          <span
+            style="color: #409eff"
+            @click="personalData(scope.$index, scope.row)"
+          >{{scope.row.name}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" prop="nickName" label="用户名" width="180">
+        <template slot-scope="scope">
+          <span>{{scope.row.nickName}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" prop="customerType" label="客户类别">
+        <template slot-scope="scope">
+          <span>{{scope.row.customerTypeName}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" prop="riskLevel" label="风险等级">
+        <template slot-scope="scope">
+          <span>{{scope.row.riskLevelName}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" prop="investorTypeName" label="客户状态">
+        <template slot-scope="scope">
+          <span>{{scope.row.investorTypeName}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" prop="investorType" label="投资者类别">
+        <template slot-scope="scope">
+          <span>{{scope.row.investorRoleName}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" prop="isQualified" label="是否为合格投资者">
+        <template slot-scope="scope">
+          <span>{{scope.row.isQualifiedName}}</span>
+        </template>
+      </el-table-column>
+      <!-- <el-table-column
       align="center" 
       width="280"
       label="操作">
@@ -106,9 +108,9 @@
             <el-button type="primary" icon="el-icon-view" size="mini" @click="checkDe(scope.$index, scope.row)"  circle></el-button>
       </template>
           </el-table-column>
-        <el-dialog title="编辑" :visible.sync="editFormVisible" :close-on-click-modal="true" :append-to-body="true" width="80%">-->
-        <!--//editForm表单提交的数据-->
-        <!-- <el-form :model="editForm" label-width="80px"  ref="editForm">
+      <el-dialog title="编辑" :visible.sync="editFormVisible" :close-on-click-modal="true" :append-to-body="true" width="80%">-->
+      <!--//editForm表单提交的数据-->
+      <!-- <el-form :model="editForm" label-width="80px"  ref="editForm">
               <el-form-item label="姓名" prop="name">
                 <el-input v-model="editForm.name" placeholder="请输入姓名"></el-input>
               </el-form-item>
@@ -120,23 +122,23 @@
               <el-button @click.native="editFormVisible = false">取消</el-button>
               <el-button type="primary" @click.native="editSubmit" >提交</el-button>
             </div>
-        </el-dialog>-->
-      </el-table>
+      </el-dialog>-->
+    </el-table>
 
-      <!-- 页码 -->
-      <div align="center">
-        <el-pagination
-          background
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="page"
-          :page-size="num"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="tabelCount.count"
-        ></el-pagination>
-      </div>
-      <!-- 查看详情 -->
-      <!-- <el-dialog title="详情" :append-to-body="true" :visible.sync="checkDetail" width="80%">
+    <!-- 页码 -->
+    <div align="center">
+      <el-pagination
+        background
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="page"
+        :page-size="num"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="tabelCount.count"
+      ></el-pagination>
+    </div>
+    <!-- 查看详情 -->
+    <!-- <el-dialog title="详情" :append-to-body="true" :visible.sync="checkDetail" width="80%">
         <p>姓名：{{guid}}</p>
         <p>地址： {{diz}}</p>
         <p>填表时间：{{times}}</p>
@@ -145,8 +147,7 @@
           <el-button @click="checkDetail = false">取 消</el-button>
           <el-button type="primary" @click="checkDetail = false">确 定</el-button>
         </span>
-      </el-dialog>-->
-    </vue-scroll>
+    </el-dialog>-->
   </div>
 </template>
 
@@ -268,9 +269,12 @@ export default {
       });
     },
     //点击姓名进入个人信息页
-    personalData(i,row){
-      let data = row.id
-      this.$router.push({path:'/NavBar/CParameter/personalData',query:{data}})
+    personalData(i, row) {
+      let data = row.id;
+      this.$router.push({
+        path: "/NavBar/CParameter/personalData",
+        query: { data }
+      });
     },
     // 添加
     // getAdd(){
@@ -318,13 +322,13 @@ export default {
     //每页显示数据量变更
     handleSizeChange: function(val) {
       this.num = val;
-      // this.getAllList(this.search, this.page, this.num);
+      this.getAllList;
     },
 
     //页码变更
     handleCurrentChange: function(val) {
       this.page = val;
-      // this.getAllList(this.search, this.page, this.num);
+      this.getAllList;
     }
     // // 编辑
     // handleEdit:function (index, row) {
@@ -376,6 +380,7 @@ export default {
  
  <style lang="less" >
 .currenminput {
+  height: auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -383,9 +388,6 @@ export default {
     /deep/.el-input__suffix {
       height: 70%;
     }
-    // /deep/.el-popper {
-    //   margin-top: 0 !important;
-    // }
   }
   .el-input {
     width: 220px;

@@ -20,7 +20,7 @@
               :key="item.index"
             ></el-option>
           </el-select>
-          <el-input v-model="search" placeholder="搜索姓名/机构名称" prefix-icon="el-icon-search"></el-input>
+          <el-input v-model="search" placeholder="搜索姓名/机构名称"></el-input>
 
           <el-button type="primary" @click="sureSearch">确定</el-button>
         </div>
@@ -102,7 +102,6 @@
           :total="tabelCount.count"
         ></el-pagination>
       </div>
-
       <!-- 特定对象查看详情 -->
       <div>
         <el-dialog :visible.sync="checkDetail" width="30%">
@@ -112,20 +111,18 @@
             </div>
           </div>
           <el-dialog title="审核内容" :append-to-body="true" :visible.sync="adopt" width="30%">
-            <p>审核结果：通过</p>
+            <p>特定对象审核结果：通过</p>
             <div class="remarks">
               <span>备注内容：</span>
               <textarea style="width:295px;height:99px" placeholder="请输入内容" v-model="textareaAdopt"></textarea>
             </div>
             <span slot="footer" class="dialog-footer">
               <el-button @click="adopt = false">取 消</el-button>
-              <el-button type="primary" @click="specificClick" v-if="specific">确 定</el-button>
-              <el-button type="primary" @click="appropriateClick" v-if="appropriates">确 定</el-button>
-              <el-button type="primary" @click="qualifiedClick" v-if="qualifieds">确 定</el-button>
+              <el-button type="primary" @click="specificClick">确 定</el-button>
             </span>
           </el-dialog>
           <el-dialog title="审核内容" append-to-body :visible.sync="noPassage" width="30%">
-            <p>审核结果：不通过</p>
+            <p>特定对象审核结果：不通过</p>
             <div class="remarks">
               <span>备注内容：</span>
               <textarea
@@ -136,9 +133,7 @@
             </div>
             <span slot="footer" class="dialog-footer">
               <el-button @click="noPassage = false">取 消</el-button>
-              <el-button type="primary" @click="NospecificClick" v-if="Nospecific">确 定</el-button>
-              <el-button type="primary" @click="NoappropriatesClick" v-if="Noappropriates">确 定</el-button>
-              <el-button type="primary" @click="NoqualifiedsClick" v-if="Noqualifieds">确 定</el-button>
+              <el-button type="primary" @click="NospecificClick">确 定</el-button>
             </span>
           </el-dialog>
           <span slot="footer" class="dialog-footer">
@@ -147,8 +142,86 @@
           </span>
         </el-dialog>
       </div>
-      <!-- 适当性涉核材料 -->
-
+      <!-- 适当性审核材料 -->
+      <div>
+        <el-dialog :visible.sync="checkDes" width="30%">
+          <div v-for="item in itemsy" :key="item.id">
+            <div v-for="list in item.items">
+              <span @click="res=>browse(list)">{{list.userMaterialType.name}}</span>
+            </div>
+          </div>
+          <el-dialog title="审核内容" :append-to-body="true" :visible.sync="ado" width="30%">
+            <p>适当性审核结果：通过</p>
+            <div class="remarks">
+              <span>备注内容：</span>
+              <textarea style="width:295px;height:99px" placeholder="请输入内容" v-model="textareaAdopt"></textarea>
+            </div>
+            <span slot="footer" class="dialog-footer">
+              <el-button @click="ado = false">取 消</el-button>
+              <el-button type="primary" @click="appropriateClick">确 定</el-button>
+            </span>
+          </el-dialog>
+          <el-dialog title="审核内容" append-to-body :visible.sync="noPass" width="30%">
+            <p>适当性审核结果：不通过</p>
+            <div class="remarks">
+              <span>备注内容：</span>
+              <textarea
+                style="width:295px;height:99px"
+                placeholder="请输入内容"
+                v-model="textareaNoPassage"
+              ></textarea>
+            </div>
+            <span slot="footer" class="dialog-footer">
+              <el-button @click="noPass = false">取 消</el-button>
+              <el-button type="primary" @click="NoappropriatesClick">确 定</el-button>
+            </span>
+          </el-dialog>
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="noPass = true">不通过</el-button>
+            <el-button type="primary" @click="ado = true">通 过</el-button>
+          </span>
+        </el-dialog>
+      </div>
+      <!-- 合格投资查看详情 -->
+      <div>
+        <el-dialog :visible.sync="check" width="30%">
+          <div v-for="item in itemsy" :key="item.id">
+            <div v-for="list in item.items">
+              <span @click="res=>browse(list)">{{list.userMaterialType.name}}</span>
+            </div>
+          </div>
+          <el-dialog title="审核内容" :append-to-body="true" :visible.sync="adop" width="30%">
+            <p>合格投资审核结果：通过</p>
+            <div class="remarks">
+              <span>备注内容：</span>
+              <textarea style="width:295px;height:99px" placeholder="请输入内容" v-model="textareaAdopt"></textarea>
+            </div>
+            <span slot="footer" class="dialog-footer">
+              <el-button @click="adop = false">取 消</el-button>
+              <el-button type="primary" @click="qualifiedClick">确 定</el-button>
+            </span>
+          </el-dialog>
+          <el-dialog title="审核内容" append-to-body :visible.sync="noPassa" width="30%">
+            <p>合格投资审核结果：不通过</p>
+            <div class="remarks">
+              <span>备注内容：</span>
+              <textarea
+                style="width:295px;height:99px"
+                placeholder="请输入内容"
+                v-model="textareaNoPassage"
+              ></textarea>
+            </div>
+            <span slot="footer" class="dialog-footer">
+              <el-button @click="noPassa = false">取 消</el-button>
+              <el-button type="primary" @click="NoqualifiedsClick">确 定</el-button>
+            </span>
+          </el-dialog>
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="noPassa = true">不通过</el-button>
+            <el-button type="primary" @click="adop = true">通 过</el-button>
+          </span>
+        </el-dialog>
+      </div>
       <!-- //遇坑，这两个二宝不能放在上面的div里面，不然会被隐藏了 -->
       <el-dialog append-to-body :visible.sync="dialogTableVisible" width="30%">
         <img :src="bigimage" alt="图" style="width:100%;" />
@@ -161,10 +234,10 @@
               <span @click="browse(list)">{{list.userMaterialType.name}}</span>
             </div>
           </div>
-          <span slot="footer" class="dialog-footer">
+          <!-- <span slot="footer" class="dialog-footer">
             <el-button @click="completion = false">取 消</el-button>
             <el-button type="primary" @click="completion = false">确 定</el-button>
-          </span>
+          </span>-->
         </el-dialog>
       </div>
     </vue-scroll>
@@ -215,7 +288,13 @@ export default {
       tabelCount: {}, //数据条数
       itemsy: [], //证件类型
       dialogTableVisible: false, //展示证明材料
-      id: ""
+      id: "",
+      adop: false,
+      noPassa: false,
+      ado: false,
+      noPass: false,
+      checkDes: false,
+      check: false
     };
   },
   methods: {
@@ -265,62 +344,43 @@ export default {
     },
     // 特定对象查看详情
     checkDe(index, row) {
-      this.specific = !this.specific;
-      this.appropriates = false;
-      this.qualifieds = false;
-      this.Nospecific = !this.Nospecific;
-      this.Noappropriates = false;
-      this.Noqualifieds = false;
       let id = row.id;
       this.id = row.id;
       this.lists("/api/Management/Audit/Material/Authentication/");
       // //审核通过
       let auditStatus = row.authentication.auditStatus;
-      if (auditStatus != 4) {
-        this.checkDetail = !this.checkDetail;
+      if (auditStatus == 4) {
+        this.completion = true;
       } else {
-        this.completion = !this.completion;
+        this.checkDetail = true;
       }
     },
     // 适当性审核查看详情
     appropriate(index, row) {
       let id = row.id;
       this.id = row.id;
-      (this.specific = false), (this.appropriates = !this.appropriates);
-      this.qualifieds = false;
-      this.Nospecific = false;
-      this.Noappropriates = !this.Noappropriates;
-      (this.Noqualifieds = false),
-        //   console.log(this.id)
-        this.lists("/api/Management/Audit/Material/Appropriateness/");
+      //   console.log(this.id)
+      this.lists("/api/Management/Audit/Material/Appropriateness/");
       //审核通过
-      if (row.appropriateness != null) {
-        let auditStatus = row.appropriateness.auditStatus;
-        if (auditStatus != 4) {
-          this.checkDetail = !this.checkDetail;
-        } else {
-          this.completion = !this.completion;
-        }
+      let auditStatus = row.appropriateness.auditStatus;
+      if (auditStatus == 4) {
+        this.completion = true;
+      } else {
+        this.checkDes = true;
       }
     },
     // 合格投资查看详情
     qualified(index, row) {
-      (this.specific = false),
-        (this.appropriates = false),
-        (this.qualifieds = !this.qualifieds);
-      (this.Nospecific = false),
-        (this.Noappropriates = false),
-        (this.Noqualifieds = !this.Noqualifieds);
       //   console.log(this.id)
       let id = row.id;
       this.id = row.id;
       this.lists("/api/Management/Audit/Material/Qualified/");
       //审核通过
       let auditStatus = row.qualified.auditStatus;
-      if (auditStatus != 4) {
-        this.checkDetail = !this.checkDetail;
+      if (auditStatus == 4) {
+        this.completion = true;
       } else {
-        this.completion = !this.completion;
+        this.check = true;
       }
     },
     // 补充材料查看详情
@@ -329,7 +389,7 @@ export default {
       let id = row.id;
       this.id = row.id;
       this.lists("/api/Management/Audit/Material/Others/");
-      this.completion = !this.completion;
+      this.completion = true;
     },
     //封装方法
     lists(i) {
@@ -345,36 +405,87 @@ export default {
 
     //特定对象审核通过按钮
     specificClick() {
-      this.test("/api/Management/Audit/Authentication");
+      let data = { userId: this.id, remark: this.textareaNoPassage };
+      ajax.authPost.bind(this)(
+        "/api/Management/Audit/Authentication",
+        data,
+        res => {
+          this.adopt = false;
+          this.checkDetail = false;
+          this.sureSearch()
+        }
+      );
     },
     //适当性审核通过按钮
     appropriateClick() {
-      this.test("/api/Management/Audit/Appropriateness");
+      let data = { userId: this.id, remark: this.textareaNoPassage };
+      ajax.authPost.bind(this)(
+        "/api/Management/Audit/Appropriateness",
+        data,
+        res => {
+          this.ado = false;
+          this.checkDes = false;
+          this.sureSearch()
+        }
+      );
     },
     //合格投资审核通过按钮
     qualifiedClick() {
-      this.test("/api/Management/Audit/Qualified");
+      // this.test("/api/Management/Audit/Qualified");
+      let data = { userId: this.id, remark: this.textareaNoPassage };
+      ajax.authPost.bind(this)("/api/Management/Audit/Qualified", data, res => {
+        this.noPassa = false;
+        this.check = false;
+        this.sureSearch()
+      });
     },
     //特定对象审核不通过按钮
     NospecificClick() {
-      this.test("/api/Management/Audit/Authentication/Refuse");
+      let data = { userId: this.id, remark: this.textareaNoPassage };
+      ajax.authPost.bind(this)(
+        "/api/Management/Audit/Authentication/Refuse",
+        data,
+        res => {
+          this.noPassage = false;
+          this.completion = false;
+          this.sureSearch()
+        }
+      );
     },
     //适当性审核不通过按钮
     NoappropriatesClick() {
-      this.test("/api/Management/Audit/Appropriateness/Refuse");
+      let data = { userId: this.id, remark: this.textareaNoPassage };
+      ajax.authPost.bind(this)(
+        "/api/Management/Audit/Appropriateness/Refuse",
+        data,
+        res => {
+          this.noPass = false;
+          this.checkDes = false;
+          this.sureSearch()
+        }
+      );
+    },
+    // //合格投资审核通过按钮
+    qualifiedClick() {
+      let data = { userId: this.id, remark: this.textareaNoPassage };
+      ajax.authPost.bind(this)("/api/Management/Audit/Qualified", data, res => {
+        this.adop = false;
+        this.check = false;
+        this.sureSearch()
+      });
     },
     //合格投资审核不通过按钮
     NoqualifiedsClick() {
-      this.test("/api/Management/Audit/Qualified/Refuse");
-    },
-    test(u) {
       let data = { userId: this.id, remark: this.textareaNoPassage };
-      ajax.authPost.bind(this)(u, data, res => {
-        console.log(res);
-        this.textareaNoPassage=''
-        this.noPassage = !this.noPassage;
-        this.checkDetail = !this.checkDetail;
-      });
+      ajax.authPost.bind(this)(
+        "/api/Management/Audit/Qualified/Refuse",
+        data,
+        res => {
+          this.noPassa = false;
+          this.check = false;
+          this.sureSearch()
+        }
+      );
     },
 
     //每页显示数据量变更
@@ -396,8 +507,9 @@ export default {
 };
 </script>
  
- <style lang="less" >
+ <style lang="less" scoped>
 .currenminput {
+  height: auto;
   display: flex;
   align-items: center;
   justify-content: space-between;

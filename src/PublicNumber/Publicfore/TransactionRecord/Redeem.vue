@@ -32,6 +32,7 @@
         </div>
       </div>
     </div>
+    <div class="nothing" v-if="message">暂无赎回记录</div>
   </div>
 </template>
 
@@ -42,7 +43,8 @@ export default {
     return {
       page: 1,
       num: 10,
-      dataList: []
+      dataList: [],
+      message: ""
     };
   },
   methods: {
@@ -57,6 +59,9 @@ export default {
         data,
         res => {
           this.dataList = res.data.data.list;
+          if (this.dataList.length == 0) {
+            this.message = true;
+          }
         }
       );
     }
@@ -82,5 +87,8 @@ export default {
       }
     }
   }
+}
+.nothing {
+  text-align: center;
 }
 </style>

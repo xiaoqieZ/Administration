@@ -118,7 +118,7 @@
       </mt-header>
       <div class="modify">已认证页面，可以修改信息</div>
       <div class="messagul">
-        <ul>
+        <ul  v-if="information.mechanismName==''">
           <li>姓名：{{information.name}}</li>
           <li>手机：{{information.mobile}}</li>
           <li>邮箱：{{information.email}}</li>
@@ -126,7 +126,13 @@
           <li>证件类型：{{information.certificateTypeName}}</li>
           <li>证件号：{{information.certificateNo}}</li>
         </ul>
-        <ul v-if="mechanism">
+        <ul v-else>
+          <li>姓名：{{information.name}}</li>
+          <li>手机：{{information.mobile}}</li>
+          <li>邮箱：{{information.email}}</li>
+          <li>客户类型：{{information.customerTypeName}}</li>
+          <li>证件类型：{{information.certificateTypeName}}</li>
+          <li>证件号：{{information.certificateNo}}</li>
           <li>机构名称：{{information.mechanismName}}</li>
           <li>机构证件类型：{{information.mechanismCertificateTypeName}}</li>
           <li>机构证件号码：{{information.mechanismCertificateNo}}</li>
@@ -174,7 +180,6 @@ export default {
         mechanismCertificateType: "", //机构证件类型
         mechanismCertificateNo: "" //机构证件号码
       },
-      mechanism: false, //用户类型为机构类型
       getswithy: true, //进入页面时，获取验证码功能
       getGun: false, //进入页面时，重亲获取功能隐藏
       getHide: true, //获取验证码按钮
@@ -400,10 +405,6 @@ export default {
     if (lisee) {
       this.Hang = 1;
       this.getPersonal();
-    }
-    //判断用户认证的时候选择的是‘个人’‘机构’‘产品’,如果选择的不是机构，那就隐藏。
-    if (this.radio === 2) {
-      this.mechanism = true;
     }
     this.getCustomer();
   }

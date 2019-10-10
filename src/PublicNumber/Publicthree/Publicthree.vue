@@ -5,15 +5,17 @@
       <div class="aggre">
         <p>
           <span>您现在是</span>
-          <span style="color:red">{{riskName==null || riskName.riskLevelName == null?'- -':riskName.riskLevelName}}</span>
+          <span
+            style="color:red"
+          >{{riskName==null || riskName.riskLevelName == null?'- -':riskName.riskLevelName}}</span>
           <span>投资者推荐下列产品</span>
         </p>
       </div>
-      <div class="plops" v-for="(item,index) in popularData" :key="item.productId">       
-          <div class="period">
-            <Icon type="ios-bookmark" size="20" />运集期
-          </div>
-          <div @click="change(item)">
+      <div class="plops" v-for="(item,index) in popularData" :key="item.productId">
+        <div class="period">
+          <Icon type="ios-bookmark" size="20" />运集期
+        </div>
+        <div class="product_auto" @click="change(item)">
           <div class="huaihe">
             <span>{{item.name}}</span>
           </div>
@@ -113,7 +115,6 @@ export default {
     //拿到用户的风险等级
     getStorage() {
       this.riskName = storage.get("Risk");
-
     },
     //判断用户是否实名注册过
     getRealName() {
@@ -156,7 +157,9 @@ export default {
         line-height: 50px;
         border-bottom: 1px solid;
       }
-      .huaihe {
+      .product_auto{
+
+        .huaihe {
         height: 40px;
         line-height: 40px;
       }
@@ -164,7 +167,7 @@ export default {
         padding-left: 10px;
       }
       .first {
-        height: 70px;
+        padding: 10px 0;
         border-bottom: 1px solid;
         display: flex;
         align-items: center;
@@ -184,6 +187,7 @@ export default {
           padding-right: 10px;
         }
       }
+      }   
     }
   }
   .kong {
