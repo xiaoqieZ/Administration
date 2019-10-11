@@ -26,9 +26,6 @@ import Managementone from '@/pages/Management/Managementone'
 import Managementtow from '@/pages/Management/Managementtow'
 import Managementthree from '@/pages/Management/Managementthree'
 import Managementfour from '@/pages/Management/Managementfour'
-import RiskQuestionnaire from '@/pages/Management/RiskQuestionnaire'
-import KnowledgeAssessment from '@/pages/Management/KnowledgeAssessment'
-import BackaccessVolume from '@/pages/Management/BackaccessVolume'
 import EditorialQuestionnai from '@/pages/Management/EditorialQuestionnai'
 import Managementfive from '@/pages/Management/Managementfive'
 import Managementsix from '@/pages/Management/Managementsix'
@@ -401,25 +398,6 @@ export default new Router({
               name: 'Managementfour',
               title: '问卷管理',
               component: Managementfour,
-              children: [{
-                  path: '/NavBar/Managements/Managementfour/RiskQuestionnaire',
-                  name: 'RiskQuestionnaire',
-                  title: '风险调查问卷',
-                  component: RiskQuestionnaire,
-                },
-                {
-                  path: '/NavBar/Managements/Managementfour/KnowledgeAssessment',
-                  name: 'KnowledgeAssessment',
-                  title: '知识评测',
-                  component: KnowledgeAssessment,
-                },
-                {
-                  path: '/NavBar/Managements/Managementfour/BackaccessVolume',
-                  name: 'BackaccessVolume',
-                  title: '回访问卷',
-                  component: BackaccessVolume,
-                }
-              ]
             },
             {
               path: '/NavBar/Managements/EditorialQuestionnai',

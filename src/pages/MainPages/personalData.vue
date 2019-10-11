@@ -371,28 +371,37 @@
     <!-- 问卷弹窗 -->
     <el-dialog title="特定对象认定问卷详情" :visible.sync="centerDialogVisible" width="80%" center>
       <!-- <div v-for="item in arraysQuestionnaire" :key="item.id"> -->
-      <div>
+      <div style="padding-bottom:20px">
         <el-row>
           <el-col :span="12">
-            <div class="grid-content bg-purple">{{arraysQuestionnaire.title}}</div>
+            <div
+              class="grid-content bg-purple"
+              style="font-weight:600"
+            >{{arraysQuestionnaire.title}}</div>
           </el-col>
           <el-col :span="12">
-            <div class="grid-content bg-purple-light">{{arraysQuestionnaire.riskLevelName}}</div>
+            <div
+              class="grid-content bg-purple-light"
+              style="font-weight:600"
+            >{{arraysQuestionnaire.riskLevelName}}</div>
           </el-col>
         </el-row>
       </div>
       <table border="1">
         <tr>
           <th>问题</th>
-          <th>答案</th>
-          <th>获得分数</th>
+          <th style="width:180px;">答案</th>
+          <th style="width:80px;">获得分数</th>
         </tr>
-        <tr v-for="item in arraysQuestionnaire.items" :key="item.id">
-          <td>{{item.title}}</td>
+        <tr v-for="(item,index) in arraysQuestionnaire.items" :key="item.id">
           <td>
+            <span>{{index+1}}、</span>
+            {{item.title}}
+          </td>
+          <td style="text-align:center">
             <div v-for="open in item.options" :key="open.id">{{open.isChecked==1?open.content:''}}</div>
           </td>
-          <td>
+          <td style="text-align:center">
             <div v-for="open in item.options" :key="open.id">{{open.isChecked==1?open.score:''}}</div>
           </td>
         </tr>

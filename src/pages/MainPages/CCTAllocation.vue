@@ -168,7 +168,7 @@ export default {
 };
 </script>
  
- <style lang="less" >
+ <style lang="less">
 .currenminput {
   height: auto;
   display: flex;
@@ -187,9 +187,9 @@ export default {
     width: 70px;
     height: 40px;
   }
+  /deep/.el-icon-arrow-up{
+  height: 74% ;
 }
-.el-dialog__wrapper {
-  z-index: 9999 !important;
 }
 </style>
  
