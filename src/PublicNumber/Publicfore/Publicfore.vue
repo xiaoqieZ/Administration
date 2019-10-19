@@ -28,7 +28,7 @@
         </p>
         <p>
           手机：
-          <span>{{storageList==null||storageList.mobile==null?'- -':storageList.mobile}}</span>
+          <span>{{userData.mobile==null?'- -':userData.mobile}}</span>
         </p>
         <p>
           资产：
@@ -36,7 +36,7 @@
         </p>
         <p>
           类别：
-          <span>{{storageList==null||storageList.customerTypeName==null?'- -':storageList.customerTypeName}}</span>
+          <span>{{userData.customerTypeName==null?'- -':userData.customerTypeName}}</span>
         </p>
       </div>
     </div>
@@ -93,11 +93,11 @@
             <i class="el-icon-arrow-right"></i>
           </div>
         </router-link>
-        <router-link to="/Publicfore/Information/Conversion">
-          <div class="myhometupdey">
+        <router-link to="/Publicfore/Information/Conversion" >
+          <div class="myhometupdey" v-if="investorTypeList.investorType==2">
             <p>
               <i class="el-icon-user"></i>
-              <span>投资者转化(选填)</span>
+              <span>投资者转化(普转专)</span>
             </p>
             <i class="el-icon-arrow-right"></i>
           </div>
@@ -171,10 +171,13 @@ import storage from "../../api/storage.js";
 export default {
   data() {
     return {
-      storageList:{mobile:null},
+      // storageList:{mobile:null},
       dialogVisible: false, //弹窗
       messagesName: [], //用户信息
-      TotalAssets:''//用户资产
+      TotalAssets:'',//用户资产
+      investorType: '',//投资者类型
+      investorTypeList:{},
+      userData:{},
     };
   },
   methods: {
@@ -185,8 +188,8 @@ export default {
     //获取Token接口
     getName() {
       ajax.auth.bind(this)({
-        openId: "88fc72605e17450fb52bbe1c2db1031a",
-        nickName: "百威口服液",
+        openId: "d231695a53484adc9a56d44a6626e06b",
+        nickName: "忽必烈",
         portrait:'http://192.168.28.213:81/123.jpg'
       })
         .then(res => {
@@ -208,15 +211,30 @@ export default {
         this.TotalAssets=res.data.data
       })
     },
+    //用户信息
     getStorage(){
-      var data = storage.get('listaktion')
-      this.storageList = data
+      ajax.authGet.bind(this)(
+        "/api/Information/Account/GetByOpenId",
+        res => {
+          this.userData = res.data.data;
+        }
+      );
+    },
+    getInvestorType() {
+      ajax.authGet.bind(this)(
+        "/api/Information/Account/Authentication",
+        res => {
+          this.investorTypeList = res.data.data;
+        }
+      );
     },
   },
   mounted() {
     this.getName();
     this.getStorage();
     this. getTotalAssets();
+    this.getInvestorType()
+
   },
   components: {
     "tabbar-home": tebbarhome

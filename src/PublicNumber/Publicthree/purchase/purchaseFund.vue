@@ -7,19 +7,23 @@
     </mt-header>
     <div class="title">
       <p>请确认以上产品信息及产品风险</p>
-      <div class="product_list">111</div>
+      <div class="product_list">{{productData.name}}</div>
       <div class="product_count">
         <p>产品类型</p>
-        <div class="list">12</div>
-        <p>产品类型</p>
-        <div class="list">32</div>
+        <div class="lists">{{productData.fundTypeName}}</div>
+        <p>风险等级</p>
+        <div class="lists">{{productData.riskLevelName}}</div>
       </div>
       <div class="product_level">
         <div>风险揭示及匹配情况</div>
         <div>基金合同</div>
-        <p class="contract">12</p>
+        <p
+          class="contract"
+        >{{contractData.contractMaterialId==null?'— —':contractData.contractMaterialId}}</p>
         <div>风险揭示书</div>
-        <p class="contract">12</p>
+        <p
+          class="contract"
+        >{{contractData.riskDisclosureMaterialId==null?'— —':contractData.riskDisclosureMaterialId}}</p>
         <div>风险匹配通知书</div>
         <p class="contract">12</p>
       </div>
@@ -70,15 +74,15 @@
     <div>
       <el-dialog title="购买提示" :visible.sync="centerDialog" width="80%" center>
         <div>
-            <p>重要提示</p>
-            <p>1、申请人提交购业物申请，需在指定时间内将资金划入本产品的募集户，信息如下：</p>
+          <p>重要提示:</p>
+          <!-- <p>1、申请人提交购业物申请，需在指定时间内将资金划入本产品的募集户，信息如下：</p>
             <p>账户名：</p>
             <p>账号：</p>
             <p>开户行：</p>
-            <p>大额支付系统行号：</p>
-            <p>2、本申请的受理并不表示对该申请是否成功确定，申请是否有效应由注册登记机构确认为准，如发生巨额退出，退出款项的支付办法将按产品合同和有关法律法规规定办理。</p>
-            <div style="text-align:center;font-weight:600">请输入订购金额（单位/元）</div>
-            <el-input v-model="money" placeholder="请输入金额"></el-input>
+          <p>大额支付系统行号：</p>-->
+          <p>1、本申请的受理并不表示对该申请是否成功确定，申请是否有效应由注册登记机构确认为准，如发生巨额退出，退出款项的支付办法将按产品合同和有关法律法规规定办理。</p>
+          <!-- <div style="text-align:center;font-weight:600">请输入订购金额（单位/元）</div>
+          <el-input v-model="money" placeholder="请输入金额"></el-input>-->
         </div>
         <span slot="footer" class="dialog-footer">
           <el-button @click="centerDialog = false">取 消</el-button>
@@ -103,8 +107,10 @@ export default {
       chang: [],
       RadioList: [],
       chec: false,
-      centerDialog:false,//购买提示
-      money:'',//金额
+      centerDialog: false, //购买提示
+      money: "", //金额
+      contractData: {},
+      productData: {}
     };
   },
   methods: {
@@ -132,6 +138,15 @@ export default {
         }
       );
     },
+    //获取合同
+    getContract() {
+      ajax.authGet.bind(this)(
+        "/api/Management/Product/Market/Contract/" + this.$route.query.data,
+        res => {
+          this.contractData = res.data.data;
+        }
+      );
+    },
     //14个单选题点击确定
     submitRadio() {
       // console.log(this.RadioList);
@@ -149,22 +164,34 @@ export default {
     //进入金额对话框
     quersubmit() {
       if (this.checked != false && this.chec != false) {
-          this.centerDialog=true
+        this.centerDialog = true;
       } else {
         this.$message("请阅读声明并勾选");
       }
     },
     //进入投资者购买信息确认
-    centerConfirmation(){
-        if(this.money!=''){
-            let data = this.id
-            this.$router.push({path: '/Publicthree/Purchases/confirmation',query:{data}})
+    centerConfirmation() {
+        let data = this.id;
+        this.$router.push({
+          path: "/Publicthree/Purchases/confirmation",
+          query: { data }
+        });
+    },
+    //获取产品基本信息
+    getProduct() {
+      ajax.authGet.bind(this)(
+        "/api/Information/Present/Product/Hot/" + this.$route.query.data,
+        res => {
+          this.productData = res.data.data;
         }
+      );
     }
   },
   mounted() {
     this.id = this.$route.query.data;
     this.getStatement();
+    this.getContract();
+    this.getProduct();
   }
 };
 </script>
@@ -175,13 +202,16 @@ export default {
     text-align: center;
     padding-top: 50px;
     .product_list {
-      padding-top: 20px;
+      font-size: 16px;
       color: red;
+      font-weight: 600;
+      padding-top: 20px;
     }
     .product_count {
       padding-top: 20px;
-      .list {
+      .lists {
         font-size: 15px;
+        padding-bottom:10px;
         font-weight: 600;
       }
     }
@@ -194,23 +224,19 @@ export default {
       }
     }
   }
-  /deep/.el-dialog--center {
-    height: 78%;
-    overflow: scroll;
-  }
   /deep/.el-checkbox {
     white-space: normal;
     word-break: break-all;
   }
-  .buttom{
-          text-align: center;
+  .buttom {
+    text-align: center;
     padding-top: 53px;
-    /deep/.el-button--primary{
-        width: 100%;
+    /deep/.el-button--primary {
+      width: 100%;
     }
   }
-  /deep/.el-checkbox__label{
-    display: inline
+  /deep/.el-checkbox__label {
+    display: inline;
   }
 }
 </style>

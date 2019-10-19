@@ -1,7 +1,8 @@
 <template>
   <div class="Risk_heck">
+    <div>问卷管理</div>
     <div class="Risk_count">
-      <el-select v-model="InvestorRole">
+      <el-select v-model="InvestorRole" @change="dropDown">
         <el-option
           :label="item.text"
           :value="item.value"
@@ -9,8 +10,9 @@
           :key="item.index"
         ></el-option>
       </el-select>
-      <el-button type="primary" @click="addCount">确定</el-button>
+      <el-button type="primary" @click="addCount">添加问卷</el-button>
     </div>
+    <!-- 数据表单 -->
     <div class="Risk_data">
       <el-table :data="questionnaireData" stripe id="out-table" style="width: 100%">
         <el-table-column type="selection" width="55"></el-table-column>
@@ -55,28 +57,32 @@
       <div align="center">
         <el-pagination
           background
+          @current-change="handleCurrentChange"
+          @size-change="handleSizeChange"
+          :current-page="page"
+          :page-size="num"
           layout="total, sizes, prev, pager, next, jumper"
           :total="questionnairecount.count"
         ></el-pagination>
       </div>
     </div>
+    <!-- 设置分值 -->
     <el-dialog title="设置分值" :visible.sync="centerDialogVisible" width="60%" center>
       <div>
-          <div>设置分值类型</div>
-          <div v-for="(item,index) in scoreData" :key="index">
-              <el-form>
-              <el-form-item :label="item.levelName">
-                  <el-input-number v-model="item.minScore" @change="handleChange" :min="item.minScore"></el-input-number>
-                  <span>≤分值≤</span>
-                  <el-input-number v-model="item.maxScore" @change="handle" :max="item.maxScore"></el-input-number>
-              </el-form-item>
+        <div>设置分值类型</div>
+        <div v-for="(item,index) in scoreData" :key="index">
+          <el-form>
+            <el-form-item :label="item.levelName">
+              <el-input-number v-model="item.minScore" @change="handleChange" :min="item.minScore"></el-input-number>
+              <span>≤分值≤</span>
+              <el-input-number v-model="item.maxScore" @change="handle" :max="item.maxScore"></el-input-number>
+            </el-form-item>
           </el-form>
-          </div>
-          
+        </div>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="centerDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="centerDialogVisible = false">确 定</el-button>
+        <el-button type="primary" @click="Preservation">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -94,8 +100,9 @@ export default {
       num: 6,
       questionnaireData: [],
       questionnairecount: {},
-      centerDialogVisible:false,
-      scoreData:[],
+      centerDialogVisible: false,
+      scoreData: [],
+      questionnaireId: "" //分值Id
     };
   },
   methods: {
@@ -105,8 +112,8 @@ export default {
         this.countData = res.data.data;
       });
     },
-    //确定查询
-    addCount() {
+    //下拉选中
+    dropDown() {
       let data = {
         pageIndex: this.page,
         pageSize: this.num,
@@ -120,6 +127,19 @@ export default {
           this.questionnairecount = res.data.data.page;
         }
       );
+    },
+    //添加问卷
+    addCount() {
+      var questionnaireId = 0;
+      let data = {
+        id: questionnaireId,
+        see: 2,
+        questionnaireType: this.InvestorRole
+      };
+      this.$router.push({
+        path: "/NavBar/Managements/EditorialQuestionnai",
+        query: { data }
+      });
     },
     //操作栏 启动
     enable(index, row) {
@@ -138,7 +158,7 @@ export default {
         id: row.id,
         title: row.title,
         questionnaireType: this.InvestorRole,
-        see: 0
+        see: 0,
       };
       this.$router.push({
         path: "/NavBar/Managements/EditorialQuestionnai",
@@ -159,23 +179,47 @@ export default {
       });
     },
     //分值
-    Score(index, row){
-        this.centerDialogVisible=true;
-        ajax.authGet.bind(this)('/api/Questionnaire/Score/'+row.id,res=>{
-            this.scoreData = res.data.data
-        })
+    Score(index, row) {
+      this.centerDialogVisible = true;
+      this.questionnaireId = row.id;
+      ajax.authGet.bind(this)("/api/Questionnaire/Score/" + row.id, res => {
+        this.scoreData = res.data.data;
+      });
     },
     //计数器
     handleChange(currentValue, oldValue) {
-        // console.log(currentValue);
-      },
-      handle(currentValue, oldValue){
-
-      }
+      // console.log(currentValue);
+    },
+    handle() {},
+    //保存分值
+    Preservation() {
+      let data = this.scoreData;
+      ajax.authPost.bind(this)(
+        "/api/Questionnaire/Score/" + this.questionnaireId,
+        data,
+        res => {
+          this.$message("提交成功");
+        }
+      );
+    },
+    //每页显示数据量变更
+    handleSizeChange(val) {
+      this.num = val;
+      this.dropDown()();
+    },
+    //页码变更
+    handleCurrentChange(val) {
+      this.page = val;
+      this.dropDown()();
+    }
   },
   mounted() {
+    this.InvestorRole = this.$route.query.data;
+    if(this.InvestorRole == undefined){
+      this.InvestorRole=1
+    }    
     this.getCount();
-    this.addCount();
+    this.dropDown();
   }
 };
 </script>

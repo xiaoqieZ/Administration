@@ -8,18 +8,29 @@
 
     <div class="radios" v-show="values==0">
       <div class="options" v-for="(item,index) in getQuestlist" :key="item.id">
-        <p>{{item.title}}</p>
-        <el-radio-group v-model="item.radio">
+        <p>
+          {{item.title}}
+          <span>{{item.optionType==2?'（多选）':''}}</span>
+        </p>
+        <el-radio-group v-model="item.radio" v-if="item.optionType==1">
           <el-radio
             :label="option.id"
             v-for="option in item.options"
             :key="option.id"
-            @change="ChangeRadio($event,item,index,option)"
+            @change="ChangeRadio(item,index,option)"
           >{{option.content}}</el-radio>
           <br />
         </el-radio-group>
+        <el-checkbox-group v-model="form.checkbox" v-if="item.optionType==2">
+          <el-checkbox
+            v-for="option in item.options"
+            :label="option.id"
+            :key="option.id"
+            @change="ChangeRadio2(item,index,option)"
+          >{{option.content}}</el-checkbox>
+        </el-checkbox-group>
       </div>
-      <div class="button_submit">
+      <div class="button_submit" v-if="subm">
         <el-button type="primary" plain @click="submit">提交</el-button>
       </div>
     </div>
@@ -28,7 +39,7 @@
         <div class="Congratu">
           <p>恭喜您完成特定对象的风险测评</p>
           <span>您的风险等级为：</span>
-          <span style="color:red">{{listoption.riskLevelName}}</span>
+          <span style="color:red">{{authentication.riskLevelName}}</span>
         </div>
       </div>
       <el-button type="primary" @click="determine">确定</el-button>
@@ -50,7 +61,7 @@
     >
       <span>小茄子：需要先实名认证才可以进行风险测评喔！</span>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="cancel">取 消</el-button>
+        <el-button @click="centerDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="dssy">去认证</el-button>
       </span>
     </el-dialog>
@@ -63,31 +74,36 @@ import storage from "../../../api/storage.js";
 export default {
   data() {
     return {
+      subm:true,
       values: 0,
       radio: "",
       getQuestlist: [],
       RadioList: [],
-      listoption: {},
-      centerDialogVisible: false
+      centerDialogVisible: false,
+      form: {
+        radio: "",
+        checkbox: []
+      },
+      a: [],
+      information: {}, //获取当前用户信息
+      authentication: {} //获取当前用户注册认证信息
     };
   },
   methods: {
     //提交答案
     submit() {
-      if (this.RadioList != "" && this.RadioList.length > 11) {
+      if (this.RadioList.length == this.getQuestlist.length) {
         let data = this.RadioList;
         ajax.authPost.bind(this)(
           "/api/Information/Account/Questionnaire",
           data,
           res => {
-            this.listoption = res.data.data;
-            let Risk = this.listoption;
-            storage.set("Risk", Risk);
+            this.authentication = res.data.data;
             this.values = 1;
           }
         );
       } else {
-        this.$message("不能为空");
+        this.$message("选择题都要选上");
       }
     },
     dssy() {
@@ -96,11 +112,6 @@ export default {
       this.$router.push({ path: "/Publicfore/Information/Authentication" });
     },
     determine() {
-      this.$router.push({ path: "/Publicfore" });
-    },
-    //取消实名认证
-    cancel() {
-      this.centerDialogVisible = false;
       this.$router.push({ path: "/Publicfore" });
     },
     Publicthree() {
@@ -119,32 +130,64 @@ export default {
       });
     },
     //选择题选中
-    ChangeRadio(e, item, index, o) {
+    ChangeRadio(item, index, open) {
       this.RadioList[index] = {
         itemId: item.id,
-        optionId: [o.id]
+        optionId: [open.id]
       };
-      // console.log(this.RadioList[index])
+      // console.log(this.RadioList)
+    },
+    ChangeRadio2(item, index, open) {
+      if (this.a[index]) {
+        this.a[index].push(open.id);
+      } else {
+        this.a[index] = [open.id];
+      }
+      this.RadioList[index] = {
+        itemId: item.id,
+        optionId: this.a[index]
+      };
+      // console.log(this.RadioList)
     },
     //重新测试
     retest() {
       this.values = 0;
+    },
+    //展示已实名认证的用户信息
+    getPersonal() {
+      ajax.authGet.bind(this)("/api/Information/Account/GetByOpenId", res => {
+        console.log(res);
+        if (res.data.code == 200) {
+          this.information = res.data.data;
+          if (this.information.name == null) {
+            this.centerDialogVisible = true;
+              this.subm=false      
+          } else {
+            this.getQuesttion();
+            
+          }
+        }
+      });
+      //获取当前用户注册认证信息
+      ajax.authGet.bind(this)(
+        "/api/Information/Account/Authentication",
+        res => {
+          console.log(res);
+          if (res.data.code == 200) {
+            this.authentication = res.data.data;
+            if(this.authentication.riskLevelName == null){
+              this.values = 0;
+            }else{
+              this.values = 1;
+            }
+          }
+        }
+      );
     }
   },
   mounted() {
-    this.getQuesttion();
-    let listaktion = storage.get("listaktion");
-    if (!listaktion) {
-      this.centerDialogVisible = true;
-    }
-    //已测评的界面
-    let listRisk = storage.get("Risk");
-    if (listRisk) {
-      this.listoption = listRisk;
-      this.values = 1;
-    } else {
-      this.values = 0;
-    }
+    this.getPersonal();
+    // this.getQuesttion();
   }
 };
 </script>
@@ -162,7 +205,7 @@ export default {
       }
     }
     .button_submit {
-      padding: 50px 0
+      padding: 50px 0;
     }
   }
   /deep/.el-button--primary {

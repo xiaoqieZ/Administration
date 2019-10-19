@@ -9,33 +9,37 @@
       <!-- 投资者确认 -->
       <div class="confirm">
         <div class="confirm_title">投资者确认</div>
-        <div class="confirm_list">
+        <div class="confirm_list" v-if="information.mechanismName=information.mechanismName">
           <p>机构名称</p>
-          <span>{{confirmData.mechanismName}}</span>
+          <span>{{information.mechanismName}}</span>
         </div>
         <div class="confirm_list">
           <p>操作人员</p>
-          <span>_ _</span>
+          <span>{{information.name}}</span>
         </div>
         <div class="confirm_list">
+          <p>{{information.certificateTypeName}}</p>
+          <span>{{information.certificateNo}}</span>
+        </div>
+        <div class="confirm_list" v-if="confirmData.mechanismCertificateNo=confirmData.mechanismCertificateNo">
           <p>机构证件号</p>
           <span>{{confirmData.mechanismCertificateNo}}</span>
         </div>
         <div class="confirm_list">
           <p>投资者风险承受等级</p>
-          <span>{{risk.remark}}</span>
-        </div>
-        <div class="confirm_list">
-          <p>产品风险等级</p>
           <span>{{risk.riskLevelName}}</span>
         </div>
         <div class="confirm_list">
+          <p>产品风险等级</p>
+          <span>{{riskLevelName.riskLevelName}}</span>
+        </div>
+        <div class="confirm_list">
           <p>投资者类型</p>
-          <span>{{confirmData.customerTypeName}}</span>
+          <span>{{risk.investorTypeName}}</span>
         </div>
         <div class="confirm_list">
           <p>投资者资格</p>
-          <span></span>
+          <span>{{whether=true?'合格':'不合格'}}</span>
         </div>
         <div class="confirm_list">
           <p>合同协议确认</p>
@@ -76,7 +80,7 @@
             class="upload-demo"
             ref="upload"
             :action="action"
-            :on-success="uploadPayment"
+            :on-success="uploadBankcard"
             :file-list="fileList"
             :headers="access_token"
           >
@@ -138,7 +142,10 @@ export default {
       ),
       ReportId: "", //缴款文件id
       BankcardId: "", //银行卡id
-      confirmationMaterialId: 1 //申购确认书
+      confirmationMaterialId: '', //申购确认书
+      riskLevelName:{},
+      information:{},
+      whether:""
     };
   },
   methods: {
@@ -153,11 +160,24 @@ export default {
         this.confirmData = res.data.data;
       });
     },
-    //获取产品风险等级
+    //获取用户可承受的风险等级
     getStorage() {
-      this.risk = storage.get("Risk");
+      ajax.authGet.bind(this)("/api/Information/Account/Authentication",res=>{
+        this.risk = res.data.data;
+      });
+      //获取产品的风险等级
+      ajax.authGet.bind(this)("/api/Management/Product/Risk/"+this.$route.query.data,res=>{
+        this.riskLevelName = res.data.data;
+      });
+       //展示已认证的用户信息
+      ajax.authGet.bind(this)("/api/Information/Account/GetByOpenId", res => {
+          this.information = res.data.data; 
+      });
+      ajax.authGet.bind(this)("/api/Permission/IsQualified", res => {
+          this.whether = res.data.data; 
+      });
     },
-    //文件上传成功的回调
+    //缴款证明
     uploadPayment(response, file, fileList) {
       this.ReportId = response.data.id;
     },
@@ -176,6 +196,7 @@ export default {
         paymentMaterialId: this.ReportId,
         bankCardMaterialId: this.BankcardId,
         confirmationMaterialId: this.confirmationMaterialId
+
       };
       ajax.authPost.bind(this)(
         "/api/Information/Present/Product/Apply",

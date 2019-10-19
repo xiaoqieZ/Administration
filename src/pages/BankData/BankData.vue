@@ -10,8 +10,8 @@
         <!-- 勾选框 -->
         <!-- <el-table-column type="selection" width="55"></el-table-column> -->
         <!-- 索引 -->
-        <el-table-column align="center" type="index" prop="data" label="序号" width="60"></el-table-column>
-        <el-table-column align="center" prop="fundRecordNumber" label="产品编号" width="120">
+        <el-table-column align="center" type="index" prop="data" label="序号" ></el-table-column>
+        <el-table-column align="center" prop="fundRecordNumber" label="产品编号" >
           <template slot-scope="scope">
             <span>{{scope.row.fundRecordNumber}}</span>
           </template>
@@ -91,6 +91,7 @@
           :total="tabelPage.count"
         ></el-pagination>
       </div>
+      
       <!-- 招募说明书上传 -->
       <el-dialog title="提示" :visible.sync="centerDialogVisible" width="50%" center>
         <div class="upload">
@@ -116,6 +117,18 @@
             </el-table-column>
           </el-table>
         </template>
+        <!-- 页码 -->
+      <div align="center">
+        <el-pagination
+          background
+          @size-change="handleSizeList"
+          @current-change="handleCurrentPage"
+          :current-page="pages"
+          :page-size="nums"
+          layout="total, prev, pager, next, jumper"
+          :total="getCount.count"
+        ></el-pagination>
+      </div>
         <span slot="footer" class="dialog-footer">
           <el-button @click="centerDialogVisible = false">取 消</el-button>
           <el-button type="primary" @click="centerDialogVisible = false">确 定</el-button>
@@ -135,7 +148,6 @@
           :limit="1"
           :file-list="fileList"
           :headers="access_token"
-          :auto-upload="false"
         >
           <el-button size="small" type="primary">点击上传</el-button>
         </el-upload>
@@ -260,7 +272,7 @@
             <div class="grid-content bg-purple">
               <p>
                 风险等级：
-                <span>{{getSeeOneList.risk.riskLevel}}</span>
+                <span>{{getSeeOneList.risk.riskLevelName}}</span>
               </p>
               <p>
                 风险说明：
@@ -273,7 +285,7 @@
               <p>
                 风险等级文件：
                 <span>
-                  <a :href="getSeeOneList.risk.filePath" target="_blank">点击查看</a>
+                  <a :href="material" target="_blank">点击查看</a>
                 </span>
               </p>
             </div>
@@ -464,6 +476,8 @@ export default {
     return {
       num: 6, //每页显示数据条数
       page: 1, //默认第一页
+      nums: 6, //每页显示数据条数
+      pages: 1, //默认第一页
       tabelData: {},
       tabelList: [], //数据
       tabelPage: [],
@@ -473,7 +487,7 @@ export default {
       UploadFile: false, // 上传文件对话框
       DialogSee: false, // 查看对话框
       uploadData: {},
-      action: ajax.doms.bind(this)("/api/Management/Product/Prospectus/Save"),
+      action: ajax.doms.bind(this)("/api/Management/Product/Prospectus/Upload"),
       access_token: {
         Authorization: "Bearer " + sessionStorage.getItem("access_token")
       },
@@ -487,7 +501,10 @@ export default {
         investment: {},
         manager: {},
         mechanism: {}
-      }
+      },
+      material:'',
+      materialId:'',
+      getCount:'',
     };
   },
   methods: {
@@ -514,8 +531,8 @@ export default {
       this.productId = id;
       let data = {
         productId: id,
-        pageIndex: this.page,
-        pageSize: this.num
+        pageIndex: this.pages,
+        pageSize: this.nums
       };
       ajax.authPost.bind(this)(
         "/api/Management/Query/Prospectus",
@@ -524,6 +541,7 @@ export default {
           console.log(res);
           if (res.data.code == 200) {
             this.getRecruit = res.data.data.list;
+            this.getCount = res.data.data.page
           }
         }
       );
@@ -533,7 +551,7 @@ export default {
         let up = o;
         let data = {id:row.id,up:up};
         ajax.authPostForm.bind(this)('/api/Management/Product/Order',data,res=>{
-            console.log(res);
+            // console.log(res);
             this.getList();
         })
     },
@@ -543,15 +561,19 @@ export default {
     },
     // 上传成功的回调
     chenggeing(response, file, fileList) {
-      this.supplement(0, this.productId);
-      this.$message(response.message);
-      this.clearUploadedImage();
-      this.UploadFile = false;
+      this.materialId = response.data.id
     },
     // 提交上传招募书
     SubmitUploadFile() {
       this.uploadData.productId = this.productId;
-      this.$refs.upload.submit();
+      let data = {
+        productId:this.productId,
+        materialId:this.materialId
+      }
+      ajax.authPost.bind(this)('/api/Management/Product/Prospectus/Save',data,res=>{
+        this.UploadFile = false;
+        this.supplement(0,this.productId);
+      })
     },
     //文件上传个数
     handleChange(file, fileList) {
@@ -560,16 +582,14 @@ export default {
     },
     //移除文件钩子
     handleRemove(file, fileList) {
-      //   this.ruleForm.RiskLD = "";
-      console.log(file, fileList);
     },
     //点击文件列表中已上传的文件时的钩子
     handlePreview(file) {
-      console.log(file);
+      // console.log(file);
     },
     // 操作里面的查看详情
     changeSee(i, row) {
-      console.log(row);
+      // console.log(row);
       this.DialogSee = true;
       this.changeSeeId = row.id;
       this.getSeeOne();
@@ -580,6 +600,7 @@ export default {
       }); //基本信息
       this.getll("/api/Management/Product/Risk/", res => {
         this.getSeeOneList.risk = res;
+        this.material = res.material.fullPath
       }); //风险信息
       this.getll("/api/Management/Product/Rate/", res => {
         this.getSeeOneList.rate = res;
@@ -596,10 +617,7 @@ export default {
     },
     getll(u, cb) {
       ajax.authGet.bind(this)(u + this.changeSeeId, res => {
-        console.log(res);
-        if (res.data.code == 200) {
-          cb(res.data.data);
-        }
+          cb(res.data.data); 
       });
     },
     //删除啊
@@ -607,7 +625,7 @@ export default {
       ajax.authPost.bind(this)(
         "/api/Management/Product/Remove?id=" + row.id,
         res => {
-          console.log(res);
+          // console.log(res);
           this.getList();
         }
       );
@@ -622,17 +640,28 @@ export default {
     },
     //每页显示数据量变更
     handleSizeChange: function(val) {
-      console.log(val);
+      // console.log(val);
       this.num = val;
       this.getList();
     },
-
     //页码变更
     handleCurrentChange: function(val) {
-      console.log(val);
+      // console.log(val);
       this.page = val;
       this.getList();
-    }
+    },
+    //每页显示数据量变更
+    handleSizeList: function(val) {
+      // console.log(val);
+      this.nums = val;
+      this.supplement(0,this.productId);
+    },
+    //页码变更
+    handleCurrentPage: function(val) {
+      // console.log(val);
+      this.pages = val;
+      this.supplement(0,this.productId);
+    },
   },
   created() {
     this.getList();
@@ -651,6 +680,10 @@ export default {
   /deep/.el-row {
     padding: 20px 0;
     border-top: 5px solid;
+  }
+  /deep/.el-dialog__body{
+    height: 450px;
+    overflow: scroll;
   }
 }
 </style>

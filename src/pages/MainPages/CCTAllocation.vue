@@ -28,7 +28,7 @@
               :key="item.index"
             ></el-option>
           </el-select>
-          <el-input v-model="search" placeholder="搜索姓名/机构名称"></el-input>
+          <el-input v-model="search" placeholder="搜索姓名/机构名称" @keyup.enter.native="usersearch"></el-input>
 
           <el-button type="primary" @click="usersearch">确定</el-button>
         </div>
@@ -96,7 +96,7 @@ export default {
       tableData: [], //请求过来的数据
       username: "", //姓名
       address: "", //地址
-      num: 7, //每页显示数据条数
+      num: 6, //每页显示数据条数
       page: 1, //默认第一页
       search: "", //搜索
       totalCount: {} , //默认一百条
@@ -153,12 +153,12 @@ export default {
     //每页显示数据量变更
     handleSizeChange: function(val) {
       this.num = val;
-      this.getAllList;
+      this.getAllList();
     },
     //页码变更
     handleCurrentChange: function(val) {
       this.page = val;
-      this.getAllList;
+      this.getAllList();
     }
   },
   mounted() {

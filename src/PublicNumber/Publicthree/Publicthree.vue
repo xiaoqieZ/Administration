@@ -7,7 +7,7 @@
           <span>您现在是</span>
           <span
             style="color:red"
-          >{{riskName==null || riskName.riskLevelName == null?'- -':riskName.riskLevelName}}</span>
+          >{{authentication.riskLevelName == null ? '- -':authentication.riskLevelName}}</span>
           <span>投资者推荐下列产品</span>
         </p>
       </div>
@@ -58,7 +58,7 @@
       width="80%"
       center
     >
-      <span>小茄子：需要先实名认证才可以选购基金产品喔！</span>
+      <span>小茄子：需要先完成实名认证相关信息才可以选购基金产品喔！</span>
       <span slot="footer" class="dialog-footer">
         <el-button @click="centerDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="dssy">去认证</el-button>
@@ -76,18 +76,31 @@ import ajax from "../../api/https.js";
 export default {
   data() {
     return {
-      muj: 1, //没有实名认证的话，不展示产品页
+      muj: '', //没有实名认证的话，不展示产品页
       centerDialogVisible: false,
-      riskName: {}, //风险等级
       popularData: [],
       page: 1,
-      num: 6
+      num: 6,
+      isQualified: {}, //判断是否提交材料
+      authentication: {} //获取当前用户注册认证信息
     };
   },
   components: {
     "tabbar-home": tebbarhome
   },
   methods: {
+    //判断当前用户是否是合格的投资者
+    getRealName() {
+      ajax.authGet.bind(this)("/api/Permission/IsQualified", res => {
+        this.isQualified = res.data;
+        if (this.isQualified.data == false) {
+          this.muj = 1;
+          this.centerDialogVisible = true;
+        } else {
+          this.muj = 0;
+        }
+      });
+    },
     //获取热门产品
     getPopular() {
       let data = {
@@ -110,26 +123,23 @@ export default {
     //去实名
     dssy() {
       this.centerDialogVisible = false;
-      this.$router.push({ path: "/Publicfore/Information/Authentication" });
+      this.$router.push({ path: "/Publicfore" });
     },
     //拿到用户的风险等级
     getStorage() {
-      this.riskName = storage.get("Risk");
-    },
-    //判断用户是否实名注册过
-    getRealName() {
-      /*在本地拿到注册页面给的feng*/
-      let mname = storage.get("feng");
-      /*如果mname等于空，则跳出dialog框，选择回到实名页*/
-      if (mname) {
-        this.muj = 0;
-      } else {
-        this.centerDialogVisible = true;
-      }
+      ajax.authGet.bind(this)(
+        "/api/Information/Account/Authentication",
+        res => {
+          console.log(res);
+          if (res.data.code == 200) {
+            this.authentication = res.data.data;
+          }
+        }
+      );
     }
   },
   mounted() {
-    this.getRealName(); //实名认证判断
+    this.getRealName(); //材料提交判断
     this.getStorage(); //拿到用户的风险等级
     this.getPopular();
   }
@@ -157,37 +167,36 @@ export default {
         line-height: 50px;
         border-bottom: 1px solid;
       }
-      .product_auto{
-
+      .product_auto {
         .huaihe {
-        height: 40px;
-        line-height: 40px;
-      }
-      span {
-        padding-left: 10px;
-      }
-      .first {
-        padding: 10px 0;
-        border-bottom: 1px solid;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        .sales {
-          display: contents;
+          height: 40px;
+          line-height: 40px;
+        }
+        span {
+          padding-left: 10px;
+        }
+        .first {
+          padding: 10px 0;
+          border-bottom: 1px solid;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
           .sales {
-            .netWorth {
-              padding-left: 30px;
+            display: contents;
+            .sales {
+              .netWorth {
+                padding-left: 30px;
+              }
+            }
+            .el-divider--vertical {
+              margin: 0 -60px;
             }
           }
-          .el-divider--vertical {
-            margin: 0 -60px;
+          .help {
+            padding-right: 10px;
           }
         }
-        .help {
-          padding-right: 10px;
-        }
       }
-      }   
     }
   }
   .kong {

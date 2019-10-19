@@ -25,8 +25,14 @@
     <div class="funds">
       <span>基金合同</span>
       <div>
-        <p>《【润达基金】基金合同》</p>
-        <p>《润达基金_风险揭示书》</p>
+        <!-- <p>{{contractData.contractMaterial.fullPath}}</p>
+        <p>{{contractData.othersMaterial1.fullPath}}</p>-->
+        <p>
+          <a :href="contractData" target="_blank">《【润达基金】基金合同》</a>
+        </p>
+        <p>
+          <a :href="contractList" target="_blank">《润达基金_风险揭示书》</a>
+        </p>
       </div>
     </div>
     <P style="height:10px;background:#d4d2d2;"></P>
@@ -35,9 +41,22 @@
       <van-icon name="arrow" />
     </div>
     <div class="anniu">
-      <el-button type="primary" style="width:48%">预约</el-button>
-      <el-button type="primary" style="width:48%" @click="purchase">购买</el-button>
+      <el-button type="primary" style="width:48%" @click="purchase" v-if="marketData.purchase==1">购买</el-button>
+      <el-button type="primary" style="width:48%" @click="cognizance = true" v-if="marketData.redeem==1">赎回</el-button>
     </div>
+    <el-dialog title="赎回" :visible.sync="cognizance" width="80%" center>
+      <div>
+        <el-form :model="form">
+          <el-form-item label="赎回数量：">
+            <el-input v-model="form.edeemCount"></el-input>
+          </el-form-item>
+        </el-form>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="cognizance = false">取 消</el-button>
+        <el-button type="primary" @click="redeem">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -50,7 +69,14 @@ export default {
       textarea: "",
       activeNames: ["0"],
       productRange: {}, //投资范围
-      docuId: ""
+      docuId: "",
+      contractData: "",
+      contractList: "",
+      form: {
+        edeemCount: ""
+      },
+      cognizance: false,
+      marketData:{}
     };
   },
   methods: {
@@ -65,6 +91,10 @@ export default {
           this.productData = res.data.data;
         }
       );
+      //购买、赎回按钮的控制
+      ajax.authGet.bind(this)('/api/Information/Present/Product/Market/' + this.$route.query.data,res=>{
+        this.marketData = res.data.data
+      })
     },
     //投资范围
     getRange() {
@@ -90,12 +120,43 @@ export default {
         path: "/Publicthree/Purchases/purchaseFund",
         query: { data }
       });
-    }
+    },
+    //获取合同
+    getContract() {
+      ajax.authGet.bind(this)(
+        "/api/Management/Product/Market/Contract/" + this.$route.query.data,
+        res => {
+          this.contractData =
+            res.data.data.contractMaterial &&
+            res.data.data.contractMaterial.fullPath;
+          this.contractList =
+            res.data.data.othersMaterial1 &&
+            res.data.data.othersMaterial1.fullPath;
+        }
+      );
+    },
+    //赎回
+    redeem() {
+      let data = {
+        productId: this.$route.query.data,
+        portionAmount: this.form.edeemCount
+      };
+      ajax.authPost.bind(this)(
+        "/api/Information/Present/Product/Redeem",
+        data,
+        res => {
+          this.cognizance=false
+          this.$message({message:res.data.message,type:"success"})
+        }
+      );
+    },
+    
   },
   mounted() {
     this.getProduct();
     this.getRange();
     this.getid();
+    this.getContract();
   }
 };
 </script>
@@ -129,8 +190,11 @@ export default {
   .anniu {
     width: 100%;
     padding: 10px 10px;
+    // display: flex;
+    // justify-content: space-between;
+    padding-top: 50px;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
   }
 }
 </style>

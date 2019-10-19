@@ -42,7 +42,7 @@
             :key="item.index"
           ></el-option>
         </el-select>
-        <el-input v-model="search" placeholder="搜索姓名/机构名称"></el-input>
+        <el-input v-model="search" placeholder="搜索姓名/机构名称" @keyup.enter.native="sureSearch"></el-input>
 
         <el-button type="primary" @click="sureSearch">确定</el-button>
       </div>
@@ -129,11 +129,11 @@
     <div align="center">
       <el-pagination
         background
-        @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
+        @size-change="handleSizeChange"
         :current-page="page"
         :page-size="num"
-        layout="total, sizes, prev, pager, next, jumper"
+        layout="total, prev, pager, next, jumper"
         :total="tabelCount.count"
       ></el-pagination>
     </div>
@@ -162,7 +162,7 @@ export default {
   data() {
     return {
       tableData: [], //请求过来的数据
-      num: 10, //每页显示数据条数
+      num: 6, //每页显示数据条数
       page: 1, //默认第一页
       search: "", //搜索
       currentRow: [], //选中的值
@@ -320,15 +320,14 @@ export default {
     // })
     // },
     //每页显示数据量变更
-    handleSizeChange: function(val) {
+    handleSizeChange(val) {
       this.num = val;
-      this.getAllList;
+      this.sureSearch();
     },
-
     //页码变更
-    handleCurrentChange: function(val) {
+    handleCurrentChange(val) {
       this.page = val;
-      this.getAllList;
+      this.sureSearch();
     }
     // // 编辑
     // handleEdit:function (index, row) {

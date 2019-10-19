@@ -92,7 +92,12 @@
             </p>
             <!-- <el-radio-group v-model="listOption[index].radio"> -->
             <el-radio-group v-model="item.radio">
-              <el-radio :label="option.id" v-for="option in item.options" :key="option.id"  @change="ChangeRadio($event,item,i,option)">{{option.content}}</el-radio>
+              <el-radio
+                :label="option.id"
+                v-for="option in item.options"
+                :key="option.id"
+                @change="ChangeRadio($event,item,i,option)"
+              >{{option.content}}</el-radio>
             </el-radio-group>
           </div>
         </div>
@@ -104,7 +109,7 @@
           <div class="Congratu">
             <p>恭喜您完成基本信息采集</p>
             <span>您将申请成为：</span>
-              <span style="color:red">{{listTypeName.investorTypeName}}</span>
+            <span style="color:red">{{this.authentication.investorTypeName}}</span>
           </div>
         </div>
         <el-button type="primary" @click="material">上传证明材料</el-button>
@@ -120,9 +125,9 @@
       width="80%"
       center
     >
-      <span>小茄子：需要先实名认证才可以选购基金产品喔！</span>
+      <span>小茄子：需要先风险评测才可以选购基金产品喔！</span>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="cancel">取 消</el-button>
+        <el-button @click="centerDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="dssy">去认证</el-button>
       </span>
     </el-dialog>
@@ -157,10 +162,11 @@ export default {
       isShow: false, //没有实名认证时现实的信息采集页面
       isHider: false, // 实名认证完了之后给用户展示的页面
       centerDialogVisible: false, //没有实名认证，弹出提示框
-      listTypeName: "", //用户类型
       listOption: [], //拉取后台选择题
       RadioList: [], //选择题的数量
-      newlist : [],
+      newlist: [],
+      information: {}, //获取当前用户信息
+      authentication: {}, //获取当前用户注册认证信息
       rules: {
         name: [{ required: true, message: "请输入姓名", trigger: "blur" }],
         certificateTypeName: [
@@ -186,9 +192,7 @@ export default {
           { required: true, message: "请输入邮编", trigger: "blur" },
           { min: 1, max: 12, message: "长度在 11 个字符", trigger: "blur" }
         ],
-        addressPit: [
-          { required: true, message: "请输入", trigger: "blur" },
-        ]
+        addressPit: [{ required: true, message: "请输入", trigger: "blur" }]
       }
     };
   },
@@ -196,11 +200,7 @@ export default {
     dssy() {
       //去实名认证
       this.centerDialogVisible = false;
-      this.$router.push({ path: "/Publicfore/Information/Authentication" });
-    },
-    cancel() {
-      this.centerDialogVisible = false;
-      this.$router.push({ path: "/Publicfore" });
+      this.$router.push({ path: "/Publicfore/Information/Assessment" });
     },
     // 提交信息
     submitForm(formName, index) {
@@ -225,9 +225,7 @@ export default {
               res => {
                 console.log(res);
                 if (res.data.code == 200) {
-                  this.listTypeName = res.data.data;
-                  let typeName = this.listTypeName;
-                  storage.set("typeName", typeName);
+                  this.authentication = res.data.data;
                 }
               }
             );
@@ -240,7 +238,7 @@ export default {
         });
       } else {
         this.$message("单选不能留空");
-      };
+      }
     },
     //获取后台选择题
     getAcquisitionOption() {
@@ -255,10 +253,10 @@ export default {
       );
     },
     //选择题选中
-    ChangeRadio(e, index,i,o) {
+    ChangeRadio(e, index, i, o) {
       this.RadioList[i] = {
-        itemId:index.id,
-        optionId:[o.id],
+        itemId: index.id,
+        optionId: [o.id]
       };
       // console.log(this.RadioList)
     },
@@ -268,30 +266,48 @@ export default {
     // },
     material() {
       this.$router.push({ path: "/Publicfore/Information/Material" });
-    }
-  },
-  created() {
-    var conputy = storage.get("typeName");
-    // conputy=this.listTypeName
-    if (conputy) {
-      this.values = 1; //信息采集完成界面
-      this.listTypeName = conputy;
+    },
+    //展示已认证的用户信息
+    getPersonal() {
+      ajax.authGet.bind(this)("/api/Information/Account/GetByOpenId", res => {
+        console.log(res);
+        if (res.data.code == 200) {
+          this.information = res.data.data;
+          //判断是否有实名认证类型
+          if (this.information.name == null) {
+            this.inputName = false; //取消禁用输入框
+            this.isShow = true;
+          } else {
+            this.ruleForm = this.information;
+            this.inputName = true; //启动禁用输入框
+            this.inputdisabled = false; //取消禁用输入框
+            this.isHider = true;
+          }
+        }
+      });
+      //获取当前用户注册认证信息
+      ajax.authGet.bind(this)(
+        "/api/Information/Account/Authentication",
+        res => {
+          this.authentication = res.data.data;
+          //判断是否完成风险评测
+          if (this.authentication.riskLevelName == null) {
+            this.centerDialogVisible = true;
+            //判断是否信息采集完成
+          }
+          if (this.authentication.investorTypeName == null) {
+              console.log(this.authentication.investorTypeName)
+              this.values = 0;
+            } else {
+              this.values = 1; //信息采集完成界面
+            }
+        }
+      );
     }
   },
   mounted() {
+    this.getPersonal();
     this.getAcquisitionOption();
-    var lisat = storage.get("listaktion");
-    if (lisat == null || lisat.length == 0) {
-      this.inputName = false; //取消禁用输入框
-      this.isShow = true;
-      this.centerDialogVisible = true; //弹窗
-    } else {
-      this.ruleForm = lisat;
-      this.inputName = true; //启动禁用输入框
-      this.inputdisabled = false; //取消禁用输入框
-      this.isHider = true;
-      this.centerDialogVisible = false; //弹窗
-    }
   }
 };
 </script>

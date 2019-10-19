@@ -5,6 +5,7 @@
         <mt-button icon="back">返回</mt-button>
       </router-link>
     </mt-header>
+    <!-- 审核记录 -->
     <div class="imgs" v-show="inages==0">
       <span>审核记录</span>
       <!-- 上传图片 -->
@@ -29,9 +30,22 @@
           </div>
         </div>
       </div>
+      <div class="information">
+        <el-form ref="form" :model="form" label-width="90px">
+          <el-form-item label="账户名称">
+            <el-input v-model="form.name"></el-input>
+          </el-form-item>
+          <el-form-item label="缴款账号">
+            <el-input v-model="form.Account"></el-input>
+          </el-form-item>
+          <el-form-item label="开户行信息">
+            <el-input v-model="form.Opening"></el-input>
+          </el-form-item>
+        </el-form>
+      </div>
       <el-button type="primary" @click="audit">提交审核</el-button>
     </div>
-
+    <!-- 您的信息正在审核中 -->
     <div class="audit" v-show="inages==1">
       <div class="add">
         <p>您的信息正在审核中，请耐心等待....</p>
@@ -41,6 +55,7 @@
         <el-button disabled>查看详情</el-button>
       </div>
     </div>
+    <div v-show="inages==2"></div>
     <!-- 弹窗 -->
     <el-dialog
       title="提示"
@@ -51,7 +66,7 @@
     >
       <span>小茄子：需要先去信息采集才可以提交证明材料喔！</span>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="cancel">取 消</el-button>
+        <el-button @click="centerDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="dssy">信息采集</el-button>
       </span>
     </el-dialog>
@@ -74,20 +89,22 @@ export default {
       obj: [],
       centerDialogVisible: false, //没有进行信息采集，弹出提示框
       getImgId: {},
-      arrays:{},
-      message:''
+      arrays: {},
+      message: "",
+      form: {
+        name: "",
+        Account: "",
+        Opening: ""
+      },
+      information: {}, //获取当前用户信息
+      authentication: {} //获取当前用户注册认证信息
     };
   },
-  methods: {  
+  methods: {
     dssy() {
       //去信息采集
       this.centerDialogVisible = false;
       this.$router.push({ path: "/Publicfore/Information/Acquisition" });
-    },
-    // 弹出框取消按钮
-    cancel() {
-      this.centerDialogVisible = false;
-      this.$router.push({ path: "/Publicfore" });
     },
     //获取证件分类和证件框架
     getMaterial() {
@@ -122,16 +139,20 @@ export default {
         }
       }
       // console.log(array)
-      this.arrays=array
-      ajax.authPost.bind(this)('/api/Information/Account/Upload/Submit',array,res=>{
-          console.log(res)
-          if(res.data.code==400){
-            this.message=res.data.message
-            this.$message(this.message);
-          }else if(res.data.code==200){
-            this.inages=1  //  您的信息正在审核中，请耐心等待
-          }
-      })
+      let data = {
+        accountName: this.form.name,
+        account: this.form.Account,
+        accountBank: this.form.Opening,
+        materials: array
+      };
+      ajax.authPost.bind(this)(
+        "/api/Information/Account/Upload/Submit",
+        data,
+        res => {
+          this.inages = 1; //  您的信息正在审核中，请耐心等待
+          this.$message(res.data.message);
+        }
+      );
     },
     //报表文件上传成功回调
     material() {
@@ -139,12 +160,9 @@ export default {
     },
     //图片上传成功的回调，获取id
     handleAvatarSuccess(res, file, newItem) {
-      newItem.imageUrl =res.data.fullPath// URL.createObjectURL(file.raw);
+      newItem.imageUrl = res.data.fullPath; // URL.createObjectURL(file.raw);
       newItem.img = res.data;
-      // console.log(res);
       this.getImgId = res.data;
-      // let tanplat=JSON.stringify(this.getScience)
-      // sessionStorage.setItem('array',tanplat)
     },
     // 图片的格式
     beforeAvatarUpload(file) {
@@ -158,21 +176,33 @@ export default {
       }
       return isLt2M;
     },
-    getcail(){
-      ajax.authGet.bind(this)('/api/Information/Account/CanSubmit',res=>{
-        console.log(res)
-      })
+    getcail() {
+      ajax.authGet.bind(this)("/api/Information/Account/CanSubmit", res => {
+        console.log(res);
+      });
+    },
+    //判断信息采集页面是否完成提交
+    getPersonal() {
+      ajax.authGet.bind(this)(
+        "/api/Information/Account/Authentication",
+        res => {
+          console.log(res);
+          if (res.data.code == 200) {
+            this.authentication = res.data.data;
+            if (this.authentication.investorTypeName == null) {
+              this.centerDialogVisible = true;
+              this.inages = 2;
+            }
+          }
+        }
+      );
     }
   },
   mounted() {
     //获取结构
     this.getMaterial();
-    //判断信息采集页面是否完成提交
-    let acquis = storage.get("typeName");
-    if (acquis == null || acquis.length == 0) {
-      this.centerDialogVisible = true;
-    };
-    this.getcail()
+    this.getcail();
+    this.getPersonal()
   }
 };
 </script>
@@ -223,6 +253,9 @@ export default {
         }
       }
     }
+  }
+  .information {
+    padding-top: 30px;
   }
   /deep/.el-button--primary {
     width: 100%;

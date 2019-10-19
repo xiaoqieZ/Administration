@@ -16,8 +16,10 @@ import BankDataList from '@/pages/BankData/BankDataList'
 import PositionManagement from '@/pages/BankData/PositionManagement'
 import AccountManage from '@/pages/UserManage/AccountManage'
 import UserFun from '@/pages/UserManage/UserFun'
+import SealEditor from '@/pages/UserManage/SealEditor'
 import UserRecord from '@/pages/UserManage/UserRecord'
 import UserInfo from '@/pages/UserManage/UserInfo'
+import CorporateSeal from '@/pages/UserManage/CorporateSeal'
 import Aparameters from '@/pages/MemberManage/Aparameters'
 import Pushmessage from '@/pages/Pushmessage/Pushmessageone'
 import Pushmessagetow from '@/pages/Pushmessage/Pushmessagetow'
@@ -320,6 +322,12 @@ export default new Router({
               component: UserFun
             },
             {
+              path: '/NavBar/UserManage/SealEditor',
+              name: 'SealEditor',
+              title: '合同印章编辑',
+              component: SealEditor
+            },
+            {
               path: '/NavBar/UserManage/UserRecord',
               name: 'UserRecord',
               title: '公文文件',
@@ -330,6 +338,12 @@ export default new Router({
               name: 'UserInfo',
               title: '账户设置',
               component: UserInfo
+            },
+            {
+              path: '/NavBar/UserManage/CorporateSeal',
+              name: 'CorporateSeal',
+              title: '设置印章',
+              component: CorporateSeal
             }
           ]
         },

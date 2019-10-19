@@ -282,22 +282,22 @@
       <div>
         <div>
           <el-table :data="modifyData" style="width: 100%">
-            <el-table-column prop="date" label="修改内容">
+            <el-table-column align="center" prop="date" label="修改内容">
               <template slot-scope="scope">
                 <span>{{scope.row.modifyTypeName}}</span>
               </template>
             </el-table-column>
-            <el-table-column prop="name" label="原始内容">
+            <el-table-column align="center" prop="name" label="原始内容">
               <template slot-scope="scope">
                 <span>{{scope.row.originContent}}</span>
               </template>
             </el-table-column>
-            <el-table-column prop="address" label="更新内容">
+            <el-table-column align="center" prop="address" label="更新内容">
               <template slot-scope="scope">
                 <span>{{scope.row.modifyContent}}</span>
               </template>
             </el-table-column>
-            <el-table-column prop="address" label="修改时间">
+            <el-table-column align="center" prop="address" label="修改时间">
               <template slot-scope="scope">
                 <span>{{scope.row.creationTime}}</span>
               </template>

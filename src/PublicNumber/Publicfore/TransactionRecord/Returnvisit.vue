@@ -7,8 +7,16 @@
     </mt-header>
     <div class="list">
       <div class="cou" v-for="item in returnVisit" :key="item.Id">
-        <div class="coutent" @click="answer(item)">
+        <div class="coutent" v-if="item.isSure==1">
           <span>{{item.productName}}</span>
+          <span>
+            {{item.isSure==1?item.operationTypeName:"已完成"}}
+            <Icon type="ios-arrow-forward" size="24" />
+          </span>
+        </div>
+        <div class="coutent" @click="answer(item)" v-else>
+          <span>{{item.productName}}</span>
+          <span style="color:#26a2ff" @click="remove(item)">取消</span>
           <span>
             {{item.operationTypeName}}
             <Icon type="ios-arrow-forward" size="24" />
@@ -16,9 +24,14 @@
         </div>
       </div>
     </div>
-    <div class="nothing" v-if="message">
-            暂无回访记录
-        </div>
+    <div class="nothing" v-if="message">暂无回访记录</div>
+    <el-dialog title="提示" width="80%" :visible.sync="centerDialogVisible" center>
+      <span>你确定取消回访吗？</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="centerDialogVisible = false">返 回</el-button>
+        <el-button type="primary" @click="submi">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -33,8 +46,10 @@ export default {
       returnVisit: [], //用于回去回访Id
       Id: "",
       productName: "",
-      returnId:'',
+      returnId: "",
       message: "",
+      centerDialogVisible:false,
+      id:''
     };
   },
   methods: {
@@ -49,8 +64,7 @@ export default {
         data,
         res => {
           this.returnVisit = res.data.data.list;
-          this.returnId = this.returnVisit.forEach((index,row)=>{
-          })
+          this.returnId = this.returnVisit.forEach((index, row) => {});
           if (this.returnVisit.length == 0) {
             this.message = true;
           }
@@ -58,11 +72,28 @@ export default {
       );
     },
     //按钮，进入单选界面
-    answer(data){
+    answer(data) {
       // console.log(data.id);return;
-      let productName = {productName:data.productName,visitId:data.id};
-      this.$router.push({path: '/Publicfore/TransactionRecord/ReturnvisitAnswer',query:{productName}})
+      let productName = { productName: data.productName, visitId: data.id };
+      this.$router.push({
+        path: "/Publicfore/TransactionRecord/ReturnvisitAnswer",
+        query: { productName }
+      });
     },
+    remove(row) {
+      this.centerDialogVisible=true;
+      this.id = row.id
+    },
+    //取消回访
+    submi(){
+      ajax.authPost.bind(this)(
+        "/api/Information/Present/Product/VisitBack/Remove?id=" + this.id,
+        res => {
+          this.getVisitBack();
+          this.centerDialogVisible=false;
+        }
+      );
+    }
   },
   mounted() {
     this.getVisitBack();

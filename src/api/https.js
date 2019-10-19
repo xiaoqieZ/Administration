@@ -6,7 +6,10 @@ function thenCallBack(res, then, cat) {
     if (res.data.code == 200) {
         then.call(this, res);
     } else {
-        this.$message(res.data.message);
+        this.$message({
+            message: res.data.message,
+            type:"error"
+          });
         cat.call(this,res);
     }
 
@@ -124,16 +127,7 @@ function authPostForm(url, data, then, cat) {
         if (!cat) {
             cat = res => {};
         }
-        var value = "";
-        if (data instanceof String) {
-            value = data;
-        } else {
-            for (var i in data) {
-                value += i + "=" + data[i] + "&";
-            }
-            value = value && value.substr(0, value.length - 1);
-        }
-        url += url.indexOf("?") > -1 ? ("&" + value) : ("?" + value)
+        url=stringfy(data);
 
         if (token) {
             return this.$axios({
@@ -152,6 +146,20 @@ function authPostForm(url, data, then, cat) {
         }
     }
 }
+function stringfy(url,data){
+    
+    var value = "";
+    if (data instanceof String) {
+        value = data;
+    } else {
+        for (var i in data) {
+            value += i + "=" + data[i] + "&";
+        }
+        value = value && value.substr(0, value.length - 1);
+    }
+    url += url.indexOf("?") > -1 ? ("&" + value) : ("?" + value)
+    return dom+url;
+}
 
 export default {
     post,
@@ -160,5 +168,6 @@ export default {
     authPost,
     auth,
     doms,
-    authPostForm
+    authPostForm,
+    stringfy
 }

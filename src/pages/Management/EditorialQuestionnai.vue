@@ -1,15 +1,16 @@
 <template>
   <div>
     <div class="button">
-    <el-button @click="returnUpper" type="primary" plain icon="el-icon-d-arrow-left">问卷管理</el-button>&nbsp;&nbsp;
-    <p v-if="queryData.see==0">编辑问卷页面</p>
-    <p v-else>查看问卷</p>
+      <el-button @click="returnUpper" type="primary" plain icon="el-icon-d-arrow-left">问卷管理</el-button>&nbsp;&nbsp;
+      <p v-if="queryData.see==0">编辑问卷页面</p>
+      <p v-if="queryData.see==2">添加问卷</p>
+      <p v-else>查看问卷</p>
     </div>
     <div class="title">
       <div class="Return_title"></div>
       <div style="color:red">CO选项为是否无风险承受能力</div>
     </div>
-    <div class="Return_list">
+    <div class="Return_list" v-if="queryData.see!=2">
       <div class="return_form" v-for="(item,index) in questionnaireData ">
         <el-form label-width="80px">
           <el-form-item :label="'题目'+index">
@@ -20,6 +21,14 @@
           </el-form-item>
           <el-form-item :label="'问题'+index">
             <el-input v-model="item.title"></el-input>
+            <el-select v-model="item.score">
+              <el-option
+                :label="item.text"
+                :value="item.value"
+                v-for="item in countData"
+                :key="item.indexa"
+              ></el-option>
+            </el-select>
             <el-button type="primary" @click="add(index)">新增选项</el-button>
           </el-form-item>
           <div v-for="(open,indexa) in item.options ">
@@ -38,12 +47,66 @@
             </el-form-item>
           </div>
           <div class="return_button" v-if="queryData.see==0">
-            <el-button type="primary" @click="submit">提交</el-button>
+            <el-button type="primary" @click="submit">提 交</el-button>
             <el-button type="primary" @click="addProblem">新增问题</el-button>
             <el-button type="primary" @click="recovery">恢复默认</el-button>
           </div>
           <div class="return_button" v-else>
-              <el-button type="primary">返回</el-button>
+            <el-button type="primary" @click="retrunSee">返 回</el-button>
+          </div>
+        </el-form>
+      </div>
+    </div>
+
+    <div class="Return_list" v-if="queryData.see==2">
+      <el-form label-width="80px">
+        <el-form-item label="问卷名称">
+          <el-input v-model="name" placeholder="请输入问卷名称"></el-input>
+        </el-form-item>
+      </el-form>
+      <div class="return_form" v-for="(item,indexs) in items" :key="item.indexs">
+        <el-form label-width="80px">
+          <el-form-item label="题目">
+            <el-radio-group v-model="item.optionType">
+              <el-radio :label="1">单选</el-radio>
+              <el-radio :label="2">多选</el-radio>
+            </el-radio-group>
+          </el-form-item>
+          <el-form-item label="问题">
+            <el-input v-model="item.title"></el-input>
+            <el-select v-model="item.score">
+              <el-option
+                :label="item.text"
+                :value="item.value"
+                v-for="item in countData"
+                :key="item.indexa"
+              ></el-option>
+            </el-select>
+            <el-button type="primary" @click="addCount(item,indexs)">新增选项</el-button>
+          </el-form-item>
+          <div v-for="(open,index) in item.options">
+            <el-form-item label="选项">
+              <el-input v-model="open.content"></el-input>
+              <el-select v-model="open.score">
+                <el-option
+                  :label="item.text"
+                  :value="item.value"
+                  v-for="item in countData"
+                  :key="item.indexa"
+                ></el-option>
+              </el-select>
+              <el-checkbox v-model="open.withoutRisk">CO选项</el-checkbox>
+              <el-button
+                type="primary"
+                icon="el-icon-delete"
+                @click="addCountDel(open,index,indexs)"
+              ></el-button>
+            </el-form-item>
+          </div>
+          <div class="return_button">
+            <el-button type="primary" @click="addSubmit">{{queryData.see==2?'添 加':''}}</el-button>
+            <el-button type="primary" @click="addCountProblem(item,indexs)">新增问题</el-button>
+            <el-button type="primary" @click="recovery">恢复默认</el-button>
           </div>
         </el-form>
       </div>
@@ -55,6 +118,20 @@ import ajax from "../../api/https.js";
 export default {
   data() {
     return {
+      name: "",
+      items: [
+        {
+          optionType: 1,
+          title: "",
+          score: "",
+          options: [{ content: "", score: "", withoutRisk: 0 }]
+        }
+      ], //新增页面下的新增问题
+      // itemOptionType: 1, //单双选
+      // itemTitle: "", //问题
+      // openContent: "", //选项
+      // openScore: "", //分数
+      // openWithoutRisk: "", //CO选项
       id: "", //问卷id
       queryData: {},
       countData: [
@@ -69,9 +146,7 @@ export default {
         { text: "9分", value: "9" },
         { text: "10分", value: "10" }
       ],
-      questionnaireData: [], //数据
-      items: [],
-      ak: []
+      questionnaireData: [] //数据
     };
   },
   methods: {
@@ -86,7 +161,11 @@ export default {
     },
     // 返回
     returnUpper() {
-      this.$router.go(-1);
+      let data = this.queryData.questionnaireType
+      this.$router.push({
+        path: "/NavBar/Managements/Managementfour",
+        query: { data }
+      });
     },
     //提交
     submit() {
@@ -96,7 +175,9 @@ export default {
         title: this.queryData.title,
         items: this.questionnaireData
       };
-      ajax.authPost.bind(this)("api/Questionnaire/Save", data, res => {});
+      ajax.authPost.bind(this)("api/Questionnaire/Save", data, res => {
+        this.$message("提交成功");
+      });
     },
     //新增选项
     add(index) {
@@ -112,27 +193,70 @@ export default {
       temp.splice(kk, 1);
     },
     //新增问题
-    addProblem(){
-        this.questionnaireData.push({optionType:1,title:'',score:10,options:[]})
+    addProblem() {
+      this.questionnaireData.push({
+        optionType: 1,
+        title: "",
+        score: 10,
+        options: []
+      });
     },
     //重置
-    recovery(){
-        this.getData()
+    recovery() {
+      this.getData();
+    },
+    //返回
+    retrunSee() {
+      this.$router.go(-1);
+    },
+    //添加
+    addSubmit() {
+      let data = {
+        questionnaireType: this.queryData.questionnaireType,
+        title: this.name,
+        items: this.items
+      };
+      ajax.authPost.bind(this)("/api/Questionnaire/Save", data, res => {
+        this.$message("添加成功");
+      });
+    },
+    //添加问卷下面的新增选项
+    addCount(item, indexs) {
+      var dd = this.items[indexs].options;
+      dd.push({
+        content: "",
+        score: "",
+        withoutRisk: 0
+      });
+    },
+    //添加问卷下面的删除按钮
+    addCountDel(open, index, indexs) {
+      var arr = this.items[indexs].options;
+      var kk = arr.findIndex(index => {
+        if (open.index == index) return true;
+      });
+      arr.splice(kk, 1);
+    },
+    //添加问卷下面的新增问题按钮
+    addCountProblem(item, indexs) {
+      this.items.push({ optionType: 1, title: "", score: "", options: [] });
+      console.log(indexs);
     }
   },
   mounted() {
     this.queryData = this.$route.query.data;
+    // console.log(this.queryData.questionnaireType);
     this.getData();
   }
 };
 </script>
 <style lang="less" scoped>
-.button{
-    height: 56px;
-    background: #fff;
-    line-height: 56px;
-    display: flex;
-    align-items: center;
+.button {
+  height: 56px;
+  background: #fff;
+  line-height: 56px;
+  display: flex;
+  align-items: center;
 }
 .title {
   display: flex;
@@ -143,14 +267,11 @@ export default {
   }
 }
 .Return_list {
+  /deep/.el-input {
+    width: 50%;
+  }
   height: 461px;
   overflow: scroll;
-  //   @media screen and (max-width: 1080px) {
-  //   .Return_list {
-  //     height: 561px;
-  //     overflow: scroll;
-  //   }
-  //   }
   .return_form {
     padding-bottom: 20px;
     /deep/.el-icon-arrow-up {
@@ -165,6 +286,30 @@ export default {
     text-align: center;
     position: absolute;
     bottom: 10px;
+  }
+}
+@media screen and (min-width: 1080px) {
+  .Return_list {
+    /deep/.el-input {
+      width: 50%;
+    }
+    height: 540px;
+    overflow: scroll;
+    .return_form {
+      padding-bottom: 20px;
+      /deep/.el-icon-arrow-up {
+        height: 75%;
+      }
+      /deep/.el-input {
+        width: 50%;
+      }
+    }
+    .return_button {
+      width: 100%;
+      text-align: center;
+      position: absolute;
+      bottom: 10px;
+    }
   }
 }
 </style>

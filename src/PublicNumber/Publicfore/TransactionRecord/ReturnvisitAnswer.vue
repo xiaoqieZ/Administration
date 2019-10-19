@@ -9,7 +9,7 @@
       <div class="visit_title">
         <p>
           尊敬的投资者
-          <span style="font-weight:600">11</span>,您好！
+          <span style="font-weight:600">{{acountName.name}}</span>,您好！
         </p>
         <p class="content">
           以下内容为您购买的产品：
@@ -32,11 +32,20 @@
       </div>
     </div>
     <div>
-      <el-dialog title="提示" :visible.sync="centerDialogVisible" width="80%" center>
-        <span>您的回访已完成！</span>
+      <el-dialog
+        title="提示"
+        :visible.sync="centerDialogVisible"
+        :close-on-click-modal="false"
+        :close-on-press-escape="false"
+        :show-close="false"
+        width="80%"
+        center
+      >
+        <span v-if="statusData.isPass==true">您的回访已通过，点击确认提交！</span>
+        <span v-else>{{statusData.statusName}}</span>
         <span slot="footer" class="dialog-footer">
-          <el-button @click="centerDialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="centerDialog">确 定</el-button>
+          <el-button type="primary" @click="go" v-if="statusData.isPass==false">确 定</el-button>
+          <el-button type="primary" v-else @click="centerDialog">确 定</el-button>
         </span>
       </el-dialog>
     </div>
@@ -54,58 +63,88 @@ export default {
       problem: [],
       centerDialogVisible: false,
       InvestmentName: {},
-      visitId:'',//回访Id
+      visitId: "", //回访Id
+      statusData: "",
+      acountName:{}
     };
   },
   methods: {
     //获取单选题目
     getRadio() {
       ajax.authGet.bind(this)(
-        "/api/Information/Present/Product/VisitBack/Questionnaire?visitId=" + this.$route.query.productName.visitId,
+        "/api/Information/Present/Product/VisitBack/Questionnaire?visitId=" +
+          this.$route.query.productName.visitId,
         res => {
           this.radioData = res.data.data;
+        }
+      );
+      ajax.authGet.bind(this)(
+        "/api/Information/Account",
+        res => {
+          this.acountName = res.data.data;
         }
       );
     },
     //选择题答案
     chenge(open, item, index) {
-    //   this.problem.splice(0);
+      //   this.problem.splice(0);
       this.problem[index] = {
         itemId: item.id,
         optionId: [open.id]
       };
-      console.log(this.problem)
+      // console.log(this.problem)
     },
     //提交回访单
     submi() {
       if (this.problem.length > 7) {
-        let data = {
-             visitId:this.visitId,
-             answer:this.problem,
-             materialId:1,
-        };
+        let data = this.problem;
         //提交接口
         ajax.authPost.bind(this)(
-          "/api/Information/Present/Product/VisitBack/Save",data,res=>{
-              this.centerDialogVisible = true;
+          "/api/Information/Present/Product/VisitBack/Validate?visitId=" +
+            this.visitId,
+          data,
+          res => {
+            this.centerDialogVisible = true;
+            this.statusData = res.data.data;
           }
         );
       } else {
         this.$message("检查是否全部作答");
       }
     },
-    //对话框
+    //确定提交
     centerDialog() {
-      this.centerDialogVisible = false;
-      this.$router.push({ path: "/Publicfore/TransactionRecord/Returnvisit" });
+      if (this.problem.length > 7) {
+        let data = {
+          visitId: this.visitId,
+          answer: this.problem,
+          materialId: 1
+        };
+        //提交接口
+        ajax.authPost.bind(this)(
+          "/api/Information/Present/Product/VisitBack/Save",
+          data,
+          res => {
+            this.centerDialogVisible = false;
+            this.$router.push({
+              path: "/Publicfore/TransactionRecord/Returnvisit"
+            });
+          }
+        );
+      } else {
+        this.$message("检查是否全部作答");
+      }
+    },
+    go() {
+      this.$router.go(-1);
     },
     //拿到本地储存的数据
     getstorage() {
       this.InvestmentName = storage.get("listaktion");
     },
     //获取回访Id
-    getvisitid(){
-        this.visitId = this.$route.query.productName.visitId
+    getvisitid() {
+      this.visitId = this.$route.query.productName.visitId;
     }
   },
   mounted() {
@@ -126,7 +165,7 @@ export default {
   padding: 10px;
 }
 .primary {
-  padding-top: 50px;
+  padding: 50px 0;
   .el-button--primary {
     width: 100%;
   }

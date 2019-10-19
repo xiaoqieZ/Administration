@@ -65,7 +65,7 @@ export default {
       countData: [], //新闻数据
       activeName: "",
       page:1,
-      num:4,
+      num:2,
       popularData:[],
     };
   },
@@ -177,21 +177,19 @@ export default {
     .hometnav {
       width: 100%;
       height: 120px;
-      position: relative;
       overflow-x: scroll;
       border-bottom: 1px solid #666;
       .hometswrip {
-        width: 217%;
+        width: 48%;
         height: 120px;
-        position: absolute;
-        display: flex;
+        display: inline-flex;
         align-items: center;
+        text-align: center;
         .el-divider--vertical {
           height: 4em;
-          margin: 0px 30px;
         }
         .homeopesion {
-          width: 20%;
+          width: 100%;
           .title {
             color: #000;
             font-weight: 600;

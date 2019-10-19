@@ -1,6 +1,9 @@
 <template>
   <div>
-    <div style="font-weight: 600;padding-bottom: 10px;">{{PositionHolder.fundTypeName}}</div>
+    <div class="title">
+      <div><el-button icon="el-icon-d-arrow-left" @click="prev">产品编辑</el-button></div>&nbsp;&nbsp;
+      <div style="font-weight: 600;padding-bottom: 10px;">{{PositionHolder.fundTypeName}}</div>
+    </div>
     <div class="Hold">
       <div class="HoldForm">
         <el-form
@@ -10,7 +13,7 @@
           label-width="100px"
           class="demo-ruleForm"
         >
-        <!-- 持仓数量 -->
+          <!-- 持仓数量 -->
           <div class="ruleForm_item">
             <div class="HoldNum">
               持仓数量：
@@ -19,7 +22,7 @@
             <el-form-item label="操作类型" prop="region">
               <el-select
                 v-model="ruleForm.region"
-                placeholder="请选择活动区域"
+                placeholder="请选择操作类型"
                 @change="selectOne($event)"
               >
                 <el-option
@@ -135,54 +138,53 @@
               </el-upload>
             </div>
           </div>
-          <div>
-            <div class="HoldNum">操作详情</div>
-            <!-- 表格数据操作 -->
-            <el-table :data="tabelPotentialList" stripe id="out-table" style="width: 100%">
-              <!-- 勾选框 -->
-              <el-table-column type="selection" width="55"></el-table-column>
-              <!-- 索引 -->
-              <el-table-column align="center" type="index" prop="data" label="序号" width="60"></el-table-column>
-              <el-table-column align="center" prop="fundScale" label="操作">
-                <template slot-scope="scope">
-                  <span>{{scope.row.name}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column align="center" prop="creationTime" label="净值时间">
-                <template slot-scope="scope">
-                  <span>{{scope.row.certificateTypeName}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column align="center" prop="recommendName" label="单位净值">
-                <template slot-scope="scope">
-                  <span>{{scope.row.portionAmount}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column align="center" prop="recommendName" label="份额">
-                <template slot-scope="scope">
-                  <span>{{scope.row.certificateTypeName}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column align="center" prop="recommendName" label="金额">
-                <template slot-scope="scope">
-                  <span>{{scope.row.certificateNo}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column align="center" prop="recommendName" label="操作时间">
-                <template slot-scope="scope">
-                  <span>{{scope.row.customerTypeName}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column align="center" prop="isQualified" label="双路视频">
-                <template slot-scope="scope">
-                  <span class="spanColor" @click="delInvestor(scope.$index, scope.row)">删除投资人</span>
-                  <span class="spanColor" @click="holdPositions(scope.$index, scope.row)">持仓管理</span>
-                  <span class="spanColor" @click="returnVisit(scope.$index, scope.row)">适当性回访</span>
-                </template>
-              </el-table-column>
-            </el-table>
-            <!-- 页码 -->
-            <div align="center">
+        </el-form>
+        <div>
+          <div class="HoldNum">操作详情</div>
+          <!-- 表格数据操作 -->
+          <el-table :data="tabelPotentialList" stripe id="out-table" style="width: 100%">
+            <!-- 勾选框 -->
+            <el-table-column type="selection" width="55"></el-table-column>
+            <!-- 索引 -->
+            <el-table-column align="center" type="index" prop="data" label="序号" width="60"></el-table-column>
+            <el-table-column align="center" prop="fundScale" label="操作">
+              <template slot-scope="scope">
+                <span>{{scope.row.operationTypeName}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column align="center" prop="creationTime" label="净值时间">
+              <template slot-scope="scope">
+                <span>{{scope.row.dateOfWorth}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column align="center" prop="recommendName" label="单位净值">
+              <template slot-scope="scope">
+                <span>{{scope.row.unitWorth}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column align="center" prop="recommendName" label="份额">
+              <template slot-scope="scope">
+                <span>{{scope.row.portionAmount}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column align="center" prop="recommendName" label="金额">
+              <template slot-scope="scope">
+                <span>{{scope.row.moneyAmount}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column align="center" prop="recommendName" label="操作时间">
+              <template slot-scope="scope">
+                <span>{{scope.row.creationTime}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column align="center" prop="isQualified" label="双路视频">
+              <template slot-scope="scope">
+                <span class="spanColor">视频接口暂无</span>
+              </template>
+            </el-table-column>
+          </el-table>
+          <!-- 页码 -->
+          <!-- <div align="center">
               <el-pagination
                 background
                 @size-change="handleSize"
@@ -190,17 +192,14 @@
                 :current-page="page"
                 :page-size="num"
                 layout="total, prev, pager, next, jumper"
-                :total="tabelPotentialListPage.count"
+                :total="tabelPotentialList.count"
               ></el-pagination>
-            </div>
-          </div>
-          <div class="ruleForm_submit">
-            <el-form-item>
-              <el-button type="primary" @click="submitForm('ruleForm')">立即创建</el-button>
-              <el-button @click="resetForm('ruleForm')">重置</el-button>
-            </el-form-item>
-          </div>
-        </el-form>
+          </div>-->
+        </div>
+        <div class="ruleForm_submit">
+          <el-button type="primary" @click="submitForm('ruleForm')">立即创建</el-button>
+          <el-button @click="resetForm('ruleForm')">重置</el-button>
+        </div>
       </div>
     </div>
   </div>
@@ -210,7 +209,7 @@ import ajax from "../../api/https.js";
 export default {
   data() {
     return {
-      holdPositions: {}, //id
+      activeName:"fourth",
       PositionHolder: {}, //持仓者信息
       ruleForm: {
         region: "",
@@ -220,7 +219,7 @@ export default {
         desc: "",
         relateOrder: "",
         coolDownPeriod: "",
-        resource: "",
+        resource: 0,
         fileId: "",
         saleHigherRiskMaterialId: "",
         adjustMaterialId: "",
@@ -263,7 +262,7 @@ export default {
       operationList: [], //操作类型下拉框数据
       relationList: [], //关联订单下拉框
       values: "",
-      positionsNum:'',//持仓份额
+      positionsNum: "" //持仓份额
     };
   },
   methods: {
@@ -273,9 +272,10 @@ export default {
         "/api/Management/Product/Invest/Asset?productId=" +
           this.$route.query.data.productId +
           "&userId=" +
-          this.$route.query.data.userId,res=>{
-            this.positionsNum=res.data.data
-          }
+          this.$route.query.data.userId,
+        res => {
+          this.positionsNum = res.data.data;
+        }
       );
     },
     //基金产品信息
@@ -294,6 +294,18 @@ export default {
         this.operationList.unshift({ value: "0", text: "无" });
       });
     },
+    //操作详情
+    getTabelPotentialList() {
+      ajax.authGet.bind(this)(
+        "/api/Management/Product/Invest/Operation?productId=" +
+          this.$route.query.data.productId +
+          "&userId=" +
+          this.$route.query.data.userId,
+        res => {
+          this.tabelPotentialList = res.data.data;
+        }
+      );
+    },
     //下拉change
     selectOne(event) {
       this.values = event;
@@ -306,7 +318,7 @@ export default {
           this.$route.query.data.productId +
           "&userId=" +
           this.$route.query.data.userId +
-          "&orderType=" +
+          "&operationType=" +
           this.values,
         res => {
           this.relationList = res.data.data;
@@ -337,7 +349,9 @@ export default {
             "/api/Management/Product/Invest/Save",
             data,
             res => {
-              this.prev();
+              this.getDataName()
+              this.getTabelPotentialList()
+               this.$message({message:res.data.message,type:"success"});
             }
           );
         } else {
@@ -348,6 +362,8 @@ export default {
     },
     prev() {
       this.$router.go(-1);
+      // let fourth = {fourth:this.activeName.fourth,productId:this.$route.query.data.productId}
+      // this.$router.push({path:"/NavBar/DataDitionary/BankDataList",query:{fourth}})
     },
     // 重置输入框
     resetForm(formName) {
@@ -365,27 +381,33 @@ export default {
     },
     chenge(response, file, fileList) {
       this.ruleForm.riskWarningMaterialId = response.data.id;
-    },
-    //每页显示数据量变更
-    handleSize: function(val) {
-      this.num = val;
-      this.getPresentation();
-    },
-    //页码变更
-    handleCurrent: function(val) {
-      this.page = val;
-      this.getPresentation();
     }
+    // //每页显示数据量变更
+    // handleSize: function(val) {
+    //   this.num = val;
+    //   this.getPresentation();
+    // },
+    // //页码变更
+    // handleCurrent: function(val) {
+    //   this.page = val;
+    //   this.getPresentation();
+    // }
   },
   mounted() {
     // this.getFundTypeName();
     this.getDataName();
     this.getoperation();
     this.getpositions();
+    this.getTabelPotentialList();
   }
 };
 </script>
 <style lang="less">
+.title{
+  display: flex;
+  height: 50px;
+  line-height: 40px;
+}
 .Hold {
   height: 610px;
   overflow: scroll;
@@ -413,6 +435,7 @@ export default {
     .ruleForm_submit {
       width: 100%;
       text-align: center;
+      padding-top: 50px;
     }
     .holdVideo {
       padding: 0 0 30px 20px;

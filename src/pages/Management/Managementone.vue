@@ -189,7 +189,7 @@
                     :inactive-value="0"
                     active="#00A854"
                     inactive="#F04134"
-                    @change="Switch(scope.row.isHotSpot,scope.row.id)"
+                    @change="Switch(scope.row)"
                   ></el-switch>
                 </template>
               </el-table-column>
@@ -387,11 +387,10 @@ export default {
       delLink: "",
       delTitle: "",
       delFilePath: "",
-      currentFileId: 0,//轮播图的ID
-      chartId:0,//轮播图里面的row.ID
-      JournalismId:0,
-      aboutId:0,
-
+      currentFileId: 0, //轮播图的ID
+      chartId: 0, //轮播图里面的row.ID
+      JournalismId: 0,
+      aboutId: 0
     };
   },
   methods: {
@@ -435,12 +434,12 @@ export default {
     },
     //报表文件上传成功回调
     chengecheng(response, file, fileList) {
-      this.currentFileId = response.data.id;//轮播图的ID
-      this.JournalismId = response.data.id;//新闻图的ID
-      this.aboutId = response.data.id;//关于图的ID
+      this.currentFileId = response.data.id; //轮播图的ID
+      this.JournalismId = response.data.id; //新闻图的ID
+      this.aboutId = response.data.id; //关于图的ID
     },
     //清空上传成功后的文件列表
-    clearUploadedImage () {
+    clearUploadedImage() {
       this.$refs.upload.clearFiles();
     },
     //提交图片资料
@@ -448,57 +447,62 @@ export default {
       this.$refs[editForm].validate(valid => {
         if (valid) {
           var data = {
-        link: this.editForm.link,
-        materialId: this.currentFileId,
-        id:this.chartId
-      };
-      ajax.authPost.bind(this)("/api/System/Page/Rotary/Save", data, res => {
-        this.editFormVisible = false;
-        this.getData();
-        this.clearUploadedImage()
-        this.editForm.link=''
-
-      });
+            link: this.editForm.link,
+            materialId: this.currentFileId,
+            id: this.chartId
+          };
+          ajax.authPost.bind(this)(
+            "/api/System/Page/Rotary/Save",
+            data,
+            res => {
+              this.editFormVisible = false;
+              this.getData();
+              this.clearUploadedImage();
+              this.editForm.link = "";
+            }
+          );
         } else {
           return false;
         }
       });
     },
     //添加轮播图按钮
-    addChart(){
-      this.editFormVisible=true;
-      this.chartId=0
-      this.editForm.link=''
+    addChart() {
+      this.editFormVisible = true;
+      this.chartId = 0;
+      this.editForm.link = "";
     },
     //添加新闻按钮
-    addJournalism(){
-      this.editFormlism=true;
-      this.chartId=0;
-      this.editrules.urls=this.editrules.title=this.editrules.content=''
+    addJournalism() {
+      this.editFormlism = true;
+      this.chartId = 0;
+      this.editrules.urls = this.editrules.title = this.editrules.content = "";
     },
     //添加关于按钮
-    addAbout(){
-      this.editFormname=true;
-      this.chartId=0;
-      this.aboutForm.usurl=this.aboutForm.ustitle=this.aboutForm.uscontent=''
+    addAbout() {
+      this.editFormname = true;
+      this.chartId = 0;
+      this.aboutForm.usurl = this.aboutForm.ustitle = this.aboutForm.uscontent =
+        "";
     },
     //提交新闻资料
     clickJournalism(editrules) {
       this.$refs[editrules].validate(valid => {
         if (valid) {
           let data = {
-            link:this.editrules.urls,
-            title:this.editrules.title,
-            content:this.editrules.content,
-            materialId:this.JournalismId,
-            id:this.chartId
-          }
-        ajax.authPost.bind(this)("/api/System/Page/News/Save", data, res => {
-        this.editFormlism = false;
-        this.getJournalism();
-        this.clearUploadedImage()
-        this.editrules.urls=this.editrules.title=this.editrules.content=''
-      });
+            link: this.editrules.urls,
+            title: this.editrules.title,
+            content: this.editrules.content,
+            materialId: this.JournalismId,
+            id: this.chartId
+          };
+          ajax.authPost.bind(this)("/api/System/Page/News/Save", data, res => {
+            this.editFormlism = false;
+            this.getJournalism();
+            this.clearUploadedImage();
+            this.editrules.urls = this.editrules.title = this.editrules.content =
+              "";
+          });
         } else {
           return false;
         }
@@ -509,18 +513,23 @@ export default {
       this.$refs[aboutForm].validate(valid => {
         if (valid) {
           let data = {
-            link:this.aboutForm.usurl,
-            title:this.aboutForm.ustitle,
-            content:this.aboutForm.uscontent,
-            id:this.chartId,
-            materialId:this.aboutId
-          }
-          ajax.authPost.bind(this)("/api/System/Page/AboutUs/Save", data, res => {
-        this.editFormname = false;
-        this.getAbout();
-        this.clearUploadedImage()
-        this.aboutForm.usurl=this.aboutForm.ustitle=this.aboutForm.uscontent=''
-      });
+            link: this.aboutForm.usurl,
+            title: this.aboutForm.ustitle,
+            content: this.aboutForm.uscontent,
+            id: this.chartId,
+            materialId: this.aboutId
+          };
+          ajax.authPost.bind(this)(
+            "/api/System/Page/AboutUs/Save",
+            data,
+            res => {
+              this.editFormname = false;
+              this.getAbout();
+              this.clearUploadedImage();
+              this.aboutForm.usurl = this.aboutForm.ustitle = this.aboutForm.uscontent =
+                "";
+            }
+          );
         } else {
           return false;
         }
@@ -531,29 +540,29 @@ export default {
       console.log(file, fileList);
     },
     //编辑轮播图
-    clickChart(i,row) {
-      this.chartId=row.id
-      this.editFormVisible=true
-      this.editForm.link=row.link
-      this.currentFileId=row.fileId
+    clickChart(i, row) {
+      this.chartId = row.id;
+      this.editFormVisible = true;
+      this.editForm.link = row.link;
+      this.currentFileId = row.fileId;
     },
     //编辑新闻
-    clickJournalismEdit(i,row) {
-      this.chartId=row.id;
-      this.JournalismId=row.fileId;
-      this.editFormlism=true;
-      this.editrules.urls=row.link;
-      this.editrules.title=row.title;
-      this.editrules.content=row.content;
+    clickJournalismEdit(i, row) {
+      this.chartId = row.id;
+      this.JournalismId = row.fileId;
+      this.editFormlism = true;
+      this.editrules.urls = row.link;
+      this.editrules.title = row.title;
+      this.editrules.content = row.content;
     },
     //编辑关于我们
-    clickaboutEdit(i,row) {
-      this.editFormname=true
-      this.aboutForm.usurl=row.link;
-      this.aboutForm.ustitle=row.title;
-      this.aboutForm.uscontent=row.content;
-      this.chartId=row.id;
-      this.aboutId=row.fileId;
+    clickaboutEdit(i, row) {
+      this.editFormname = true;
+      this.aboutForm.usurl = row.link;
+      this.aboutForm.ustitle = row.title;
+      this.aboutForm.uscontent = row.content;
+      this.chartId = row.id;
+      this.aboutId = row.fileId;
     },
     // 图片文件
     handlePreview(file) {
@@ -583,11 +592,14 @@ export default {
       // this.getAllList(this.search, this.page, this.num);
     },
     // 开关
-    Switch(i, row) {
-      let data = { id: row, isHotSpot: i };
-      ajax.authPostForm.bind(this)("/api/System/Page/HotSpot", data, res => {
-        console.log(res);
-      });
+    Switch(row) {
+      // let data = { id: row.id, isHotSpot: row.isHotSpot };
+      ajax.authPost.bind(this)(
+        "/api/System/Page/HotSpot?id=" + row.id + "&isHotSpot=" + row.isHotSpot,
+        res => {
+          // console.log(res);
+        }
+      );
     }
   },
   mounted() {

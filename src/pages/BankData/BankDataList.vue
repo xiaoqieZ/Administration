@@ -1,7 +1,12 @@
 <template>
   <div class="data_title">
-    <el-tabs type="border-card" @tab-click="netValuePage">
-      <el-tab-pane label="数据编辑页面">
+    <div class="retrue_eter">
+      <el-button @click="go" icon="el-icon-d-arrow-left">产品列表</el-button>&nbsp;&nbsp;
+      <p>产品编辑</p>
+    </div>
+    <el-tabs type="border-card" v-model="activeName" @tab-click="netValuePage">
+      <!-- 数据编辑页面 -->
+      <el-tab-pane name="edits" label="数据编辑页面">
         <div class="AddList">
           <el-form
             :model="ruleForm"
@@ -331,6 +336,7 @@
           </el-form>
         </div>
       </el-tab-pane>
+      <!-- 净值管理 -->
       <el-tab-pane v-if="edit" name="first" label="净值管理">
         <div>
           <el-button type="primary" @click="delNetWorth">删除</el-button>
@@ -449,6 +455,7 @@
           </div>
         </div>
       </el-tab-pane>
+      <!-- 报表管理 -->
       <el-tab-pane v-if="edit" name="second" label="报表管理">
         <el-button type="primary" @click="delNetReport">删除</el-button>
         <el-button type="primary" @click="downloadReport">下载</el-button>
@@ -561,6 +568,7 @@
           ></el-pagination>
         </div>
       </el-tab-pane>
+      <!-- 公告管理 -->
       <el-tab-pane v-if="edit" name="third" label="公告管理">
         <el-button type="primary" @click="delNetNotice">删除</el-button>
         <el-button type="primary" @click="downloadNotice">下载</el-button>
@@ -676,9 +684,11 @@
           ></el-pagination>
         </div>
       </el-tab-pane>
+      <!-- 投资管理 -->
       <el-tab-pane v-if="edit" name="fourth" label="投资管理">
-        <el-tabs type="card" v-model="activeName" @tab-click="handleClick">
-          <el-tab-pane label="潜在投资人" name="first">
+        <el-tabs type="card" v-model="activeInvestor">
+          <!-- 潜在投资人 -->
+          <el-tab-pane label="潜在投资人" name="investor">
             <div class="first">
               <el-input
                 v-model="formLabelAlign.Investment"
@@ -744,7 +754,8 @@
               </div>
             </div>
           </el-tab-pane>
-          <el-tab-pane label="投资人" name="second">
+          <!-- 投资人 -->
+          <el-tab-pane label="投资人" name="potential">
             <div class="first">
               <el-input
                 v-model="formLabelAlign.potential"
@@ -836,17 +847,9 @@
           </el-tab-pane>
         </el-tabs>
       </el-tab-pane>
+      <!-- 营销管理 -->
       <el-tab-pane v-if="edit" name="marketing" label="营销管理">
         <div class="Marketing_WholeList" v-if="MarketingSetup">
-          <div class="Marketing_Branch">
-            <div class="Marketing_list">
-              <div class="Marketing_title">预约设置</div>
-              <div class="Marketing_Record">预约记录</div>
-            </div>
-            <div class="Marketing_switch">
-              <el-switch v-model="makeSwitch" active-color="#13ce66" inactive-color="#666666"></el-switch>
-            </div>
-          </div>
           <div class="Marketing_Branch">
             <div class="Marketing_list">
               <div class="Marketing_title">购买设置</div>
@@ -871,8 +874,8 @@
             <div class="Marketing_list">
               <div class="Marketing_title">推介设置</div>
               <div class="Marketing_Record">
-                <span>定向推介</span>&nbsp;&nbsp;&nbsp;&nbsp;
-                <span>净值展示</span>
+                <span v-show="isShow">定向推介</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                <span v-show="isShow">净值展示</span>
               </div>
             </div>
             <div class="Marketing_switch">
@@ -891,8 +894,8 @@
             <div class="Marketing_list">
               <div class="Marketing_title">可售设置</div>
               <div class="Marketing_Record">
-                <span>规模设置</span>&nbsp;&nbsp;&nbsp;&nbsp;
-                <span>预留规模</span>
+                <span v-show="isShow">规模设置</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                <span v-show="isShow">预留规模</span>
               </div>
             </div>
             <div class="Marketing_switch">
@@ -903,23 +906,6 @@
                 active-color="#13ce66"
                 inactive-color="#666666"
                 @change="clicksalable($event)"
-              ></el-switch>
-            </div>
-          </div>
-          <!-- 代销设置 -->
-          <div class="Marketing_Branch">
-            <div class="Marketing_list">
-              <div class="Marketing_title">代销设置</div>
-              <div class="Marketing_Record">代销列表</div>
-            </div>
-            <div class="Marketing_switch">
-              <el-switch
-                v-model="consignmentSwitch"
-                :active-value="1"
-                :inactive-value="0"
-                active-color="#13ce66"
-                inactive-color="#666666"
-                @change="clickconsignment($event)"
               ></el-switch>
             </div>
           </div>
@@ -1020,9 +1006,9 @@
           </div>
         </div>
         <!-- 设置页面 -->
-        <div v-if="settingsPage">
+        <div v-if="settingsPage" class="height_overflow">
           <el-button @click="settingsReturn">上一页</el-button>
-          <div>
+          <div class="hodVideo_title">
             <div class="HoldNum">合同设置</div>
             <div class="holdVideo">
               <p>基金合同</p>
@@ -1035,6 +1021,19 @@
                 :headers="access_token"
               >
                 <el-button size="small" type="primary">点击上传文件</el-button>
+                <ul class="el-upload-list el-upload-list--text">
+                  <li tabindex="0" class="el-upload-list__item is-success">
+                    <a class="el-upload-list__item-name">
+                      <i class="el-icon-document"></i>
+                      {{aaa}}
+                    </a>
+                    <label class="el-upload-list__item-status-label">
+                      <i class="el-icon-upload-success el-icon-circle-check"></i>
+                    </label>
+                    <i class="el-icon-close"></i>
+                    <i class="el-icon-close-tip">按 delete 键可删除</i>
+                  </li>
+                </ul>
               </el-upload>
             </div>
             <div class="holdVideo">
@@ -1048,6 +1047,19 @@
                 :headers="access_token"
               >
                 <el-button size="small" type="primary">点击上传文件</el-button>
+                <ul class="el-upload-list el-upload-list--text">
+                  <li tabindex="0" class="el-upload-list__item is-success">
+                    <a class="el-upload-list__item-name">
+                      <i class="el-icon-document"></i>
+                      {{bbb}}
+                    </a>
+                    <label class="el-upload-list__item-status-label">
+                      <i class="el-icon-upload-success el-icon-circle-check"></i>
+                    </label>
+                    <i class="el-icon-close"></i>
+                    <i class="el-icon-close-tip">按 delete 键可删除</i>
+                  </li>
+                </ul>
               </el-upload>
             </div>
             <div class="holdVideo">
@@ -1061,10 +1073,23 @@
                 :headers="access_token"
               >
                 <el-button size="small" type="primary">点击上传文件</el-button>
+                <ul class="el-upload-list el-upload-list--text">
+                  <li tabindex="0" class="el-upload-list__item is-success">
+                    <a class="el-upload-list__item-name">
+                      <i class="el-icon-document"></i>
+                      {{ccc}}
+                    </a>
+                    <label class="el-upload-list__item-status-label">
+                      <i class="el-icon-upload-success el-icon-circle-check"></i>
+                    </label>
+                    <i class="el-icon-close"></i>
+                    <i class="el-icon-close-tip">按 delete 键可删除</i>
+                  </li>
+                </ul>
               </el-upload>
             </div>
             <div class="holdVideo">
-              <p>其他材料2：</p>
+              <p>其他材料2</p>
               <el-upload
                 class="upload-demo"
                 ref="upload"
@@ -1074,6 +1099,19 @@
                 :headers="access_token"
               >
                 <el-button size="small" type="primary">点击上传文件</el-button>
+                <ul class="el-upload-list el-upload-list--text">
+                  <li tabindex="0" class="el-upload-list__item is-success">
+                    <a class="el-upload-list__item-name">
+                      <i class="el-icon-document"></i>
+                      {{ddd}}
+                    </a>
+                    <label class="el-upload-list__item-status-label">
+                      <i class="el-icon-upload-success el-icon-circle-check"></i>
+                    </label>
+                    <i class="el-icon-close"></i>
+                    <i class="el-icon-close-tip">按 delete 键可删除</i>
+                  </li>
+                </ul>
               </el-upload>
             </div>
             <div class="holdVideo">
@@ -1087,18 +1125,31 @@
                 :headers="access_token"
               >
                 <el-button size="small" type="primary">点击上传文件</el-button>
+                <ul class="el-upload-list el-upload-list--text">
+                  <li tabindex="0" class="el-upload-list__item is-success">
+                    <a class="el-upload-list__item-name">
+                      <i class="el-icon-document"></i>
+                      {{eee}}
+                    </a>
+                    <label class="el-upload-list__item-status-label">
+                      <i class="el-icon-upload-success el-icon-circle-check"></i>
+                    </label>
+                    <i class="el-icon-close"></i>
+                    <i class="el-icon-close-tip">按 delete 键可删除</i>
+                  </li>
+                </ul>
               </el-upload>
             </div>
           </div>
-          <div>
+          <div class="HoldNum_top">
             <div class="HoldNum">投资者声明</div>
-            <div class="HoldNum_content">
-              <p>顶部内容</p>
-              <el-input type="textarea" placeholder="请输入内容" v-model="topContent"></el-input>
+            <div class="HoldNum_content" v-for="item in statementData" :key="item.id">
+              <p>{{item.title}}</p>
+              <el-input type="textarea" placeholder="请输入内容" v-model="item.content"></el-input>
             </div>
           </div>
-          <div>
-            <el-button type="primary">确定</el-button>
+          <div class="HoldNum_button">
+            <el-button type="primary" @click="confirmUpload">确定</el-button>
             <el-button>取消</el-button>
           </div>
         </div>
@@ -1113,6 +1164,10 @@ import ajax from "../../api/https.js";
 export default {
   data() {
     return {
+      activeInvestor: "investor",
+      activeName: "edits",
+      statementData: [],
+      isShow: false,
       topContent: "", //顶部内容输入框
       settingsPage: false, //功能设置页面
       effectiveButton: "", //有效
@@ -1136,7 +1191,6 @@ export default {
       NoticeData: [], //公告类型下拉框
       tabelPotentialList: [], //投资人数据集表
       tabelPotentialListPage: "", //数据条数
-      activeName: "first", //潜在投资人框
       tabelInvestmentPage: "", //数据条数
       tabelInvestment: [], //潜在投资管理数据
       actionNotice: ajax.doms.bind(this)(
@@ -1254,6 +1308,7 @@ export default {
         mail: 0,
         weChat: 0
       },
+      marketData: {},
       queryId: "",
       rules: {
         name: [
@@ -1335,25 +1390,34 @@ export default {
       returnVisitId: "", //适当性回访userId
       returnVisitList: [], // 适当性回访操作里面的下拉框数据
       values: "", //适当性管理，下拉框里面的菜单id
-      makeSwitch: false, //开关
-      directionalSwitch: false, //开关
-      RecommendSwitch: false, //开关
-      salableSwitch: false, //开关
-      consignmentSwitch: false, //开关
-      redeemSwitch: false, //开关
-      Array: {} //订单状态
+      directionalSwitch: 0, //开关
+      RecommendSwitch: 0, //开关
+      salableSwitch: 0, //开关
+      consignmentSwitch: 0, //开关
+      redeemSwitch: 0, //开关
+      Array: {}, //订单状态
+      contractMaterialId: "",
+      riskDisclosureMaterialId: "",
+      othersMaterialId1: "",
+      othersMaterialId2: "",
+      othersMaterialId3: "",
+      aaa: "",
+      bbb: "",
+      ccc: "",
+      ddd: "",
+      eee: ""
     };
   },
   methods: {
+    go() {
+      this.$router.push({path:"/NavBar/DataDitionary/BankData"})
+    },
     //移除文件钩子
     handleRemove(file, fileList) {
       this.ruleForm.RiskLD = "";
-      console.log(file, fileList);
     },
     //点击文件列表中已上传的文件时的钩子
-    handlePreview(file) {
-      console.log(file);
-    },
+    handlePreview(file) {},
     // 提交
     Submit(formName) {
       this.$refs[formName].validate(valid => {
@@ -1442,11 +1506,9 @@ export default {
         }
       });
     },
-
     //风险评级文件
     chengeing(response, file, fileList) {
       this.ProductMapId = response.data.id;
-      //   console.log(this.ProductMapId);
     },
     //重置
     resetForm(formName) {
@@ -1455,6 +1517,7 @@ export default {
     get(u, data) {
       ajax.authGet.bind(this)(u, data);
     },
+    //4个数据编辑页面下拉
     getFundtype() {
       //基金类型
       this.get("/api/Common/12", res => {
@@ -1486,7 +1549,6 @@ export default {
     //上个页面传过来的id
     adds() {
       this.queryId = this.$route.query.data || 0;
-      //   console.log(this.queryId);
       if (this.queryId == 0) {
         this.edit = false;
       } else {
@@ -1498,7 +1560,6 @@ export default {
         "/api/Management/Product/Risk/" + this.queryId,
         res => {
           this.ProductMapId = res.data.data.materialId;
-          //   console.log(this.ProductMapId);
         }
       );
     },
@@ -1627,15 +1688,38 @@ export default {
     },
     //点击标题后的回调
     netValuePage(tab, event) {
-      this.getNetWorth();
-      this.getPresentation();
-      this.getNotice(); //公告数据
-      this.getInvestment();
+      if (tab.name == "edits") {
+        this.getSeeOne(); //数据编辑页面
+        this.getFundtype(); //4个数据编辑页面下拉
+      } else if (tab.name == "second") {
+        this.getPresentation(); // 报表管理数据
+        this.getcategoryData(); //报告类型下拉数据
+      } else if (tab.name == "first") {
+        this.getNetWorth(); //获取净值数据
+      } else if (tab.name == "third") {
+        this.getNotice(); //公告数据
+        this.getNoticeData(); //公告类型下拉数据
+      } else if (tab.name == "fourth") {
+        this.getInvestment(); //潜在投资者管理数据
+        this.getpotential(); //投资者管理数据
+      } else if (tab.name == "marketing") {
+        this.getMarket(); //营销设置
+        this.getactionSettings(); //用于购买设置里面文件上传后拿到返回的文件id
+        this.getContract(); //合同
+      }
     },
-    //投资管理点击标题后的回调
-    handleClick(tab, event) {
-      this.getInvestment(); //潜在投资者管理数据
-      this.getpotential(); //投资者管理数据
+    //获取合同
+    getContract() {
+      ajax.authGet.bind(this)(
+        "/api/Management/Product/Market/Contract/" + this.queryId,
+        res => {
+          this.aaa = res.data.data.contractMaterial && res.data.data.contractMaterial.fileName;
+          this.bbb = res.data.data.riskDisclosureMaterial && res.data.data.riskDisclosureMaterial.fileName;
+          this.ccc = res.data.data.othersMaterial1 && res.data.data.othersMaterial1.fileName;
+          this.ddd = res.data.data.othersMaterial2 && res.data.data.othersMaterial2.fileName;
+          this.eee = res.data.data.othersMaterial3 && res.data.data.othersMaterial3.fileName;
+        }
+      );
     },
     //下载净值模板
     exportExcel() {
@@ -1791,7 +1875,7 @@ export default {
     holdPositions(i, row) {
       let data = {
         productId: this.queryId,
-        userId: row.userId
+        userId: row.userId,
       };
       this.$router.push({
         path: "/NavBar/DataDitionary/PositionManagement",
@@ -1835,10 +1919,7 @@ export default {
         "/api/Management/Product/Report/Publish",
         { id: row.id },
         res => {
-          console.log(res);
-          if (res.data.code == 200) {
-            this.getPresentation();
-          }
+          this.getPresentation();
         }
       );
     },
@@ -1848,10 +1929,7 @@ export default {
         "/api/Management/Product/Report/Private",
         { id: row.id },
         res => {
-          console.log(res);
-          if (res.data.code == 200) {
-            this.getPresentation();
-          }
+          this.getPresentation();
         }
       );
     },
@@ -2038,6 +2116,21 @@ export default {
         query: { data }
       });
     },
+
+    // 获取营销设置信息
+    getMarket() {
+      ajax.authGet.bind(this)(
+        "/api/Management/Product/Market/" + this.queryId,
+        res => {
+          // console.log(11111)
+          this.marketData = res.data.data;
+          this.directionalSwitch = this.marketData.purchase;
+          this.RecommendSwitch = this.marketData.recommend;
+          this.salableSwitch = this.marketData.saleableScale;
+          this.redeemSwitch = this.marketData.redeem;
+        }
+      );
+    },
     // 购买设置开关
     clickDirectional(e) {
       ajax.authPost.bind(this)(
@@ -2051,7 +2144,7 @@ export default {
     // 推介设置开关
     clickRecommend(e) {
       ajax.authPost.bind(this)(
-        "/api/Management/Product/Market/Purchase?productId=" +
+        "/api/Management/Product/Market/Recommend?productId=" +
           this.queryId +
           "&status=" +
           e,
@@ -2061,17 +2154,7 @@ export default {
     //可售设置开关
     clicksalable(e) {
       ajax.authPost.bind(this)(
-        "/api/Management/Product/Market/Purchase?productId=" +
-          this.queryId +
-          "&status=" +
-          e,
-        res => {}
-      );
-    },
-    //代销设置开关
-    clickconsignment(e) {
-      ajax.authPost.bind(this)(
-        "/api/Management/Product/Market/Purchase?productId=" +
+        "/api/Management/Product/Market/SaleableScale?productId=" +
           this.queryId +
           "&status=" +
           e,
@@ -2081,7 +2164,7 @@ export default {
     //赎回设置开关
     clickredeem(e) {
       ajax.authPost.bind(this)(
-        "/api/Management/Product/Market/Purchase?productId=" +
+        "/api/Management/Product/Market/Redeem?productId=" +
           this.queryId +
           "&status=" +
           e,
@@ -2147,6 +2230,8 @@ export default {
     settings() {
       this.settingsPage = true;
       this.MarketingSetup = false;
+      this.getStatement(); //产品设置声明
+      // this.getContract();//合同
     },
     //功能设置返回上一级按钮
     settingsReturn() {
@@ -2160,15 +2245,47 @@ export default {
       );
     },
     //购买设置里面基金合同成功回调
-    chengeScontractMaterialId(response, file, fileList) {},
+    chengeScontractMaterialId(response, file, fileList) {
+      this.contractMaterialId = response.data.id;
+    },
     //购买设置里面风险揭示书成功回调
-    chengeSriskDisclosureMaterialId(response, file, fileList) {},
+    chengeSriskDisclosureMaterialId(response, file, fileList) {
+      this.riskDisclosureMaterialId = response.data.id;
+    },
     //购买设置里面其他材料1成功回调
-    chengeSothersMaterialId1(response, file, fileList) {},
+    chengeSothersMaterialId1(response, file, fileList) {
+      this.othersMaterialId1 = response.data.id;
+    },
     //购买设置里面其他材料2成功回调
-    chengeSothersMaterialId2(response, file, fileList) {},
+    chengeSothersMaterialId2(response, file, fileList) {
+      this.othersMaterialId2 = response.data.id;
+    },
     //购买设置里面其他材料3成功回调
-    chengeSothersMaterialId3(response, file, fileList) {},
+    chengeSothersMaterialId3(response, file, fileList) {
+      this.othersMaterialId3 = response.data.id;
+    },
+    //确定上传文件
+    confirmUpload() {
+      let data = {
+        productId: this.queryId,
+        contractMaterialId: this.contractMaterialId,
+        riskDisclosureMaterialId: this.riskDisclosureMaterialId,
+        othersMaterialId1: this.othersMaterialId1,
+        othersMaterialId2: this.othersMaterialId2,
+        othersMaterialId3: this.othersMaterialId3,
+        statements: this.statementData
+      };
+      ajax.authPost.bind(this)(
+        "/api/Management/Product/Market/Save",
+        data,
+        res => {
+          this.$message({
+            message: res.data.message,
+            type: "success"
+          });
+        }
+      );
+    },
     //每页显示数据量变更
     handleSizeChange: function(val) {
       this.num = val;
@@ -2198,29 +2315,40 @@ export default {
     handleCurrentPurchase(val) {
       this.page = val;
       this.clickPurchase();
+    },
+    //获取产品设置声明
+    getStatement() {
+      ajax.authGet.bind(this)(
+        "/api/Management/Product/Market/Statement/" + this.queryId,
+        res => {
+          this.statementData = res.data.data;
+        }
+      );
     }
   },
+
   mounted() {
-    this.getFundtype();
     this.adds();
-    this.getSeeOne();
-    this.getNetWorth();
-    this.getPresentation(); //报告数据
-    this.getNoticeData(); //公告类型下拉数据
-    this.getcategoryData(); //报告类型下拉数据
-    this.getNotice(); //公告数据
-    this.getInvestment(); //潜在投资者管理数据
-    this.getpotential(); //投资者管理数据
     this.getNavId();
-    this.getactionSettings(); //用于购买设置里面文件上传后拿到返回的文件id
+    this.getSeeOne(); //数据编辑页面
+    this.getFundtype(); //4个数据编辑页面下拉
+    // this.activeName=this.$route.query.fourth && this.$route.query.fourth.fourth
+    // this.queryId = this.$route.query.fourth && this.$route.query.fourth.productId
   }
 };
 </script>
 
 <style lang="less" >
 .data_title {
+  .retrue_eter {
+    height: 56px;
+    background: #fff;
+    line-height: 56px;
+    display: flex;
+    align-items: center;
+  }
   .AddList {
-    max-height: 576px;
+    max-height: 498px;
     overflow: scroll;
     background: #fff;
     /deep/.el-row {
@@ -2286,8 +2414,33 @@ export default {
       }
     }
   }
-  .HoldNum {
-    border-left: 4px solid #2d8cf0;
+  .height_overflow {
+    height: 560px;
+    overflow: scroll;
+    .hodVideo_title {
+      padding-top: 30px;
+      .HoldNum {
+        font-weight: 600;
+        border-left: 4px solid #2d8cf0;
+      }
+      .holdVideo {
+        padding-top: 20px;
+        display: flex;
+        /deep/.upload-demo {
+          padding-left: 20px;
+        }
+      }
+    }
+    .HoldNum_top {
+      .HoldNum {
+        font-weight: 600;
+        border-left: 4px solid #2d8cf0;
+      }
+    }
+    .HoldNum_button {
+      padding-top: 30px;
+      text-align: center;
+    }
   }
 }
 </style>

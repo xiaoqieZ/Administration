@@ -1,5 +1,6 @@
 <template>
   <div style="width:100%">
+    <!-- 实名认证 -->
     <div class="Authentitle" v-show="Hang==0">
       <mt-header style="z-index:9;" fixed title="实名认证">
         <div @click="Ret" slot="left" v-if="retNo">
@@ -115,28 +116,74 @@
         <router-link to="/Publicfore" slot="left">
           <mt-button icon="back">返回</mt-button>
         </router-link>
+        <mt-button slot="right" @click="modify=true">修改</mt-button>
       </mt-header>
       <div class="modify">已认证页面，可以修改信息</div>
       <div class="messagul">
-        <ul  v-if="information.mechanismName==''">
-          <li>姓名：{{information.name}}</li>
-          <li>手机：{{information.mobile}}</li>
-          <li>邮箱：{{information.email}}</li>
-          <li>客户类型：{{information.customerTypeName}}</li>
-          <li>证件类型：{{information.certificateTypeName}}</li>
-          <li>证件号：{{information.certificateNo}}</li>
-        </ul>
-        <ul v-else>
-          <li>姓名：{{information.name}}</li>
-          <li>手机：{{information.mobile}}</li>
-          <li>邮箱：{{information.email}}</li>
-          <li>客户类型：{{information.customerTypeName}}</li>
-          <li>证件类型：{{information.certificateTypeName}}</li>
-          <li>证件号：{{information.certificateNo}}</li>
-          <li>机构名称：{{information.mechanismName}}</li>
-          <li>机构证件类型：{{information.mechanismCertificateTypeName}}</li>
-          <li>机构证件号码：{{information.mechanismCertificateNo}}</li>
-        </ul>
+        <div v-if="information.mechanismName==''">
+          <div class="justify">
+            <p>姓名</p>
+            <p>{{information.name}}</p>
+          </div>
+          <div class="justify">
+            <p>手机</p>
+            <p>{{information.mobile}}</p>
+          </div>
+          <div class="justify">
+            <p>邮箱</p>
+            <p>{{information.email}}</p>
+          </div>
+          <div class="justify">
+            <p>客户类型</p>
+            <p>{{information.customerTypeName}}</p>
+          </div>
+          <div class="justify">
+            <p>证件类型</p>
+            <p>{{information.certificateTypeName}}</p>
+          </div>
+          <div class="justify">
+            <p>证件号</p>
+            <p>{{information.certificateNo}}</p>
+          </div>
+        </div>
+        <div v-else>
+          <div class="justify">
+            <p>姓名</p>
+            <p>{{information.name}}</p>
+          </div>
+          <div class="justify">
+            <p>手机</p>
+            <p>{{information.mobile}}</p>
+          </div>
+          <div class="justify">
+            <p>邮箱</p>
+            <p>{{information.email}}</p>
+          </div>
+          <div class="justify">
+            <p>客户类型</p>
+            <p>{{information.customerTypeName}}</p>
+          </div>
+          <div class="justify">
+            <p>证件类型</p>
+            <p>{{information.certificateTypeName}}</p>
+          </div>
+          <div class="justify">
+            <p>证件号</p>
+            <p>{{information.certificateNo}}</p>
+          </div>
+          <div class="justify">
+            <p>机构名称</p>
+            {{information.mechanismName}}
+          </div>
+          <div class="justify">
+            <p>机构证件类型</p>
+            {{information.mechanismCertificateTypeName}}
+          </div>
+          <div class="justify">
+            <p>机构证件号码</p>
+            {{information.mechanismCertificateNo}}
+          </div>
+        </div>
       </div>
     </div>
     <!-- 用户点击返回按钮，操作未完成提示框 -->
@@ -151,6 +198,49 @@
       <span slot="footer" class="dialog-footer">
         <el-button @click="centerDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="dssy">确 认</el-button>
+      </span>
+    </el-dialog>
+    <!-- 用户点击修改信息 -->
+    <el-dialog title="提示" :visible.sync="modify" :append-to-body="true" width="80%" center>
+      <el-form>
+        <el-form-item>
+          <el-radio-group v-model="form.radio">
+            <el-radio label="1">手机</el-radio>
+            <el-radio label="2">邮箱</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item>
+          <el-input v-model="form.text" placeholder="请输入手机或邮箱"></el-input>
+        </el-form-item>
+        <el-form-item class="phoneShort" label="验证码：" prop="short">
+          <el-input type="number" v-model="form.Verification" placeholder="请输入验证码"></el-input>
+          <div style="position: relative;" v-if="getswithy">
+            <van-count-down
+              ref="countDown"
+              style="position: absolute;"
+              :time="5000"
+              :auto-start="false"
+              format="ss"
+              @finish="finished"
+            />
+            <el-button @click.stop="shortModify" class="buttonShort" v-if="getHide">获取验证码</el-button>
+          </div>
+          <div style="position: relative;" v-if="getGun">
+            <van-count-down
+              ref="countDown"
+              style="position: absolute;"
+              :time="5000"
+              :auto-start="true"
+              format="ss"
+              @finish="finished"
+            />
+            <el-button @click.stop="resetModify" class="buttonShort" v-if="getagain">重新获取</el-button>
+          </div>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="modify = false">取 消</el-button>
+        <el-button type="primary" @click="modifyClick">确 认</el-button>
       </span>
     </el-dialog>
     <!-- 完成信息提交 -->
@@ -169,6 +259,13 @@ import storage from "../../../api/storage.js";
 export default {
   data() {
     return {
+      modify: false,
+      form: {
+        radio: "1",
+        text: "",
+        Verification: ""
+      },
+      url: "",
       active: 0, // 步骤条
       radio: "", //单选框
       nameForm: {
@@ -240,7 +337,7 @@ export default {
       centerDialog: false,
       retNo: true,
       retGo: false,
-      information: {},
+      information: {}, //获取当前用户信息
       mechanismName: false, //机构input
       current: 0
     };
@@ -266,6 +363,7 @@ export default {
       this.centerDialog = false;
       this.getPersonal();
     },
+    //下一步
     nextss() {
       if (
         this.checkList != "" &&
@@ -341,10 +439,40 @@ export default {
         console.log(res);
         if (res.data.code == 200) {
           this.information = res.data.data;
-          var listaktion = this.information;
-          storage.set("listaktion", listaktion);
+          this.information.customerType = this.information.customerType.toString();
+          this.radio = this.information.customerType;
+          this.ruleForm.phone = this.information.mobile;
+          this.ruleForm.mail = this.information.email;
+          //判断用户是否注册
+          if (this.information.name == null) {
+            this.Hang = 0;
+          } else {
+            this.Hang = 1;
+          }
         }
       });
+    },
+    // 封装获取验证码
+    encapsulation(data) {
+      this.getHide = false;
+      this.$refs.countDown.start(); //倒计时
+      if (this.form.radio == 2) {
+        this.url = "/api/Information/Account/Modefy/Email?email=";
+      } else if (this.form.radio == 1) {
+        this.url = "/api/Information/Account/Modefy/Sms?phone=";
+      }
+      ajax.authPost.bind(this)(this.url + data, res => {});
+    },
+    // 封装重新获取验证码
+    againEncapsulation(data) {
+      this.getagain = false; //重新获取验证码
+      this.$refs.countDown.reset();
+      if (this.form.radio == 2) {
+        this.url = "/api/Information/Account/Modefy/Email?email=";
+      } else if (this.form.radio == 1) {
+        this.url = "/api/Information/Account/Modefy/Sms?phone=";
+      }
+      ajax.authPost.bind(this)(this.url + data, res => {});
     },
     //获取验证码
     getShort() {
@@ -352,9 +480,7 @@ export default {
       this.$refs.countDown.start();
       ajax.authPost.bind(this)(
         "/api/Information/Account/Save/Sms?phone=" + this.ruleForm.phone,
-        res => {
-          console.log(res);
-        }
+        res => {}
       );
     },
     //重新获取验证码
@@ -363,10 +489,16 @@ export default {
       this.$refs.countDown.reset();
       ajax.authPost.bind(this)(
         "/api/Information/Account/Save/Sms?phone=" + this.ruleForm.phone,
-        res => {
-          console.log(res);
-        }
+        res => {}
       );
+    },
+    //修改信息时的验证码
+    shortModify() {
+      this.encapsulation(this.form.text);
+    },
+    //修改信息时重新获取验证码
+    resetModify() {
+      this.againEncapsulation(this.form.text);
     },
     //倒计时结束的回调
     finished() {
@@ -392,19 +524,29 @@ export default {
       });
       //机构证件类型
       ajax.authGet.bind(this)("/api/Common/11", res => {
-        // console.log(res)
-        if (res.data.code == 200) {
-          this.Business = res.data.data;
-        }
+        this.Business = res.data.data;
+      });
+    },
+    //修改
+    modifyClick() {
+      let data = {
+        modifyType: this.form.radio,
+        modifyContent: this.form.text,
+        captcha: this.form.Verification
+      };
+      ajax.authPost.bind(this)("/api/Information/Account/Modefy", data, res => {
+        this.modify = false;
+        this.form.radio = this.form.text = this.form.Verification = "";
+        this.getPersonal();
       });
     }
   },
   mounted() {
-    //判断用户是否注册
-    let lisee = storage.get("feng");
-    if (lisee) {
-      this.Hang = 1;
-      this.getPersonal();
+    this.getPersonal();
+    //判断用户页面填写情况，填写信息页面完成提交后，退出界面再次进来就是补充信息界面
+    if (this.information.mobile != "") {
+      this.current = 1;
+      this.fill = 2;
     }
     this.getCustomer();
   }
@@ -474,7 +616,10 @@ export default {
     padding: 0;
   }
   /deep/.ivu-steps-horizontal {
+    height: 68px;
     text-align: center;
+    display: flex;
+    align-items: center;
   }
 }
 .modify_title {
@@ -484,6 +629,12 @@ export default {
   }
   .messagul {
     padding: 0 10px;
+    .justify {
+      padding-top: 20px;
+      border-bottom: 1px solid;
+      display: flex;
+      justify-content: space-between;
+    }
   }
 }
 // .el-select-dropdown{
