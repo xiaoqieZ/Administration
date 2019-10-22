@@ -1,6 +1,6 @@
 <template>
   <div class="Risk_heck">
-    <div>账户设置</div>
+    <div>基金合同</div>
     <div class="Risk_count">
       <el-input v-model="name" placeholder="输入机构名称搜索" @keyup.enter.native="getQuestionnaireData"></el-input>
       <el-button icon="el-icon-search" @click="getQuestionnaireData"></el-button>
@@ -216,8 +216,11 @@ export default {
       });
     },
     //发起签约
-    editSigning(){
-
+    editSigning(index,row){
+      let data = {
+        id:row.id
+      }
+      this.$router.push({path: '/NavBar/UserManage/AccountManage', query:{data}})
     },
     //每页显示数据量变更
     handleSizeChange(val) {

@@ -53,9 +53,6 @@
             <i class="el-icon-s-check"></i>
             <span>投资者认定</span>
           </p>
-          <router-link to="/Publicfore/Information/Identification">
-            <el-button type="warning" size="mini">路演清单</el-button>
-          </router-link>
         </div>
         <router-link to="/Publicfore/Information/Authentication">
           <div class="myhometupdey">
@@ -154,8 +151,9 @@
             <span>合同电子</span>
           </p>
           <p>
-            <el-button type="warning" size="mini">去部署</el-button>
-            <el-button type="warning" size="mini">全部</el-button>
+            <router-link to="/Publicfore/TransactionRecord/Identification">
+            <el-button type="warning" size="mini">去签署</el-button>
+          </router-link>
           </p>
         </div>
       </div>

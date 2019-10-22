@@ -205,12 +205,12 @@ export default {
     //每页显示数据量变更
     handleSizeChange(val) {
       this.num = val;
-      this.dropDown()();
+      this.dropDown();
     },
     //页码变更
     handleCurrentChange(val) {
       this.page = val;
-      this.dropDown()();
+      this.dropDown();
     }
   },
   mounted() {
@@ -231,8 +231,5 @@ export default {
       height: 75%;
     }
   }
-  //   .Risk_data {
-
-  //   }
 }
 </style>

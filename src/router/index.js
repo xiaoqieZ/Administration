@@ -40,7 +40,7 @@ import Publicthree from '@/PublicNumber/Publicthree/Publicthree.vue'
 import Publictow from '@/PublicNumber/Publictow/Publictow.vue'
 
 import Information from '@/PublicNumber/Publicone/Information/Information.vue'
-import Identification from '@/PublicNumber/Publicfore/Information/Identification.vue'
+import Identification from '@/PublicNumber/Publicfore/TransactionRecord/Identification.vue'
 import Authentication from '@/PublicNumber/Publicfore/Information/Authentication.vue'
 import Assessment from '@/PublicNumber/Publicfore/Information/Assessment.vue'
 import Acquisition from '@/PublicNumber/Publicfore/Information/Acquisition.vue'
@@ -127,12 +127,7 @@ export default new Router({
       name: 'Informations',
       title: '认证模块',
       component: Null,
-      children: [{
-          path: '/Publicfore/Information/Identification',
-          name: 'Identification',
-          title: '投资者认定',
-          component: Identification
-        },
+      children: [
         {
           path: '/Publicfore/Information/Authentication',
           name: 'Authentication',
@@ -199,7 +194,12 @@ export default new Router({
           name: 'ReturnvisitAnswer',
           title: '回访记录单选',
           component: ReturnvisitAnswer
-        }
+        },{
+          path: '/Publicfore/TransactionRecord/Identification',
+          name: 'Identification',
+          title: '电子签约',
+          component: Identification
+        },
       ]
     },
 
