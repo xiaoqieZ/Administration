@@ -6,7 +6,7 @@
       </router-link>
     </mt-header>
     <div class="application_Record">
-      <div class="application_for" v-for="item in dataList" :key="item.id">
+      <div class="application_for" v-for="item in dataList" :key="item.id" @click="positions(item)">
         <div>
           <Icon type="ios-bookmark" size="24" color="#2d8cf0" />
           {{item.productName}}
@@ -34,6 +34,7 @@ export default {
     };
   },
   methods: {
+    //获取持仓记录
     getRadio() {
       let data = {
         pageIndex: this.page,
@@ -49,7 +50,11 @@ export default {
           }
         }
       );
-    }
+    },
+    positions(row){
+      let data = row.productId
+      this.$router.push({path:'/Publicthree/Purchases',query:{data}})
+    },
   },
   mounted() {
     this.getRadio();

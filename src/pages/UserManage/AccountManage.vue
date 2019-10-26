@@ -46,7 +46,7 @@
             </div>
             <div v-else>
               <el-checkbox-group v-model="scope.row.smsNotify" @change="listget">
-                <el-checkbox >短信通知</el-checkbox>
+                <el-checkbox disabled>短信通知</el-checkbox>
               </el-checkbox-group>
               <el-checkbox-group v-model="scope.row.emailNotify" @change="listge">
                 <el-checkbox >邮件通知</el-checkbox>
@@ -68,7 +68,7 @@
               <span style="color:#409EFF"  v-if="scope.row.signStatus==2 || scope.row.signStatus==1" @click="cancel(scope.$index,scope.row)">取消</span>
               <span style="color:#409EFF" v-if="scope.row.checkTime == null" @click="sign(scope.$index,scope.row)">签署</span>
               <span style="color:#409EFF"  v-if="scope.row.signStatus==1" @click="Launch(scope.$index,scope.row)">发起</span>
-              <span style="color:#409EFF" v-if="scope.row.signStatus==4 || scope.row.signStatus==1 || scope.row.signStatus==2" @click="dele(scope.$index,scope.row)">删除</span>
+              <span style="color:#409EFF" v-if="scope.row.signStatus!=3" @click="dele(scope.$index,scope.row)">删除</span>
               <span style="color:#409EFF" v-if="scope.row.signStatus==4 || scope.row.signStatus==2" @click="Reset(scope.$index,scope.row)">重置</span>
             </div>
           </template>
@@ -81,7 +81,7 @@
           @size-change="handleSizeChange"
           :current-page="page"
           :page-size="num"
-          layout="total, sizes, prev, pager, next, jumper"
+          layout="total, prev, pager, next, jumper"
           :total="questionnairecount.count"
         ></el-pagination>
       </div>
@@ -115,7 +115,7 @@ export default {
       subscriptionData: [],
       questionnairecount: {},
       page: 1,
-      num: 6,
+      num: 4,
       dialogUser: false,
       name: "",
       roleUsers: [], //用户搜索返回的数据
@@ -230,7 +230,7 @@ export default {
     Launch(index, row) {
       let data = {
         id: row.id,
-        smsNotify: this.resourceShort,
+        smsNotify: 0,
         emailNotify: this.resourcEmail,
         weChatNotify: this.resourceWeChat
       };

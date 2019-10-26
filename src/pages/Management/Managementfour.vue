@@ -5,7 +5,7 @@
       <el-select v-model="InvestorRole" @change="dropDown">
         <el-option
           :label="item.text"
-          :value="item.value"
+          :value="Number(item.value)"
           v-for="item in countData"
           :key="item.index"
         ></el-option>
@@ -67,15 +67,25 @@
       </div>
     </div>
     <!-- 设置分值 -->
-    <el-dialog title="设置分值" :visible.sync="centerDialogVisible" width="60%" center>
-      <div>
+    <el-dialog title="设置分值" :visible.sync="centerDialogVisible" width="35%" center>
+      <div class="ScoreCenter">
         <div>设置分值类型</div>
         <div v-for="(item,index) in scoreData" :key="index">
-          <el-form>
+          <el-form :model="form">
             <el-form-item :label="item.levelName">
-              <el-input-number v-model="item.minScore" @change="handleChange" :min="item.minScore"></el-input-number>
+              <el-input-number
+                v-model="item.minScore"
+                @change="handleChange"
+                :min="index==0?0:(scoreData[index-1].maxScore+1)"
+                :max="item.maxScore-1"
+              ></el-input-number>
               <span>≤分值≤</span>
-              <el-input-number v-model="item.maxScore" @change="handle" :max="item.maxScore"></el-input-number>
+              <el-input-number
+                v-model="item.maxScore"
+                @change="handle"
+                :min="item.minScore+1"
+                :max="index>=scoreData.length-1?1000:(scoreData[index+1].minScore-1)"
+              ></el-input-number>
             </el-form-item>
           </el-form>
         </div>
@@ -102,7 +112,12 @@ export default {
       questionnairecount: {},
       centerDialogVisible: false,
       scoreData: [],
-      questionnaireId: "" //分值Id
+      questionnaireId: "", //分值Id
+      form: {
+        minScore: "",
+        maxScore: ""
+      },
+      max: []
     };
   },
   methods: {
@@ -158,7 +173,7 @@ export default {
         id: row.id,
         title: row.title,
         questionnaireType: this.InvestorRole,
-        see: 0,
+        see: 0
       };
       this.$router.push({
         path: "/NavBar/Managements/EditorialQuestionnai",
@@ -184,6 +199,7 @@ export default {
       this.questionnaireId = row.id;
       ajax.authGet.bind(this)("/api/Questionnaire/Score/" + row.id, res => {
         this.scoreData = res.data.data;
+        // console.log(this.max);
       });
     },
     //计数器
@@ -193,12 +209,24 @@ export default {
     handle() {},
     //保存分值
     Preservation() {
-      let data = this.scoreData;
+      let data = [];
+      for (var i = 0; i < this.scoreData.length; i++) {
+        var item = this.scoreData[i];
+        data.push({
+          level: item.level,
+          minScore: item.minScore,
+          maxScore: item.maxScore
+        });
+      }
       ajax.authPost.bind(this)(
         "/api/Questionnaire/Score/" + this.questionnaireId,
         data,
         res => {
-          this.$message("提交成功");
+          this.$message({
+          message: '提交成功',
+          type: 'success'
+        });
+          this.centerDialogVisible=false
         }
       );
     },
@@ -215,9 +243,9 @@ export default {
   },
   mounted() {
     this.InvestorRole = this.$route.query.data;
-    if(this.InvestorRole == undefined){
-      this.InvestorRole=1
-    }    
+    if (this.InvestorRole == undefined) {
+      this.InvestorRole = 1;
+    }
     this.getCount();
     this.dropDown();
   }

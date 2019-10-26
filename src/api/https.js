@@ -1,5 +1,5 @@
   let dom="http://192.168.28.213:5000";
-//   let dom="http://139.199.78.199/foundation";
+//    let dom="http://foundation.chetanlian.cn/foundation";
 
 function thenCallBack(res, then, cat) {
     console.log(res);
@@ -24,7 +24,7 @@ function post(url, data, then, cat) {
     if (!cat) {
         cat = res => {};
     }
-    var url = domain + url;
+    var url = dom + url;
     this.$axios.post(url, data).then(res => {
         thenCallBack.call(this,res,then, cat);
     })
@@ -36,7 +36,7 @@ function get(url, data, then, cat) {
         then = data;
         data=undefined;
     }
-    var url = domain + url;
+    var url = dom + url;
     this.$axios.get(url, data).then(res => {
         thenCallBack.call(this,res,then, cat);
     })

@@ -46,7 +46,9 @@
               <el-button type="primary" icon="el-icon-delete" @click="del(index,indexa,open)"></el-button>
             </el-form-item>
           </div>
-          <div class="return_button" v-if="queryData.see==0">
+        </el-form>
+      </div>
+      <div class="return_button" v-if="queryData.see==0">
             <el-button type="primary" @click="submit">提 交</el-button>
             <el-button type="primary" @click="addProblem">新增问题</el-button>
             <el-button type="primary" @click="recovery">恢复默认</el-button>
@@ -54,8 +56,6 @@
           <div class="return_button" v-else>
             <el-button type="primary" @click="retrunSee">返 回</el-button>
           </div>
-        </el-form>
-      </div>
     </div>
 
     <div class="Return_list" v-if="queryData.see==2">
@@ -103,13 +103,13 @@
               ></el-button>
             </el-form-item>
           </div>
-          <div class="return_button">
+        </el-form>
+      </div>
+      <div class="return_button">
             <el-button type="primary" @click="addSubmit">{{queryData.see==2?'添 加':''}}</el-button>
             <el-button type="primary" @click="addCountProblem(item,indexs)">新增问题</el-button>
             <el-button type="primary" @click="recovery">恢复默认</el-button>
           </div>
-        </el-form>
-      </div>
     </div>
   </div>
 </template>
@@ -284,32 +284,16 @@ export default {
   .return_button {
     width: 100%;
     text-align: center;
-    position: absolute;
-    bottom: 10px;
   }
 }
-@media screen and (min-width: 1080px) {
+@media screen and (max-width: 1620px) {
   .Return_list {
-    /deep/.el-input {
-      width: 50%;
-    }
-    height: 540px;
-    overflow: scroll;
-    .return_form {
-      padding-bottom: 20px;
-      /deep/.el-icon-arrow-up {
-        height: 75%;
-      }
-      /deep/.el-input {
-        width: 50%;
-      }
-    }
-    .return_button {
-      width: 100%;
-      text-align: center;
-      position: absolute;
-      bottom: 10px;
-    }
+    height: 560px;
+  }
+}
+@media screen and (min-width: 1620px) {
+  .Return_list {
+    height: 700px;
   }
 }
 </style>

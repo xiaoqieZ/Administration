@@ -765,4 +765,14 @@ export default {
   height: 428px;
   overflow: scroll;
 }
+ @media screen and (min-width: 1620px) { 
+      .essential {
+        height: 730px;
+      }
+  }
+  @media screen and (max-width: 1080px) { 
+      .essential {
+        height: 580px;
+      }
+  }
 </style>

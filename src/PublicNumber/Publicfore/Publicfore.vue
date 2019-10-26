@@ -15,16 +15,13 @@
     <div class="myhomettop">
       <div class="myhometimg">
         <div class="imges">
-          <img src="../../../static/img/youliya.jpg" alt="头像" />
-          <div class="imgtime">
-            <p>专业投资者</p>
-          </div>
+          <img :src="userData.portrait==null?'../../static/img/youliya.jpg':userData.portrait" alt="头像" />
         </div>
       </div>
       <div class="myhomerequrey">
         <p>
           姓名：
-          <span>小茄子</span>
+          <span>{{userData.nickName==null?'- -':userData.nickName}}</span>
         </p>
         <p>
           手机：
@@ -32,7 +29,9 @@
         </p>
         <p>
           资产：
-          <span style="font-weight: 600;color:red"><span>{{TotalAssets}}</span>￥</span>
+          <span style="font-weight: 600;color:red">
+            <span>{{TotalAssets}}</span>￥
+          </span>
         </p>
         <p>
           类别：
@@ -40,7 +39,7 @@
         </p>
       </div>
     </div>
-    <div>
+    <div v-if="IsAdmin==true">
       <el-button @click.native="gos" type="primary" plain style="width:100%">
         <i class="el-icon-menu"></i>&nbsp;进入后台系统
       </el-button>
@@ -90,7 +89,7 @@
             <i class="el-icon-arrow-right"></i>
           </div>
         </router-link>
-        <router-link to="/Publicfore/Information/Conversion" >
+        <router-link to="/Publicfore/Information/Conversion">
           <div class="myhometupdey" v-if="investorTypeList.investorType==2">
             <p>
               <i class="el-icon-user"></i>
@@ -152,8 +151,8 @@
           </p>
           <p>
             <router-link to="/Publicfore/TransactionRecord/Identification">
-            <el-button type="warning" size="mini">去签署</el-button>
-          </router-link>
+              <el-button type="warning" size="mini">去签署</el-button>
+            </router-link>
           </p>
         </div>
       </div>
@@ -171,11 +170,13 @@ export default {
     return {
       // storageList:{mobile:null},
       dialogVisible: false, //弹窗
-      messagesName: [], //用户信息
-      TotalAssets:'',//用户资产
-      investorType: '',//投资者类型
-      investorTypeList:{},
-      userData:{},
+      messagesName: {}, //用户信息
+      TotalAssets: "", //用户资产
+      investorType: "", //投资者类型
+      investorTypeList: {},
+      userData: {},
+      IsAdmin: "",
+      openId: ""
     };
   },
   methods: {
@@ -185,54 +186,70 @@ export default {
     },
     //获取Token接口
     getName() {
-      ajax.auth.bind(this)({
-        openId: "d231695a53484adc9a56d44a6626e06b",
-        nickName: "忽必烈",
-        portrait:'http://192.168.28.213:81/123.jpg'
-      })
+      ajax.auth
+        .bind(this)({
+          openId: this.openId
+        })
         .then(res => {
-        //   console.log(res);
-          ajax.authGet.bind(this)("/api/Information/Account",res=>{
-            console.log(res);
-            if (res.data.code == 200) {
-            this.messagesName = res.data.data;
-          }  
-          })
+          //   console.log(res);         
+
+          this.getStorage();
+          this.getTotalAssets();
+          this.getInvestorType();
         })
         .catch(error => {
           console.log(error);
         });
     },
     //用户资产
-    getTotalAssets(){
-      ajax.authGet.bind(this)('/api/Information/Present/Asset',res=>{
-        this.TotalAssets=res.data.data
-      })
+    getTotalAssets() {
+      ajax.authGet.bind(this)("/api/Information/Present/Asset", res => {
+        this.TotalAssets = res.data.data;
+      });
     },
-    //用户信息
-    getStorage(){
-      ajax.authGet.bind(this)(
-        "/api/Information/Account/GetByOpenId",
-        res => {
-          this.userData = res.data.data;
-        }
-      );
+
+    getStorage() {
+      //用户信息
+      ajax.authGet.bind(this)("/api/Information/Account/GetByOpenId", res => {
+        this.userData = res.data.data;
+      });
+      //是否是管理员
+      ajax.authGet.bind(this)("/api/Permission/IsAdmin", res => {
+        this.IsAdmin = res.data.data;
+      });
     },
     getInvestorType() {
       ajax.authGet.bind(this)(
         "/api/Information/Account/Authentication",
         res => {
-          this.investorTypeList = res.data.data;
+          this.investorTypeList.investorType = res.data.data&&res.data.data.investorType;
         }
       );
-    },
+    }
   },
   mounted() {
+    var openId = this.$route.query.openId;
+    if (!openId) {
+      openId = storage.get("openId");
+    }
+    openId = "oHnB5wBgy_FXh1ICjO0sV44DFO9k";
+    if (!openId) {
+      var cHost = location.origin + "/#/Publicfore";
+      ajax.get.bind(this)(
+        "/api/Wx/Code",
+        res => {
+          location.href = res.data.data;
+        },
+        res => {
+          //重定向到错误页面
+          this.$router.push({ path: "/ErrorPage" });
+        }
+      );
+      return;
+    }
+    storage.set("openId", openId);
+    this.openId = openId;
     this.getName();
-    this.getStorage();
-    this. getTotalAssets();
-    this.getInvestorType()
-
   },
   components: {
     "tabbar-home": tebbarhome

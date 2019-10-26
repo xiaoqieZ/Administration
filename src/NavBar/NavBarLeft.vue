@@ -148,10 +148,6 @@
               ></i>
             </template>
             <div v-show="!isShow">
-              <el-menu-item index="/NavBar/UserManage/AccountManage">
-                <span class="mr-right-18">·</span>
-                去签约
-              </el-menu-item>
               <el-menu-item index="/NavBar/UserManage/UserFun">
                 <span class="mr-right-18">·</span>
                 基金合同
@@ -290,7 +286,8 @@
             <div class="fundcenter">
               <div style="line-height: 60px;text-align: center;">基金募集后台管理系统</div> 
               <el-dropdown trigger="click">
-                   <img src="../../static/img/youliya.jpg" alt="尤利娅">
+                   <!-- <img src="../../static/img/youliya.jpg" alt="尤利娅"> -->
+                   <img :src="userData.portrait==null?'../../static/img/youliya.jpg':userData.portrait" alt="头像" />
                    <span>{{name}}</span>
                 <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item icon="el-icon-plus"
@@ -315,6 +312,7 @@
 <script>
 import { setCookie,getCookie,delCookie } from '../assets/js/cookie.js'
 import vuescroll from 'vuescroll';
+import ajax from '../api/https.js'
 export default {
   data() {
     return {
@@ -341,18 +339,20 @@ export default {
           background: "#ffffff"
         }
       },
-      name:''
+      name:'',
+      userData:{},
     }
   },
   mounted(){
+    this.getPortrait()
         /*页面挂载获取保存的cookie值，渲染到页面上*/
-        let uname = getCookie('username')
-        this.name = uname;
-        /*如果cookie不存在，则自动跳转到登录页*/
-        if(uname == ""){
-            //  this.$router.push({path:'/login'})  //接口无效
-            // this.$router.push({path: '/NavBar/Homepage/Homepage'})
-            }
+        // let uname = getCookie('username')
+        // this.name = uname;
+        // /*如果cookie不存在，则自动跳转到登录页*/
+        // if(uname == ""){
+        //      this.$router.push({path:'/login'})  //接口无效
+        //     this.$router.push({path: '/NavBar/Homepage/Homepage'})
+        //     }
         },
   methods: {
     login(){
@@ -363,7 +363,12 @@ export default {
     fanhui(){
         this.$router.push({path:'/Publicfore'})
       },
-
+    //获取用户头像信息
+    getPortrait(){
+       ajax.authGet.bind(this)("/api/Information/Account/GetByOpenId", res => {
+        this.userData = res.data.data;
+      });
+    },
     //鼠标进入
     // hoverNav() {
     //   this.isShow = false;

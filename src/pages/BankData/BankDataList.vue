@@ -26,7 +26,7 @@
                     <el-select v-model="ruleForm.fundType" placeholder="请选择基金类型">
                       <el-option
                         :label="item.text"
-                        :value="item.value"
+                        :value="Number(item.value)"
                         v-for="item in Fundtype"
                         :key="item.value"
                       ></el-option>
@@ -36,7 +36,7 @@
                     <el-select v-model="ruleForm.manageType" placeholder="请选择管理类型">
                       <el-option
                         :label="item.text"
-                        :value="item.value"
+                        :value="Number(item.value)"
                         v-for="item in Managementtype"
                         :key="item.value"
                       ></el-option>
@@ -46,7 +46,7 @@
                     <el-select v-model="ruleForm.fundStatus" placeholder="请选择基金状态">
                       <el-option
                         :label="item.text"
-                        :value="item.value"
+                        :value="Number(item.value)"
                         v-for="item in Fundstatus"
                         :key="item.value"
                       ></el-option>
@@ -171,7 +171,7 @@
                     <el-select v-model="ruleForm.riskLevel" placeholder="请选择活动区域">
                       <el-option
                         :label="item.text"
-                        :value="item.value"
+                        :value="Number(item.value)"
                         v-for="item in Risklevel"
                         :key="item.value"
                       ></el-option>
@@ -329,10 +329,10 @@
                 </div>
               </el-col>
             </el-row>
-            <el-form-item>
+            <div class="submitButton">
               <el-button type="primary" @click.native="Submit('ruleForm')">提 交</el-button>
               <el-button @click="resetForm('ruleForm')">重 置</el-button>
-            </el-form-item>
+            </div>
           </el-form>
         </div>
       </el-tab-pane>
@@ -367,13 +367,13 @@
                 </el-col>
               </el-form-item>
               <el-checkbox-group v-model="ruleForm.resourceShort" @change="listget">
-                <el-checkbox :label="1">短信通知</el-checkbox>
+                <el-checkbox disabled>短信通知</el-checkbox>
               </el-checkbox-group>
               <el-checkbox-group v-model="ruleForm.resourcEmail" @change="listge">
-                <el-checkbox :label="1">邮件通知</el-checkbox>
+                <el-checkbox>邮件通知</el-checkbox>
               </el-checkbox-group>
               <el-checkbox-group v-model="ruleForm.resourceWeChat" @change="listg">
-                <el-checkbox :label="1">微信通知</el-checkbox>
+                <el-checkbox>微信通知</el-checkbox>
               </el-checkbox-group>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -2348,7 +2348,7 @@ export default {
     align-items: center;
   }
   .AddList {
-    max-height: 498px;
+    height: 568px;
     overflow: scroll;
     background: #fff;
     /deep/.el-row {
@@ -2380,6 +2380,9 @@ export default {
       position: absolute;
       bottom: 60px;
       left: 85px;
+    }
+    .submitButton {
+      text-align: center;
     }
   }
   /deep/.el-input__icon {
@@ -2442,5 +2445,16 @@ export default {
       text-align: center;
     }
   }
+  @media screen and (min-width: 1620px) { 
+      .AddList {
+        height: 660px;
+      }
+  }
+  @media screen and (max-width: 1620px) { 
+      .AddList {
+        height: 530px;
+      }
+  }
 }
+ 
 </style>

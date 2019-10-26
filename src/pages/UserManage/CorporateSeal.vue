@@ -161,8 +161,8 @@ export default {
       MechanismListThree: "",
       MechanismValueThree: "",
 
-      responseId: 0, //机构上传文件的Id
-      materialId: 0 //个人上传文件的Id
+      responseId: '', //机构上传文件的Id
+      materialId: '' //个人上传文件的Id
     };
   },
   methods: {
@@ -335,9 +335,9 @@ export default {
   .submit {
     text-align: center;
   }
-  @media screen and (min-width: 1080px) {
+  @media screen and (min-width: 1620px) {
       .purple {
-        height: 688px;
+        height: 730px;
         overflow: scroll;
         .title {
           height: 60px;
@@ -347,9 +347,9 @@ export default {
         }
       }
     }
-    @media screen and (max-width: 720px) {
+    @media screen and (max-width: 1620px) {
       .purple {
-        height: 568px;
+        height: 610px;
         overflow: scroll;
         .title {
           height: 60px;

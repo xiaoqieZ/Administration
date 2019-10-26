@@ -1,13 +1,10 @@
 <template>
     <div>
         首页
-        <span>
-            首页内容
-        </span>
-        <div>
+        <!-- <div>
             {{this.$store.state.count}}
         </div>
-        <div @click="ss">点击</div>
+        <div @click="ss">点击</div> -->
     </div>
 </template>
 
@@ -20,10 +17,10 @@ export default {
         }
     },
     methods:{
-        ss(){
-            console.log(this);
-            this.$store._mutations.include[0]();
-        }
+        // ss(){
+        //     console.log(this);
+        //     this.$store._mutations.include[0]();
+        // }
     },
     store,
 }

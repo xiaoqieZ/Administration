@@ -202,7 +202,8 @@
     </el-dialog>
     <!-- 用户点击修改信息 -->
     <el-dialog title="提示" :visible.sync="modify" :append-to-body="true" width="80%" center>
-      <el-form>
+      <div class="modifyCode">
+        <el-form>
         <el-form-item>
           <el-radio-group v-model="form.radio">
             <el-radio label="1">手机</el-radio>
@@ -238,6 +239,7 @@
           </div>
         </el-form-item>
       </el-form>
+      </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="modify = false">取 消</el-button>
         <el-button type="primary" @click="modifyClick">确 认</el-button>
@@ -645,5 +647,27 @@ export default {
 }
 /deep/.el-popper {
   margin-top: 0;
+}
+.modifyCode{
+  .phoneShort {
+      position: relative;
+      .buttonShort {
+        height: 39px;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+      }
+      /deep/.van-count-down {
+        width: 98px;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        border: 1px solid #dcdfe6;
+        position: absolute;
+        top: 0;
+        right: 0;
+      }
+    }
 }
 </style>

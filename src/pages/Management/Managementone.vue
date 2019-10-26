@@ -65,7 +65,7 @@
               <el-table-column type="selection" width="55"></el-table-column>
               <!-- 索引 -->
               <el-table-column align="center" type="index" prop="data" label="序号" width="100"></el-table-column>
-              <el-table-column align="center" prop="data" label="图片" width="80">
+              <el-table-column align="center" prop="data" label="图片" width="100">
                 <template slot-scope="scope">
                   <el-popover placement="right" title trigger="click">
                     <img :src="scope.row.filePath" style="height: 500px;width: 500px" />
@@ -639,6 +639,16 @@ export default {
       height: 397px;
       overflow: hidden scroll;
     }
+    @media screen and (min-width: 1620px) { 
+     /deep/.el-table--enable-row-transition {
+      height: 580px;
+    }
+  }
+  @media screen and (max-width: 1080px) { 
+      /deep/.el-table--enable-row-transition {
+      height: 320px;
+    }
+  }
   }
   .spanColor {
     color: #409eff;

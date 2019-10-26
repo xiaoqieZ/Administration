@@ -42,19 +42,47 @@
     </div>
     <div class="anniu">
       <el-button type="primary" style="width:48%" @click="purchase" v-if="marketData.purchase==1">购买</el-button>
-      <el-button type="primary" style="width:48%" @click="cognizance = true" v-if="marketData.redeem==1">赎回</el-button>
+      <el-button
+        type="primary"
+        style="width:48%"
+        @click="cognizance = true"
+        v-if="marketData.redeem==1"
+      >赎回</el-button>
     </div>
     <el-dialog title="赎回" :visible.sync="cognizance" width="80%" center>
       <div>
-        <el-form :model="form">
-          <el-form-item label="赎回数量：">
+        <el-form :model="form" :rules="rules" ref="ruleForm">
+          <el-form-item label="赎回数量：" prop="edeemCount">
             <el-input v-model="form.edeemCount"></el-input>
+          </el-form-item>
+          <el-form-item class="phoneShort" label="验证码" prop="Verification">
+            <el-input v-model="form.Verification"></el-input>
+            <div v-if="getswithy">
+              <van-count-down
+                ref="countDown"
+                :time="5000"
+                :auto-start="false"
+                format="ss"
+                @finish="finished"
+              />
+              <el-button @click="getShort" class="buttonShort" v-if="getHide">获取验证码</el-button>
+            </div>
+            <div v-if="getGun">
+              <van-count-down
+                ref="countDown"
+                :time="5000"
+                :auto-start="true"
+                format="ss"
+                @finish="finished"
+              />
+              <el-button @click="reset" class="buttonShort" v-if="getagain">重新获取</el-button>
+            </div>
           </el-form-item>
         </el-form>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="cognizance = false">取 消</el-button>
-        <el-button type="primary" @click="redeem">确 定</el-button>
+        <el-button type="primary" @click="redeem('ruleForm')">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -73,10 +101,19 @@ export default {
       contractData: "",
       contractList: "",
       form: {
-        edeemCount: ""
+        edeemCount: "",
+        Verification: ""
       },
       cognizance: false,
-      marketData:{}
+      marketData: {},
+      getswithy: true, //进入页面时，获取验证码功能
+      getGun: false, //进入页面时，重亲获取功能隐藏
+      getagain: false, //重新获取验证码按钮
+      getHide: true, //获取验证码按钮
+      rules: {
+        edeemCount: [{ required: true, message: "请输入赎回数量", trigger: "blur" }],
+        Verification: [{ required: true, message: "请输入验证码", trigger: "blur" }]
+      }
     };
   },
   methods: {
@@ -92,9 +129,12 @@ export default {
         }
       );
       //购买、赎回按钮的控制
-      ajax.authGet.bind(this)('/api/Information/Present/Product/Market/' + this.$route.query.data,res=>{
-        this.marketData = res.data.data
-      })
+      ajax.authGet.bind(this)(
+        "/api/Information/Present/Product/Market/" + this.$route.query.data,
+        res => {
+          this.marketData = res.data.data;
+        }
+      );
     },
     //投资范围
     getRange() {
@@ -136,21 +176,50 @@ export default {
       );
     },
     //赎回
-    redeem() {
-      let data = {
-        productId: this.$route.query.data,
-        portionAmount: this.form.edeemCount
-      };
-      ajax.authPost.bind(this)(
-        "/api/Information/Present/Product/Redeem",
-        data,
-        res => {
-          this.cognizance=false
-          this.$message({message:res.data.message,type:"success"})
+    redeem(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          let data = {
+            productId: this.$route.query.data,
+            portionAmount: this.form.edeemCount,
+            captcha: this.form.Verification
+          };
+          ajax.authPost.bind(this)(
+            "/api/Information/Present/Product/Redeem",
+            data,
+            res => {
+              this.cognizance = false;
+              this.$message({ message: res.data.message, type: "success" });
+              this.form.edeemCount=this.form.Verification=''
+            }
+          );
         }
+      });
+    },
+    //倒计时结束的回调
+    finished() {
+      this.getagain = true; //重新获取验证码按钮
+      this.getHide = false; //获取验证码按钮
+      this.getswithy = false; //进入页面时，获取验证码功能
+      this.getGun = true; //进入页面时，重新获取验证码功能
+    },
+    getShort() {
+      this.getHide = false;
+      this.$refs.countDown.start();
+      ajax.authPost.bind(this)(
+        "/api/Information/Present/Product/Redeem/Sms",
+        res => {}
       );
     },
-    
+    //重新获取验证码
+    reset() {
+      this.getagain = false; //重新获取验证码
+      this.$refs.countDown.reset();
+      ajax.authPost.bind(this)(
+        "/api/Information/Present/Product/Redeem/Sms",
+        res => {}
+      );
+    }
   },
   mounted() {
     this.getProduct();
@@ -195,6 +264,26 @@ export default {
     padding-top: 50px;
     display: flex;
     justify-content: center;
+  }
+  .phoneShort {
+    position: relative;
+    .buttonShort {
+      height: 39px;
+      position: absolute;
+      top: 40px;
+      right: 0;
+      bottom: 0;
+    }
+    /deep/.van-count-down {
+      width: 98px;
+      height: 40px;
+      line-height: 40px;
+      text-align: center;
+      border: 1px solid #dcdfe6;
+      position: absolute;
+      top: 40px;
+      right: 0;
+    }
   }
 }
 </style>

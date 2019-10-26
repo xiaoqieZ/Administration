@@ -21,7 +21,7 @@
                   <Icon
                     type="ios-trash"
                     style="float:right;line-height: 30px;"
-                    @click.stop="del($event,item)"
+                    @click.stop="del"
                     color="red"
                     size="22"
                   />
@@ -32,6 +32,21 @@
                     size="20"
                   />
                   <span style="float:right;line-height: 30px;">{{item.isAdmin}}</span>
+                  <!-- 确认删除 -->
+                  <el-dialog
+                    title="提示"
+                    :visible.sync="editNewroleDel"
+                    :close-on-click-modal="true"
+                    :append-to-body="true"
+                    width="30%"
+                    center
+                  >
+                    <span>确定删除吗？</span>
+                    <div slot="footer" class="dialog-footer">
+                      <el-button @click.native="editNewroleDel = false">取消</el-button>
+                      <el-button type="primary" @click.native="delSubmit($event,item)">确定</el-button>
+                    </div>
+                  </el-dialog>
                 </div>
               </div>
               <div class="tian" @click="editFormVisible=true">
@@ -43,7 +58,7 @@
                 :visible.sync="editFormVisible"
                 :close-on-click-modal="true"
                 :append-to-body="true"
-                width="80%"
+                width="30%"
               >
                 <!--//editForm表单提交的数据-->
                 <el-form :model="editForm" label-width="80px" ref="editForm">
@@ -72,7 +87,7 @@
                 :visible.sync="editFormEdit"
                 :close-on-click-modal="true"
                 :append-to-body="true"
-                width="80%"
+                width="30%"
               >
                 <!--//editForm表单提交的数据-->
                 <el-form :model="editForm" label-width="80px" ref="editForm">
@@ -251,6 +266,7 @@ import ajax from "../../api/https.js";
 export default {
   data() {
     return {
+      editNewroleDel: false,
       inputpersonnelRole: "",
       getAllData: [], //所有角色信息
       getRole: [], //角色人员
@@ -439,14 +455,17 @@ export default {
       });
     },
     //删除角色
-    del(e, index) {
+    delSubmit(e, index) {
       ajax.authPost.bind(this)(
         "/api/System/Role/Delete?id=" + index.id,
         res => {
-          console.log(res);
           this.getAll();
+          this.editNewroleDel = false;
         }
       );
+    },
+    del() {
+      this.editNewroleDel = true;
     },
     //人员管理下的删除角色
     delroleName(e, index) {

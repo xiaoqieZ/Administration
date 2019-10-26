@@ -413,6 +413,7 @@ export default {
   overflow: scroll;
   background: #fff;
   padding: 10px;
+  
   .HoldNum {
     border-left: 4px solid #2d8cf0;
   }
@@ -444,5 +445,6 @@ export default {
       }
     }
   }
+  
 }
 </style>

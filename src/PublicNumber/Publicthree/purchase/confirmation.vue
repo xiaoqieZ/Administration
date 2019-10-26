@@ -100,7 +100,28 @@
           <p>短信验证码</p>
           <div class="confirm_button">
             <el-input v-model="Code"></el-input>
-            <button class="buttom_huo">获取验证码</button>
+            <div style="position: relative;" v-if="getswithy">
+            <van-count-down
+              ref="countDown"
+              style="position: absolute;"
+              :time="5000"
+              :auto-start="false"
+              format="ss"
+              @finish="finished"
+            />
+            <el-button @click="getShort" class="buttom_huo" v-if="getHide">获取验证码</el-button>
+          </div>
+          <div style="position: relative;" v-if="getGun">
+            <van-count-down
+              ref="countDown"
+              style="position: absolute;"
+              :time="5000"
+              :auto-start="true"
+              format="ss"
+              @finish="finished"
+            />
+            <el-button @click="reset" class="buttom_huo" v-if="getagain">重新获取</el-button>
+          </div>
           </div>
         </div>
       </div>
@@ -145,10 +166,39 @@ export default {
       confirmationMaterialId: '', //申购确认书
       riskLevelName:{},
       information:{},
-      whether:""
+      whether:"",
+      getswithy: true, //进入页面时，获取验证码功能
+      getGun: false, //进入页面时，重亲获取功能隐藏
+      getHide: true, //获取验证码按钮
+      getagain: false, //重新获取验证码按钮
     };
   },
   methods: {
+    //倒计时结束的回调
+    finished() {
+      this.getagain = true; //重新获取验证码按钮
+      this.getHide = false; //获取验证码按钮
+      this.getswithy = false; //进入页面时，获取验证码功能
+      this.getGun = true; //进入页面时，重新获取验证码功能
+    },
+    //获取验证码
+    getShort() {
+      this.getHide = false;
+      this.$refs.countDown.start();
+      ajax.authPost.bind(this)(
+        "/api/Information/Present/Product/Apply/Sms",
+        res => {}
+      );
+    },
+    //重新获取验证码
+    reset() {
+      this.getagain = false; //重新获取验证码
+      this.$refs.countDown.reset();
+      ajax.authPost.bind(this)(
+        "/api/Information/Present/Product/Apply/Sms",
+        res => {}
+      );
+    },
     //返回产品Id
     Return() {
       let data = this.id;
@@ -242,6 +292,16 @@ export default {
         bottom: 15px;
         height: 40px;
         position: absolute;
+      }
+      /deep/.van-count-down {
+        width: 98px;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        border: 1px solid #dcdfe6;
+        position: absolute;
+        top: -54px;
+        right: 0;
       }
     }
   }

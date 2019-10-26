@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import ErrorPage from '@/ErrorPage/ErrorPage'
 import NavBar from '@/NavBar/NavBarLeft'
 import Homepage from '@/pages/Homepage/Homepage'
 import Null from '@/components/CParameter'
@@ -41,6 +42,7 @@ import Publictow from '@/PublicNumber/Publictow/Publictow.vue'
 
 import Information from '@/PublicNumber/Publicone/Information/Information.vue'
 import Identification from '@/PublicNumber/Publicfore/TransactionRecord/Identification.vue'
+import ToDeploy from '@/PublicNumber/Publicfore/TransactionRecord/ToDeploy.vue'
 import Authentication from '@/PublicNumber/Publicfore/Information/Authentication.vue'
 import Assessment from '@/PublicNumber/Publicfore/Information/Assessment.vue'
 import Acquisition from '@/PublicNumber/Publicfore/Information/Acquisition.vue'
@@ -63,9 +65,16 @@ import Login from '@/login/Login/'
 Vue.use(Router)
 
 export default new Router({
-  routes: [{
+  routes: [
+    {
       path: '/',
       redirect: '/Publicfore',
+    },
+    {
+      path: '/ErrorPage',
+      name: 'ErrorPage',
+      title: '错误页面',
+      component: ErrorPage,
     },
     // 前台
     {
@@ -199,6 +208,11 @@ export default new Router({
           name: 'Identification',
           title: '电子签约',
           component: Identification
+        },{
+          path: '/Publicfore/TransactionRecord/ToDeploy',
+          name: 'ToDeploy',
+          title: '电子签约-签署',
+          component: ToDeploy
         },
       ]
     },

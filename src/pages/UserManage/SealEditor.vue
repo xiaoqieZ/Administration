@@ -5,28 +5,29 @@
       <p>合同盖章</p>
     </div>
     <div class="fit">
-      <div>
-        <span @click="previousPage">上一页</span>
-        <span>{{pageIndex}}</span>
-        <span @click="nextPage">下一页</span>
-        <p style="text-align: center;">总共{{contractData.pageCount}}页</p>
-      </div>
-      <div class="main" id="main">
-        <img :src="pageData" alt />
+      <div class="pian">
+        <div class="Previous_page">
+          <span @click="previousPage">上一页</span>
+          <span>{{pageIndex}}</span>
+          <span @click="nextPage">下一页</span>
+          <p style="text-align: center;">总共{{contractData.pageCount}}页</p>
+        </div>
+        <div class="main" id="main" ref="main">
+          <img :src="pageData" alt />
+          <div ref="test" id="seal" class="seal"></div>
+          <!-- <div id="seal" class="seal">
+            <img :src="imgData" alt />
+          </div>-->
+        </div>
       </div>
       <div class="rigth">
         <div class="rigth_title">拖拽设置</div>
         <p class="rigth_p">合同的所有确认处</p>
-        <div id="seal" class="seal">
-          <img :src="imgData" alt />
-        </div>
-        <!-- <div id="sealTow" class="sealTow">12</div>
-        <div id="sea" class="sea">自然人</div>-->
         <div>
           <el-button @click="addS">添加</el-button>
           <el-select v-model="score" @change="deop">
             <el-option
-              :label="item.confirmationTypeName"
+              :label="item.confirmationTypeName+'-'+item.confirmationName"
               :value="item.id"
               v-for="item in confirmationData"
               :key="item.id"
@@ -43,7 +44,7 @@
               <el-select v-model="form.confirmationTypeName" @change="dropDown">
                 <el-option
                   :label="item.text"
-                  :value="item.value"
+                  :value="Number(item.value)"
                   v-for="item in countData"
                   :key="item.value"
                 ></el-option>
@@ -65,7 +66,7 @@
               <el-select v-model="ConfirmationData.confirmationType" @change="dropD">
                 <el-option
                   :label="item.text"
-                  :value="item.value"
+                  :value="Number(item.value)"
                   v-for="item in countData"
                   :key="item.value"
                 ></el-option>
@@ -76,6 +77,7 @@
             <el-button type="primary" @click="addSubmi">确认盖章</el-button>
             <el-button @click="add=false">取 消</el-button>
           </div>
+          <!-- <div ref="test" id="seal" class="seal"></div> -->
         </div>
       </div>
     </div>
@@ -116,7 +118,8 @@ export default {
       pageIndex: 1,
       pageData: "",
       isShow: true,
-      ConfirmationData: {}
+      ConfirmationData: {},
+      draggable: function() {}
     };
   },
   methods: {
@@ -148,6 +151,7 @@ export default {
     },
     //添加处的下拉选中
     dropDown() {
+      this.t1.bind(document.querySelector("#seal"));
       this.imgData = ajax.doms(
         "/api/Management/Contract/Confirmation/Seal?name=" +
           this.form.confirmationName +
@@ -160,7 +164,7 @@ export default {
     },
     //编辑处的下拉选中
     dropD() {
-      this.t1.bind(document.querySelector("#seal"));
+      //this.t1.bind(document.querySelector("#seal"));
       this.imgData = ajax.doms(
         "/api/Management/Contract/Confirmation/Seal?name=" +
           this.ConfirmationData.confirmationName +
@@ -170,6 +174,28 @@ export default {
           this.$route.query.data.id +
           ""
       );
+
+      var div = document.createElement("div");
+      //动态生成图
+      var img = document.createElement("img");
+      var now = new Date();
+      var nowString =
+        "" +
+        now.getFullYear() +
+        now.getMonth() +
+        now.getDate() +
+        now.getHours() +
+        now.getMinutes() +
+        now.getSeconds() +
+        now.getMilliseconds();
+      div.id = "seal" + nowString + Math.floor(Math.random() * 100000);
+      div.className = "seal";
+      div.style.position="absolute"
+      img.src = this.imgData;
+      div.appendChild(img);
+      this.$refs.main.appendChild(div);
+      var newDiv = document.querySelector(div.id);
+      this.draggable.call(div).bind.call(div);
     },
     // 添加提交
     submi() {
@@ -177,8 +203,8 @@ export default {
         id: 0,
         contractId: this.$route.query.data.id,
         pageIndex: this.pageIndex,
-        pointX: this.t1.getWidth() / 500,
-        pointY: this.t1.getHeight() / 500,
+        pointX: this.t1.getWidth() / 749,
+        pointY: this.t1.getHeight() / 1123,
         confirmationName: this.form.confirmationName,
         confirmationType: this.form.confirmationTypeName
       };
@@ -187,6 +213,7 @@ export default {
         data,
         res => {
           this.getPage();
+          this.getConfirmation();
           this.$message({
             message: res.data.message,
             type: "success"
@@ -198,12 +225,15 @@ export default {
     },
     //编辑提交
     addSubmi() {
+      console.log(this.t1.getWidth() / 749, this.t1.getHeight() / 1123);
+      console.log(this.t1.getWidth(), this.t1.getHeight());
+      return;
       let data = {
         id: this.score,
         contractId: this.$route.query.data.id,
         pageIndex: this.pageIndex,
-        pointX: this.t1.getWidth() / 500,
-        pointY: this.t1.getHeight() / 500,
+        pointX: this.t1.getWidth() / 749,
+        pointY: this.t1.getHeight() / 1123,
         confirmationName: this.ConfirmationData.confirmationName,
         confirmationType: this.ConfirmationData.confirmationType
       };
@@ -212,6 +242,7 @@ export default {
         data,
         res => {
           this.getPage();
+          this.getConfirmation();
           this.$message({
             message: res.data.message,
             type: "success"
@@ -250,8 +281,8 @@ export default {
       );
     },
     //上一页
-    previousPage(){
-      if (this.pageIndex>1) {
+    previousPage() {
+      if (this.pageIndex > 1) {
         this.pageIndex -= 1;
         this.getPage();
       }
@@ -265,7 +296,7 @@ export default {
     }
   },
   mounted() {
-    this.getConfirmation()
+    this.getConfirmation();
     this.getPage();
     this.messageData = this.$route.query.data;
     this.getCount(); //下拉，合同确认类型
@@ -321,14 +352,19 @@ export default {
           width: width,
           height: height
         };
-
+        // console.log(width,height)
         target.style.left = width + "px";
         target.style.top = height + "px";
       };
       return function() {
-        // console.log(this);
-        this.onmousedown = onmousedown;
-        this.onmouseup = onmouseup;
+        if (!position[this.id]) {
+          this.onmousedown = onmousedown;
+          this.onmouseup = onmouseup;
+          position[this.id] = {
+            width: 0,
+            height: 0
+          };
+        }
 
         return {
           getWidth: function() {
@@ -358,9 +394,8 @@ export default {
         };
       };
     })();
-    this.t1 = draggable.call(document.querySelector("#seal"));
-    // this.t2 = draggable.call(document.querySelector("#sealTow"));
-    // this.t3 = draggable.call(document.querySelector("#sea"));
+    this.draggable = draggable;
+    //this.t1 = draggable.call(document.querySelector("#seal"));
   }
 };
 </script>
@@ -374,16 +409,31 @@ export default {
   align-items: center;
 }
 .fit {
+  height: 600px;
+  overflow: scroll;
   margin-top: 30px;
   display: flex;
-  position: relative;
-  .main {
-    width: 500px;
-    height: 500px;
-    border: 1px solid;
-    img {
-      width: 100%;
-      height: 100%;
+  .Previous_page {
+    padding-right: 20px;
+  }
+  .pian {
+    .main {
+      position: relative;
+      width: 749px;
+      height: 1123px;
+      border: 1px solid;
+      img {
+        width: 100%;
+        height: 100%;
+      }
+      .seal {
+        text-align: center;
+        position: absolute;
+        img {
+          width: 100%;
+          height: 100%;
+        }
+      }
     }
   }
   .rigth {
@@ -398,23 +448,19 @@ export default {
       height: 30px;
       line-height: 30px;
     }
-    .seal {
-      width: 100px;
-      height: 100px;
-      line-height: 100px;
-      text-align: center;
-      position: absolute;
-      top: 350px;
-      left: 620px;
-      img {
-        width: 100%;
-        height: 100%;
-      }
-    }
-    // padding-top: 120px;
     /deep/.el-input__suffix {
       height: 75%;
     }
+  }
+}
+@media screen and (min-width: 1620px) {
+  .fit {
+    height: 700px;
+  }
+}
+@media screen and (max-width: 1620px) {
+  .fit {
+    height: 580px;
   }
 }
 </style>
