@@ -64,7 +64,7 @@
       width="80%"
       center
     >
-      <span>小茄子：需要先去信息采集才可以提交证明材料喔！</span>
+      <span>需要先去信息采集才可以提交证明材料喔！</span>
       <span slot="footer" class="dialog-footer">
         <el-button @click="centerDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="dssy">信息采集</el-button>

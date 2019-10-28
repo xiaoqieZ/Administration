@@ -13,11 +13,8 @@
           <p style="text-align: center;">总共{{contractData.pageCount}}页</p>
         </div>
         <div class="main" id="main" ref="main">
+          <!-- <div ref="test" id="seal" class="seal"></div> -->
           <img :src="pageData" alt />
-          <div ref="test" id="seal" class="seal"></div>
-          <!-- <div id="seal" class="seal">
-            <img :src="imgData" alt />
-          </div>-->
         </div>
       </div>
       <div class="rigth">
@@ -191,6 +188,7 @@ export default {
       div.id = "seal" + nowString + Math.floor(Math.random() * 100000);
       div.className = "seal";
       div.style.position="absolute"
+      div.style.top="0"
       img.src = this.imgData;
       div.appendChild(img);
       this.$refs.main.appendChild(div);

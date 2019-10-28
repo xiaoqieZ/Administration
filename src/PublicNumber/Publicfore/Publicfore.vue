@@ -192,7 +192,6 @@ export default {
         })
         .then(res => {
           //   console.log(res);         
-
           this.getStorage();
           this.getTotalAssets();
           this.getInvestorType();

@@ -59,7 +59,7 @@
       width="80%"
       center
     >
-      <span>小茄子：需要先实名认证才可以进行风险测评喔！</span>
+      <span>需要先实名认证才可以进行风险测评喔！</span>
       <span slot="footer" class="dialog-footer">
         <el-button @click="centerDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="dssy">去认证</el-button>

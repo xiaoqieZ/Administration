@@ -38,7 +38,7 @@
       </div>
     </div>
     <div class="cesname">
-      <div class="count_list" v-for="item in countData" :key="item.id">
+      <div class="count_list" v-for="item in countData" :key="item.id" v-if="item.isHotSpot==1">
         <van-collapse v-model="activeName" accordion>
           <van-collapse-item :title="item.title" :name="item.id">{{item.content}}</van-collapse-item>
         </van-collapse>

@@ -546,10 +546,10 @@ export default {
   mounted() {
     this.getPersonal();
     //判断用户页面填写情况，填写信息页面完成提交后，退出界面再次进来就是补充信息界面
-    if (this.information.mobile != "") {
-      this.current = 1;
-      this.fill = 2;
-    }
+    // if (this.information.mobile != "") {
+    //   this.current = 1;
+    //   this.fill = 2;
+    // }
     this.getCustomer();
   }
 };

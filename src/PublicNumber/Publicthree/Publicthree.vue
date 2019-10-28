@@ -58,7 +58,7 @@
       width="80%"
       center
     >
-      <span>小茄子：需要先完成实名认证相关信息才可以选购基金产品喔！</span>
+      <span>需要先完成实名认证相关信息才可以选购基金产品喔！</span>
       <span slot="footer" class="dialog-footer">
         <el-button @click="centerDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="dssy">去认证</el-button>
