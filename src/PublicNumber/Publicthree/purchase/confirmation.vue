@@ -245,8 +245,8 @@ export default {
         accountBank: this.bank,
         paymentMaterialId: this.ReportId,
         bankCardMaterialId: this.BankcardId,
-        confirmationMaterialId: this.confirmationMaterialId
-
+        confirmationMaterialId: this.confirmationMaterialId,
+        captcha:this.Code
       };
       ajax.authPost.bind(this)(
         "/api/Information/Present/Product/Apply",

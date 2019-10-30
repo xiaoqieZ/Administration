@@ -1,5 +1,5 @@
-  let dom="http://192.168.28.213:5000";
-//    let dom="http://foundation.chetanlian.cn/foundation";
+//   let dom="http://192.168.28.213:5000";
+   let dom="http://foundation.chetanlian.cn/foundation";
 
 function thenCallBack(res, then, cat) {
     console.log(res);

@@ -34,6 +34,7 @@
               <div v-if="getswithy">
                 <van-count-down
                   ref="countDown"
+                  style="width: 98px;height: 40px;line-height: 40px;text-align: center;position: absolute;border: 1px solid #dcdfe6;top: 0;right: 0;"
                   :time="5000"
                   :auto-start="false"
                   format="ss"
@@ -44,6 +45,7 @@
               <div v-if="getGun">
                 <van-count-down
                   ref="countDown"
+                  style="position: absolute;right:0;top:0"
                   :time="5000"
                   :auto-start="true"
                   format="ss"
@@ -57,12 +59,12 @@
             </el-form-item>
           </el-form>
         </div>
-        <el-checkbox-group v-model="checkList">
+        <!-- <el-checkbox-group v-model="checkList">
           <el-checkbox label="A">
             <a>《北京润达信合投资基金管理有限公司微信公众号服务协议》</a>
           </el-checkbox>
           <el-checkbox label="B">《合格投资者》相关要求</el-checkbox>
-        </el-checkbox-group>
+        </el-checkbox-group> -->
       </div>
       <!-- 补充信息 -->
       <div v-show="fill==2" style="padding-top:10px">
@@ -204,41 +206,41 @@
     <el-dialog title="提示" :visible.sync="modify" :append-to-body="true" width="80%" center>
       <div class="modifyCode">
         <el-form>
-        <el-form-item>
-          <el-radio-group v-model="form.radio">
-            <el-radio label="1">手机</el-radio>
-            <el-radio label="2">邮箱</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item>
-          <el-input v-model="form.text" placeholder="请输入手机或邮箱"></el-input>
-        </el-form-item>
-        <el-form-item class="phoneShort" label="验证码：" prop="short">
-          <el-input type="number" v-model="form.Verification" placeholder="请输入验证码"></el-input>
-          <div style="position: relative;" v-if="getswithy">
-            <van-count-down
-              ref="countDown"
-              style="position: absolute;"
-              :time="5000"
-              :auto-start="false"
-              format="ss"
-              @finish="finished"
-            />
-            <el-button @click.stop="shortModify" class="buttonShort" v-if="getHide">获取验证码</el-button>
-          </div>
-          <div style="position: relative;" v-if="getGun">
-            <van-count-down
-              ref="countDown"
-              style="position: absolute;"
-              :time="5000"
-              :auto-start="true"
-              format="ss"
-              @finish="finished"
-            />
-            <el-button @click.stop="resetModify" class="buttonShort" v-if="getagain">重新获取</el-button>
-          </div>
-        </el-form-item>
-      </el-form>
+          <el-form-item>
+            <el-radio-group v-model="form.radio">
+              <el-radio label="1">手机</el-radio>
+              <el-radio label="2">邮箱</el-radio>
+            </el-radio-group>
+          </el-form-item>
+          <el-form-item>
+            <el-input v-model="form.text" placeholder="请输入手机或邮箱"></el-input>
+          </el-form-item>
+          <el-form-item class="phoneShort" label="验证码：" prop="short">
+            <el-input type="number" v-model="form.Verification" placeholder="请输入验证码"></el-input>
+            <div style="position: relative;width: 100%;" v-if="getswithy">
+              <van-count-down
+                ref="countDown"
+                style="width: 98px;height: 40px;line-height: 40px;text-align: center;position: absolute;border: 1px solid #dcdfe6;top: 0;right: 0;"
+                :time="5000"
+                :auto-start="false"
+                format="ss"
+                @finish="finished"
+              />
+              <el-button @click.stop="shortModify" class="buttonShort" v-if="getHide">获取验证码</el-button>
+            </div>
+            <div style="position: relative;width: 100%;" v-if="getGun">
+              <van-count-down
+                ref="countDown"
+                style="width: 98px;height: 40px;line-height: 40px;text-align: center;position: absolute;border: 1px solid #dcdfe6;top: 0;right: 0;"
+                :time="5000"
+                :auto-start="true"
+                format="ss"
+                @finish="finished"
+              />
+              <el-button @click.stop="resetModify" class="buttonShort" v-if="getagain">重新获取</el-button>
+            </div>
+          </el-form-item>
+        </el-form>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="modify = false">取 消</el-button>
@@ -285,7 +287,7 @@ export default {
       getagain: false, //重新获取验证码按钮
       Hang: 0, //认证页面跟完成认证页面，0代表未认证
       dofig: "", //本地保存的数据
-      checkList: [], //协议资料阅读与确认
+      // checkList: [], //协议资料阅读与确认
       fill: 1, //填写信息、补充信息、确认完成3个页面的切换
       ruleForm: {
         //填写信息的内容
@@ -367,11 +369,7 @@ export default {
     },
     //下一步
     nextss() {
-      if (
-        this.checkList != "" &&
-        this.checkList.length > 1 &&
-        this.radio != ""
-      ) {
+      if (this.radio != "") {
         this.$refs[this.Ref].validate(valid => {
           if (valid) {
             if (this.current == 0) {
@@ -555,7 +553,7 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" >
 .Authentitle {
   margin-top: 50px;
   padding: 0 10px;
@@ -583,16 +581,16 @@ export default {
         right: 0;
         bottom: 0;
       }
-      /deep/.van-count-down {
-        width: 98px;
-        height: 40px;
-        line-height: 40px;
-        text-align: center;
-        border: 1px solid #dcdfe6;
-        position: absolute;
-        top: 0;
-        right: 0;
-      }
+      // /deep/.van-count-down {
+      //   width: 98px;
+      //   height: 40px;
+      //   line-height: 40px;
+      //   text-align: center;
+      //   border: 1px solid #dcdfe6;
+      //   position: absolute;
+      //   top: 0;
+      //   right: 0;
+      // }
     }
     /deep/.el-checkbox__label {
       display: inline;
@@ -648,26 +646,26 @@ export default {
 /deep/.el-popper {
   margin-top: 0;
 }
-.modifyCode{
+.modifyCode {
   .phoneShort {
-      position: relative;
-      .buttonShort {
-        height: 39px;
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-      }
-      /deep/.van-count-down {
-        width: 98px;
-        height: 40px;
-        line-height: 40px;
-        text-align: center;
-        border: 1px solid #dcdfe6;
-        position: absolute;
-        top: 0;
-        right: 0;
-      }
+    position: relative;
+    .buttonShort {
+      height: 39px;
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
     }
+    // /deep/.van-count-down {
+    //   width: 98px;
+    //   height: 40px;
+    //   line-height: 40px;
+    //   text-align: center;
+    //   border: 1px solid #dcdfe6;
+    //   position: absolute;
+    //   top: 0;
+    //   right: 0;
+    // }
+  }
 }
 </style>

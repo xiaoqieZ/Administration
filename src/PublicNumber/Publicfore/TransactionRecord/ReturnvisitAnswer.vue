@@ -41,11 +41,11 @@
         width="80%"
         center
       >
-        <span v-if="statusData.isPass==true">您的回访已通过，点击确认提交！</span>
-        <span v-else>{{statusData.statusName}}</span>
+        <span v-if="statusData.isPass==true">本次回访有效，请确认提交，我们将尽快为您添加持仓！</span>
+        <span v-else>本次回访验证无效，若继续提交，我们将做无效处理</span>
         <span slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="go" v-if="statusData.isPass==false">确 定</el-button>
-          <el-button type="primary" v-else @click="centerDialog">确 定</el-button>
+          <el-button type="primary" @click="centerDialog">确 定</el-button>
+          <el-button type="primary" @click="centerDialogVisible=false" >取 消</el-button>
         </span>
       </el-dialog>
     </div>
@@ -118,7 +118,7 @@ export default {
         let data = {
           visitId: this.visitId,
           answer: this.problem,
-          materialId: 1
+          materialId: null
         };
         //提交接口
         ajax.authPost.bind(this)(

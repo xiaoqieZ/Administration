@@ -7,7 +7,7 @@
     </mt-header>
     <div class="list">
       <div class="cou" v-for="item in returnVisit" :key="item.Id">
-        <div class="coutent" v-if="item.isSure==1">
+        <div class="coutent" v-if="item.modifiedTime">
           <span>{{item.productName}}</span>
           <span>
             {{item.isSure==1?item.operationTypeName:"已完成"}}
@@ -16,6 +16,7 @@
         </div>
         <div class="coutent" @click="answer(item)" v-else>
           <span>{{item.productName}}</span>
+          <span>{{item.creationTime}}</span>
           <span style="color:#26a2ff" @click="remove(item)">取消</span>
           <span>
             {{item.operationTypeName}}
@@ -42,7 +43,7 @@ export default {
   data() {
     return {
       page: 1,
-      num: 10,
+      num: 50,
       returnVisit: [], //用于回去回访Id
       Id: "",
       productName: "",
@@ -73,7 +74,6 @@ export default {
     },
     //按钮，进入单选界面
     answer(data) {
-      // console.log(data.id);return;
       let productName = { productName: data.productName, visitId: data.id };
       this.$router.push({
         path: "/Publicfore/TransactionRecord/ReturnvisitAnswer",

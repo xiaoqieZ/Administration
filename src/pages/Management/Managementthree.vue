@@ -157,6 +157,7 @@
                     :fetch-suggestions="querySearch"
                     placeholder="请输入用户名"
                     :trigger-on-focus="false"
+                    :popper-append-to-body="false"
                     @select="handleSelect"
                   ></el-autocomplete>
                 </el-col>
@@ -231,7 +232,7 @@
               </div>
             </div>
           </div>
-          <!-- 新增用户 -->
+          <!-- 新增用户角色 -->
           <el-dialog
             title="新增用户角色"
             :visible.sync="editNewrole"
@@ -612,6 +613,9 @@ export default {
         }
       }
     }
-  }
+  } 
+}
+/deep/.el-autocomplete-suggestion {
+  z-index: 9999 !important;
 }
 </style>

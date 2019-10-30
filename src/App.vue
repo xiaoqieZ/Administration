@@ -24,4 +24,7 @@ export default {
   height: 30px !important;
   line-height: 30px !important;
 }
+/deep/.el-autocomplete-suggestion {
+  z-index: 9999 !important;
+}
 </style>

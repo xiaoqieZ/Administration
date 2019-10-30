@@ -59,7 +59,10 @@
         </el-table-column>
         <el-table-column align="center" prop="data" label="文件">
           <template slot-scope="scope">
-            <a :href="scope.row.contractMaterial.fullPath" target="_blank">点击查看</a>
+            <span v-if="scope.row.contractMaterial==null">点击查看</span>
+            <div v-else>
+              <a :href="scope.row.contractMaterial==null?null:scope.row.contractMaterial.fullPath" target="_blank">点击查看</a>
+            </div>
           </template>
         </el-table-column>
         <el-table-column align="center" prop="data" label="操作">

@@ -1021,9 +1021,9 @@
                 :headers="access_token"
               >
                 <el-button size="small" type="primary">点击上传文件</el-button>
-                <ul class="el-upload-list el-upload-list--text">
+                <ul class="el-upload-list el-upload-list--text" v-if="aaa!=''">
                   <li tabindex="0" class="el-upload-list__item is-success">
-                    <a class="el-upload-list__item-name">
+                    <a class="el-upload-list__item-name" :href="urlOne">
                       <i class="el-icon-document"></i>
                       {{aaa}}
                     </a>
@@ -1047,9 +1047,9 @@
                 :headers="access_token"
               >
                 <el-button size="small" type="primary">点击上传文件</el-button>
-                <ul class="el-upload-list el-upload-list--text">
+                <ul class="el-upload-list el-upload-list--text" v-if="bbb!=''">
                   <li tabindex="0" class="el-upload-list__item is-success">
-                    <a class="el-upload-list__item-name">
+                    <a class="el-upload-list__item-name" :href="urlTow">
                       <i class="el-icon-document"></i>
                       {{bbb}}
                     </a>
@@ -1073,9 +1073,9 @@
                 :headers="access_token"
               >
                 <el-button size="small" type="primary">点击上传文件</el-button>
-                <ul class="el-upload-list el-upload-list--text">
+                <ul class="el-upload-list el-upload-list--text" v-if="ccc!=''">
                   <li tabindex="0" class="el-upload-list__item is-success">
-                    <a class="el-upload-list__item-name">
+                    <a class="el-upload-list__item-name" :href="urlThree">
                       <i class="el-icon-document"></i>
                       {{ccc}}
                     </a>
@@ -1099,9 +1099,9 @@
                 :headers="access_token"
               >
                 <el-button size="small" type="primary">点击上传文件</el-button>
-                <ul class="el-upload-list el-upload-list--text">
+                <ul class="el-upload-list el-upload-list--text" v-if="ddd!=''">
                   <li tabindex="0" class="el-upload-list__item is-success">
-                    <a class="el-upload-list__item-name">
+                    <a class="el-upload-list__item-name" :href="urlFour">
                       <i class="el-icon-document"></i>
                       {{ddd}}
                     </a>
@@ -1125,9 +1125,9 @@
                 :headers="access_token"
               >
                 <el-button size="small" type="primary">点击上传文件</el-button>
-                <ul class="el-upload-list el-upload-list--text">
+                <ul class="el-upload-list el-upload-list--text" v-if="eee!=''">
                   <li tabindex="0" class="el-upload-list__item is-success">
-                    <a class="el-upload-list__item-name">
+                    <a class="el-upload-list__item-name" :href="urlFive">
                       <i class="el-icon-document"></i>
                       {{eee}}
                     </a>
@@ -1405,7 +1405,12 @@ export default {
       bbb: "",
       ccc: "",
       ddd: "",
-      eee: ""
+      eee: "",
+      urlOne:'',
+      urlTow:'',
+      urlThree:'',
+      urlFour:'',
+      urlFive:'',
     };
   },
   methods: {
@@ -1714,10 +1719,15 @@ export default {
         "/api/Management/Product/Market/Contract/" + this.queryId,
         res => {
           this.aaa = res.data.data.contractMaterial && res.data.data.contractMaterial.fileName;
+          this.urlOne=res.data.data.contractMaterial.fullPath;
           this.bbb = res.data.data.riskDisclosureMaterial && res.data.data.riskDisclosureMaterial.fileName;
+          this.urlTow=res.data.data.riskDisclosureMaterial.fullPath;
           this.ccc = res.data.data.othersMaterial1 && res.data.data.othersMaterial1.fileName;
+          this.urlThree=res.data.data.othersMaterial1.fullPath;
           this.ddd = res.data.data.othersMaterial2 && res.data.data.othersMaterial2.fileName;
+          this.urlFour=res.data.data.othersMaterial2.fullPath;
           this.eee = res.data.data.othersMaterial3 && res.data.data.othersMaterial3.fileName;
+          this.urlFive=res.data.data.othersMaterial3.fullPath;
         }
       );
     },
@@ -1852,6 +1862,7 @@ export default {
           row.userId,
         res => {
           this.getInvestment();
+          this.getpotential();
         }
       );
     },
@@ -1867,6 +1878,7 @@ export default {
           "&userId=" +
           row.userId,
         res => {
+          this.getInvestment();
           this.getpotential();
         }
       );

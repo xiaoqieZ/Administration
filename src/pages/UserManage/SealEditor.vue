@@ -7,14 +7,25 @@
     <div class="fit">
       <div class="pian">
         <div class="Previous_page">
-          <span @click="previousPage">上一页</span>
-          <span>{{pageIndex}}</span>
-          <span @click="nextPage">下一页</span>
-          <p style="text-align: center;">总共{{contractData.pageCount}}页</p>
+          <el-button size="mini" type="success" @click="previousPage">上一页</el-button>
+          <span>{{pageIndex}}页</span>
+          <el-button size="mini" type="success" @click="nextPage">下一页</el-button>
+          <div class="jump">
+            <div style="text-align: center;">总共{{contractData.pageCount}}页</div>
+            <div style="line-height: 60px;width: 60px;">
+              <el-input v-model="jumpPage" placeholder="跳转到合同页" @keyup.enter.native="sureSearch"></el-input>
+            </div>
+          </div>
         </div>
         <div class="main" id="main" ref="main">
           <!-- <div ref="test" id="seal" class="seal"></div> -->
           <img :src="pageData" alt />
+        </div>
+        <div class="Previous_page">
+          <el-button size="mini" type="success" @click="previousPage">上一页</el-button>
+          <span>{{pageIndex}}</span>
+          <el-button size="mini" type="success" @click="nextPage">下一页</el-button>
+          <p style="text-align: center;">总共{{contractData.pageCount}}页</p>
         </div>
       </div>
       <div class="rigth">
@@ -24,7 +35,7 @@
           <el-button @click="addS">添加</el-button>
           <el-select v-model="score" @change="deop">
             <el-option
-              :label="item.confirmationTypeName+'-'+item.confirmationName"
+              :label="item.confirmationTypeName+'-'+item.confirmationName+'(第'+item.pageIndex+'页)'"
               :value="item.id"
               v-for="item in confirmationData"
               :key="item.id"
@@ -71,8 +82,8 @@
             </el-form-item>
           </el-form>
           <div class="button_submi">
-            <el-button type="primary" @click="addSubmi">确认盖章</el-button>
-            <el-button @click="add=false">取 消</el-button>
+            <el-button type="danger" @click="delSubmi">删 除</el-button>
+            <el-button type="primary" @click="addSubmi">提 交</el-button>
           </div>
           <!-- <div ref="test" id="seal" class="seal"></div> -->
         </div>
@@ -83,9 +94,11 @@
  
 <script>
 import ajax from "../../api/https.js";
+//import func from "../../../vue-temp/vue-editor-bridge";
 export default {
   data() {
     return {
+      jumpPage: 1,
       contractData: {},
       addSeal: false,
       aft: false,
@@ -115,8 +128,8 @@ export default {
       pageIndex: 1,
       pageData: "",
       isShow: true,
-      ConfirmationData: {},
-      draggable: function() {}
+      draggable: function() {},
+      allDragger: {} //所有
     };
   },
   methods: {
@@ -138,6 +151,23 @@ export default {
         "/api/Management/Contract/Confirmation/" + this.score,
         res => {
           this.ConfirmationData = res.data.data;
+          var id = this.ConfirmationData.id + "";
+          var drag = this.allDragger[id];
+          if (drag) {
+            for (var i in this.allDragger) {
+              var div1 = document.getElementById("seal" + i);
+              if (div1 && this.allDragger[i]) {
+                this.allDragger[i].bind.call(div1);
+                this.allDragger[i].low();
+                drag.reset();
+              }
+            }
+
+            var div = document.getElementById("seal" + id);
+            drag.bind.call(div);
+            drag.setVisible(true);
+            drag.top();
+          }
         }
       );
     },
@@ -147,62 +177,35 @@ export default {
       this.add = false;
     },
     //添加处的下拉选中
-    dropDown() {
-      this.t1.bind(document.querySelector("#seal"));
-      this.imgData = ajax.doms(
-        "/api/Management/Contract/Confirmation/Seal?name=" +
-          this.form.confirmationName +
-          "&confirmationType=" +
-          this.form.confirmationTypeName +
-          "&contractId=" +
-          this.$route.query.data.id +
-          ""
-      );
-    },
+    dropDown() {},
     //编辑处的下拉选中
     dropD() {
-      //this.t1.bind(document.querySelector("#seal"));
-      this.imgData = ajax.doms(
-        "/api/Management/Contract/Confirmation/Seal?name=" +
-          this.ConfirmationData.confirmationName +
-          "&confirmationType=" +
-          this.ConfirmationData.confirmationType +
-          "&contractId=" +
-          this.$route.query.data.id +
-          ""
-      );
-
-      var div = document.createElement("div");
-      //动态生成图
-      var img = document.createElement("img");
-      var now = new Date();
-      var nowString =
-        "" +
-        now.getFullYear() +
-        now.getMonth() +
-        now.getDate() +
-        now.getHours() +
-        now.getMinutes() +
-        now.getSeconds() +
-        now.getMilliseconds();
-      div.id = "seal" + nowString + Math.floor(Math.random() * 100000);
-      div.className = "seal";
-      div.style.position="absolute"
-      div.style.top="0"
-      img.src = this.imgData;
-      div.appendChild(img);
-      this.$refs.main.appendChild(div);
-      var newDiv = document.querySelector(div.id);
-      this.draggable.call(div).bind.call(div);
+      var id = "" + this.ConfirmationData.id;
+      var drag = this.allDragger[id];
+      if (drag) {
+        debugger;
+        var item = this.ConfirmationData;
+        var url = ajax.doms(
+          "/api/Management/Contract/Confirmation/Seal?name=" +
+            item.confirmationName +
+            "&confirmationType=" +
+            item.confirmationType +
+            "&contractId=" +
+            this.$route.query.data.id +
+            ""
+        );
+        drag.setSrc(url);
+      }
     },
     // 添加提交
     submi() {
+      console.log(this.draggable);
       let data = {
         id: 0,
         contractId: this.$route.query.data.id,
         pageIndex: this.pageIndex,
-        pointX: this.t1.getWidth() / 749,
-        pointY: this.t1.getHeight() / 1123,
+        pointX: 0,
+        pointY: 0,
         confirmationName: this.form.confirmationName,
         confirmationType: this.form.confirmationTypeName
       };
@@ -211,27 +214,32 @@ export default {
         data,
         res => {
           this.getPage();
-          this.getConfirmation();
           this.$message({
             message: res.data.message,
             type: "success"
           });
+          this.addSeal = false;
           this.add = false;
-          this.form.confirmationType = this.form.confirmationType = "";
+          this.form.confirmationName = this.form.confirmationTypeName = "";
+
+          for (var i in this.allDragger) {
+            var drag = this.allDragger[i];
+            if (drag) {
+              drag.reset();
+            }
+          }
         }
       );
     },
     //编辑提交
     addSubmi() {
-      console.log(this.t1.getWidth() / 749, this.t1.getHeight() / 1123);
-      console.log(this.t1.getWidth(), this.t1.getHeight());
-      return;
+      var drag = this.allDragger[this.ConfirmationData.id + ""];
       let data = {
         id: this.score,
         contractId: this.$route.query.data.id,
         pageIndex: this.pageIndex,
-        pointX: this.t1.getWidth() / 749,
-        pointY: this.t1.getHeight() / 1123,
+        pointX: drag.getLeft() / 749,
+        pointY: drag.getTop() / 1123,
         confirmationName: this.ConfirmationData.confirmationName,
         confirmationType: this.ConfirmationData.confirmationType
       };
@@ -240,12 +248,43 @@ export default {
         data,
         res => {
           this.getPage();
-          this.getConfirmation();
           this.$message({
             message: res.data.message,
             type: "success"
           });
           this.addSeal = false;
+          this.add = false;
+
+          for (var i in this.allDragger) {
+            var drag = this.allDragger[i];
+            if (drag) {
+              drag.reset();
+            }
+          }
+        }
+      );
+    },
+    //编辑处的删除
+    delSubmi() {
+      ajax.authPost.bind(this)(
+        "/api/Management/Contract/Confirmation/Remove/" + this.score,
+        res => {
+          var d = this.allDragger[this.score + ""];
+          if (d) {
+            d.bind.call(document.getElementById("seal" + this.score));
+            d.setVisible(false);
+          }
+
+          this.getPage();
+          this.addSeal = false;
+          this.add = false;
+
+          for (var i in this.allDragger) {
+            var drag = this.allDragger[i];
+            if (drag) {
+              drag.reset();
+            }
+          }
         }
       );
     },
@@ -258,13 +297,10 @@ export default {
           this.pageIndex,
         res => {
           this.pageData = res.data.data;
-        }
-      );
-      //获取合同总页数
-      ajax.authGet.bind(this)(
-        "/api/Management/Contract/" + this.$route.query.data.id,
-        res => {
-          this.contractData = res.data.data;
+          this.score = "";
+          this.getConfirmation();
+          this.addSeal = false;
+          this.add = false;
         }
       );
     },
@@ -274,30 +310,123 @@ export default {
         "/api/Management/Contract/Confirmation?contractId=" +
           this.$route.query.data.id,
         res => {
-          this.confirmationData = res.data.data;
+          this.fillConfirmation(res.data.data);
         }
       );
     },
     //上一页
     previousPage() {
-      if (this.pageIndex > 1) {
-        this.pageIndex -= 1;
-        this.getPage();
-      }
+      this.jumpPage = Math.max(1 * this.pageIndex - 1, 1);
+      this.sureSearch();
     },
     //下一页
     nextPage() {
-      if (this.contractData.pageCount > this.pageIndex) {
-        this.pageIndex += 1;
-        this.getPage();
+      this.jumpPage = Math.min(
+        1 * this.pageIndex + 1,
+        this.contractData.pageCount
+      );
+      this.sureSearch();
+    },
+    //页码跳转
+    sureSearch() {
+      if (this.jumpPage < 1 || this.contractData.pageCount < this.jumpPage) {
+        return;
       }
+
+      this.pageIndex = this.jumpPage;
+      this.getPage();
+    },
+    // 自动放图片
+    fillConfirmation(datas) {
+      var array = [];
+      for (var i = 0; i < datas.length; i++) {
+        var item = datas[i];
+        if (item.pageIndex == this.pageIndex) {
+          array.push(item);
+        }
+        var id = item.id + "";
+        var drag = this.allDragger[id] || this.drawImage(item);
+        this.allDragger[id] = drag;
+        drag.bind.call(document.getElementById("seal" + id));
+        drag.setVisible(false);
+        drag.reset();
+      }
+      this.confirmationData = array;
+
+      for (var i = 0; i < array.length; i++) {
+        var drag =
+          this.allDragger[array[i].id + ""] || this.drawImage(array[i]);
+        this.allDragger[array[i].id + ""] = drag;
+        drag.bind.call(document.getElementById("seal" + array[i].id));
+        drag.setVisible(true);
+        drag.reset();
+      }
+    },
+    // 图片位置设置
+    drawImage(item) {
+      item = item || {};
+      var name = item.confirmationName;
+      var type = item.confirmationType;
+      if (!type) return;
+
+      var src = ajax.doms(
+        "/api/Management/Contract/Confirmation/Seal?name=" +
+          name +
+          "&confirmationType=" +
+          type +
+          "&contractId=" +
+          this.$route.query.data.id +
+          ""
+      );
+      var width = 749;
+      var height = 1123;
+      var imageInfo = {
+        id: item.id,
+        src: src,
+        left: item.pointX ? item.pointX * width : 0,
+        top: item.pointY ? item.pointY * height : 0
+      };
+      var drag = this.createImage(imageInfo);
+      return drag;
+    },
+    // 生成图片
+    createImage(item) {
+      item = item || {};
+      var id = item.id || 0;
+      var div = document.createElement("div");
+      //动态生成图
+      var img = document.createElement("img");
+      var now = new Date();
+      div.id = "seal" + id;
+      div.className = "seal";
+      div.style.position = "absolute";
+      //div.style.top = item.top || 0;
+      //div.style.left = item.left || 0;
+      img.src = item.src;
+      div.appendChild(img);
+      this.$refs.main.appendChild(div);
+      var newDiv = document.querySelector(div.id);
+      var drag = this.draggable.call(div);
+      drag.bind.call(div);
+      drag.setLeft(item.left || 0);
+      drag.setTop(item.top || 0);
+      drag.reset();
+      return drag;
+      //.bind.call(div);
     }
   },
   mounted() {
-    this.getConfirmation();
     this.getPage();
     this.messageData = this.$route.query.data;
     this.getCount(); //下拉，合同确认类型
+
+    //获取合同总页数
+    ajax.authGet.bind(this)(
+      "/api/Management/Contract/" + this.$route.query.data.id,
+      res => {
+        this.contractData = res.data.data;
+      }
+    );
 
     var draggable = (function() {
       var target = undefined;
@@ -311,8 +440,8 @@ export default {
 
       var onmousedown = function(e) {
         if (bindTarget != this.id) {
-          return;
           target = undefined;
+          return;
         }
 
         target = this;
@@ -356,6 +485,7 @@ export default {
       };
       return function() {
         if (!position[this.id]) {
+          console.log(this);
           this.onmousedown = onmousedown;
           this.onmouseup = onmouseup;
           position[this.id] = {
@@ -365,34 +495,65 @@ export default {
         }
 
         return {
-          getWidth: function() {
+          getLeft: function() {
             return position[this.id] ? position[this.id].width || 0 : 0;
           }.bind(this),
-          getHeight: function() {
+          getTop: function() {
             return position[this.id] ? position[this.id].height || 0 : 0;
           }.bind(this),
-          SetWidth: function(t) {
+          setLeft: function(t) {
             position[this.id] = position[this.id] || {};
             position[this.id].width = t;
-            target.style.left = width + "px";
+            if (bindTarget) {
+              document.getElementById(bindTarget).style.left = t + "px";
+            }
           }.bind(this),
-          SetHeight: function(t) {
+          setTop: function(t) {
             position[this.id] = position[this.id] || {};
             position[this.id].height = t;
-            target.style.tp = height + "px";
+            if (bindTarget) {
+              document.getElementById(bindTarget).style.top = t + "px";
+            }
           }.bind(this),
           bind: function() {
-            console.log(this);
+            // console.log(this);
             bindTarget = this.id;
+          }.bind(this),
+          top: function() {
+            if (bindTarget) {
+              document.getElementById(bindTarget).style.zIndex = 1002;
+            }
+          }.bind(this),
+          low: function() {
+            if (bindTarget) {
+              document.getElementById(bindTarget).style.zIndex = 1000;
+            }
           }.bind(this),
           reset: function() {
             bindTarget = undefined;
             target = undefined;
+          }.bind(this),
+          setVisible: function(b) {
+            if (bindTarget) {
+              document.getElementById(bindTarget).style.display = b
+                ? "block"
+                : "none";
+            }
+            //if(target)
+          }.bind(this),
+          setSrc: function(s) {
+            if (bindTarget) {
+              var img = document
+                .getElementById(bindTarget)
+                .querySelector("img");
+              img.src = s;
+            }
           }.bind(this)
         };
       };
     })();
     this.draggable = draggable;
+    // console.log(this.draggable)
     //this.t1 = draggable.call(document.querySelector("#seal"));
   }
 };
@@ -413,6 +574,11 @@ export default {
   display: flex;
   .Previous_page {
     padding-right: 20px;
+    .jump {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
   }
   .pian {
     .main {

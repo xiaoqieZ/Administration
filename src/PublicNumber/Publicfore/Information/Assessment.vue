@@ -59,6 +59,9 @@
       width="80%"
       center
     >
+      <!-- /deep/.el-button--primary {
+    width: 100%;
+      }-->
       <span>需要先实名认证才可以进行风险测评喔！</span>
       <span slot="footer" class="dialog-footer">
         <el-button @click="centerDialogVisible = false">取 消</el-button>
@@ -74,7 +77,7 @@ import storage from "../../../api/storage.js";
 export default {
   data() {
     return {
-      subm:true,
+      subm: true,
       values: 0,
       radio: "",
       getQuestlist: [],
@@ -161,10 +164,9 @@ export default {
           this.information = res.data.data;
           if (this.information.name == null) {
             this.centerDialogVisible = true;
-              this.subm=false      
+            this.subm = false;
           } else {
             this.getQuesttion();
-            
           }
         }
       });
@@ -175,9 +177,9 @@ export default {
           console.log(res);
           if (res.data.code == 200) {
             this.authentication = res.data.data;
-            if(this.authentication.riskLevelName == null){
+            if (this.authentication.riskLevelName == null) {
               this.values = 0;
-            }else{
+            } else {
               this.values = 1;
             }
           }
@@ -192,10 +194,10 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .modefy {
-  .radios {
-    padding: 0 10px;
+  padding: 0 10px;
+  .radios { 
     margin-top: 50px;
     .options {
       padding: 10px 0;
@@ -206,10 +208,10 @@ export default {
     }
     .button_submit {
       padding: 50px 0;
+      /deep/.el-button--primary {
+        width: 100%;
+      }
     }
-  }
-  /deep/.el-button--primary {
-    width: 100%;
   }
   .radiosplay {
     margin-top: 50px;
@@ -230,6 +232,9 @@ export default {
     .retest {
       color: red;
     }
+    /deep/.el-button--primary {
+        width: 100%;
+      }
   }
 }
 </style>

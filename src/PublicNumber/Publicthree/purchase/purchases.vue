@@ -28,10 +28,10 @@
         <!-- <p>{{contractData.contractMaterial.fullPath}}</p>
         <p>{{contractData.othersMaterial1.fullPath}}</p>-->
         <p>
-          <a :href="contractData" target="_blank">《【润达基金】基金合同》</a>
+          <a :href="contractData" target="_blank">《【{{productData.name}}】基金合同》</a>
         </p>
         <p>
-          <a :href="contractList" target="_blank">《润达基金_风险揭示书》</a>
+          <a :href="contractList" target="_blank">《{{productData.name}}_风险揭示书》</a>
         </p>
       </div>
     </div>
@@ -41,13 +41,13 @@
       <van-icon name="arrow" />
     </div>
     <div class="anniu">
-      <el-button type="primary" style="width:48%" @click="purchase" v-if="marketData.purchase==1">购买</el-button>
+      <el-button type="primary" style="width:48%" @click="purchase" v-if="marketData.purchase==1">购 买</el-button>
       <el-button
-        type="primary"
+        type="warning"
         style="width:48%"
         @click="cognizance = true"
         v-if="marketData.redeem==1"
-      >赎回</el-button>
+      >赎 回</el-button>
     </div>
     <el-dialog title="赎回" :visible.sync="cognizance" width="80%" center>
       <div>

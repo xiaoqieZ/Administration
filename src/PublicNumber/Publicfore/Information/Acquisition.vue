@@ -11,7 +11,7 @@
           :model="ruleForm"
           :rules="rules"
           ref="ruleForm"
-          label-width="100px"
+          label-width="85px"
           class="demo-ruleForm"
         >
           <el-form-item label="姓名" prop="name" v-if="inputdisabled">
@@ -87,7 +87,7 @@
         <div class="radios">
           <div class="radisFilial" v-for="(item,i) in listOption" :key="item.id">
             <p>
-              <span>{{item.id}}、</span>
+              <span>{{i+=1}}</span>
               {{item.title}}
             </p>
             <!-- <el-radio-group v-model="listOption[index].radio"> -->
@@ -101,7 +101,10 @@
             </el-radio-group>
           </div>
         </div>
-        <el-button type="primary" @click="submitForm('ruleForm')">提 交</el-button>
+        <div class="button_submit">
+          <el-button type="primary" @click="submitForm('ruleForm')">提 交</el-button>
+        </div>
+        
         <!-- <el-button @click="resetForm('ruleForm')">重置</el-button> -->
       </div>
       <div class="radiosplay" v-show="values==1">
@@ -128,7 +131,7 @@
       <span>需要先风险评测才可以选购基金产品喔！</span>
       <span slot="footer" class="dialog-footer">
         <el-button @click="centerDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dssy">去认证</el-button>
+        <el-button type="primary" @click="dssy">去评测</el-button>
       </span>
     </el-dialog>
   </div>
@@ -313,6 +316,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .Publicfore {
+  padding: 0 10px;
   /deep/.demo-ruleForm {
     margin-top: 50px;
   }
@@ -320,11 +324,16 @@ export default {
     width: 100%;
   }
   .radios {
-    padding: 0 10px;
     .radisFilial {
       padding-bottom: 10px;
     }
   }
+  .button_submit {
+      padding: 50px 0;
+      /deep/.el-button--primary {
+        width: 100%;
+      }
+    }
   .radiosplay {
     margin-top: 50px;
     .Congratulations {

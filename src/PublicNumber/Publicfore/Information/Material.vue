@@ -43,7 +43,9 @@
           </el-form-item>
         </el-form>
       </div>
-      <el-button type="primary" @click="audit">提交审核</el-button>
+       <div class="button_submit">
+         <el-button type="primary" @click="audit">提交审核</el-button>
+       </div>
     </div>
     <!-- 您的信息正在审核中 -->
     <div class="audit" v-show="inages==1">
@@ -67,7 +69,7 @@
       <span>需要先去信息采集才可以提交证明材料喔！</span>
       <span slot="footer" class="dialog-footer">
         <el-button @click="centerDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dssy">信息采集</el-button>
+        <el-button type="primary" @click="dssy">去采集</el-button>
       </span>
     </el-dialog>
   </div>
@@ -254,13 +256,19 @@ export default {
       }
     }
   }
+  // /deep/.el-button--primary {
+  //   width: 100%;
+  //   margin: 26px 0;
+  // }
   .information {
     padding-top: 30px;
   }
-  /deep/.el-button--primary {
-    width: 100%;
-    margin: 26px 0;
-  }
+  .button_submit {
+      padding: 50px 0;
+      /deep/.el-button--primary {
+        width: 100%;
+      }
+    }
 }
 .audit {
   margin-top: 50px;
