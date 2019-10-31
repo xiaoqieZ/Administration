@@ -17,7 +17,8 @@
         <span @click="more">更多</span>
       </div>
       <div class="hometnav">
-        <div class="hometswrip"  v-for="item in popularData" :key="item.productId">
+        <div class="hometReal" v-if="popularData.length==0">完成投资者认定后，才能为您匹配适合您的产品</div>
+        <div class="hometswrip" v-else v-for="item in popularData" :key="item.productId">
           <div class="homeopesion" @click="getInto(item)">
             <P class="title">{{item.name}}</P>
             <p>
@@ -31,6 +32,9 @@
           </div>
           <el-divider direction="vertical"></el-divider>
         </div>
+        <!-- <div class="hometswrip" v-else>
+          实名认证后，才能为您匹配适合您的产品
+        </div>-->
       </div>
       <div class="Information">
         <span>热门资讯</span>
@@ -64,9 +68,9 @@ export default {
       addspy: "", //sessionstorage保存下来的数据
       countData: [], //新闻数据
       activeName: "",
-      page:1,
-      num:2,
-      popularData:[],
+      page: 1,
+      num: 2,
+      popularData: []
     };
   },
   store,
@@ -97,17 +101,21 @@ export default {
       );
     },
     //获取热门产品
-    getPopular(){
-        let data = {
-            pageIndex:this.page,
-            pageSize:this.num,
+    getPopular() {
+      let data = {
+        pageIndex: this.page,
+        pageSize: this.num
+      };
+      ajax.authPost.bind(this)(
+        "/api/Information/Present/Product/Hot",
+        data,
+        res => {
+          this.popularData = res.data.data.list;
         }
-        ajax.authPost.bind(this)('/api/Information/Present/Product/Hot',data,res=>{
-            this.popularData = res.data.data.list
-        })
+      );
     },
     //进入产品信息页面
-    getInto(item){
+    getInto(item) {
       let data = item.productId;
       //   console.log(data)
       this.$router.push({ path: "/Publicthree/Purchases", query: { data } });
@@ -122,7 +130,7 @@ export default {
   created() {
     this.getlisttu();
     this.getCount();
-    this.getPopular()
+    this.getPopular();
   },
   components: {
     "tabbar-home": tebbarhome
@@ -199,6 +207,11 @@ export default {
             font-weight: 600;
           }
         }
+      }
+      .hometReal {
+        color: #c9cac3;
+        text-align: center;
+        line-height: 120px;
       }
     }
     .Information {

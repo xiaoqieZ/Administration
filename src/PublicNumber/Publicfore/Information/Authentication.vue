@@ -45,7 +45,7 @@
               <div v-if="getGun">
                 <van-count-down
                   ref="countDown"
-                  style="position: absolute;right:0;top:0"
+                  style="width: 98px;height: 40px;line-height: 40px;text-align: center;position: absolute;border: 1px solid #dcdfe6;top: 0;right: 0;"
                   :time="5000"
                   :auto-start="true"
                   format="ss"
@@ -271,7 +271,7 @@ export default {
       },
       url: "",
       active: 0, // 步骤条
-      radio: "", //单选框
+      radio: "1", //单选框
       nameForm: {
         //补充信息
         name: "", //真实姓名
@@ -390,7 +390,7 @@ export default {
           }
         });
       } else {
-        this.$message("您需要查看勾选协议");
+        this.$message("您需要查看勾选投资者类型");
       }
     },
     //进入完成页面前验证补充材料

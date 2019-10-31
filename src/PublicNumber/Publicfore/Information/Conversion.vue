@@ -205,6 +205,10 @@ export default {
           res => {
             this.centerDialogVisible = true;
             this.getInvestorType();
+            // this.$message({
+            //   message:res.data.message,
+            //   type:"success"
+            // });
           }
         );
       } else {
@@ -224,6 +228,7 @@ export default {
     //弹窗确认
     center() {
       this.centerDialogVisible = false;
+      this.$router.push({path:'/Publicfore'})
     }
   },
   mounted() {
@@ -296,10 +301,16 @@ export default {
           }
         }
       }
+      /deep/.el-radio-group{
+          display: inline-grid !important;
+          /deep/.el-radio{
+            padding-top: 10px;
+          }
+      }
     }
   }
   .conversion_button {
-    padding-top: 50px;
+    padding: 50px 0;
     text-align: center;
   }
 }

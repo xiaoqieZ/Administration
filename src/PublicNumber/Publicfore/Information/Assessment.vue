@@ -205,6 +205,12 @@ export default {
         white-space: normal;
         word-break: break-all;
       }
+      /deep/.el-radio-group{
+          display: inline-grid !important;
+          /deep/.el-radio{
+            padding-top: 10px;
+          }
+      }
     }
     .button_submit {
       padding: 50px 0;

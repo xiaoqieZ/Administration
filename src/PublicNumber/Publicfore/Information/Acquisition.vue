@@ -22,8 +22,8 @@
           </el-form-item>
           <el-form-item label="性别" prop="name">
             <el-radio-group v-model="radio">
-              <el-radio label="0">男</el-radio>
-              <el-radio label="1">女</el-radio>
+              <el-radio label="1">男</el-radio>
+              <el-radio label="0">女</el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item label="年龄" prop="age">
@@ -87,7 +87,7 @@
         <div class="radios">
           <div class="radisFilial" v-for="(item,i) in listOption" :key="item.id">
             <p>
-              <span>{{i+=1}}</span>
+              <span>{{i+1}}</span>
               {{item.title}}
             </p>
             <!-- <el-radio-group v-model="listOption[index].radio"> -->
@@ -104,7 +104,7 @@
         <div class="button_submit">
           <el-button type="primary" @click="submitForm('ruleForm')">提 交</el-button>
         </div>
-        
+
         <!-- <el-button @click="resetForm('ruleForm')">重置</el-button> -->
       </div>
       <div class="radiosplay" v-show="values==1">
@@ -157,7 +157,7 @@ export default {
         addressPit: "", // 地址
         landlinePit: "" // 座机
       },
-      radio: "", ////性别
+      radio: 1, ////性别
       values: 0, //信息采集页面跟提交页面的变量
       list: "2",
       inputName: false, //禁用输入框
@@ -208,7 +208,7 @@ export default {
     // 提交信息
     submitForm(formName, index) {
       //判断选择题是否全选
-      if (this.RadioList != "" && this.RadioList.length > 5) {
+      if (this.listOption.length==this.RadioList.length ) {
         //重置输入框
         this.$refs[formName].validate(valid => {
           if (valid) {
@@ -226,14 +226,11 @@ export default {
               "/api/Information/Account/Acquisition",
               data,
               res => {
-                console.log(res);
-                if (res.data.code == 200) {
                   this.authentication = res.data.data;
-                }
+                  this.$message("提交成功");
+                  this.values = 1;
               }
             );
-            this.$message("提交成功");
-            this.values = 1;
           } else {
             console.log("error submit!!");
             return false;
@@ -261,7 +258,6 @@ export default {
         itemId: index.id,
         optionId: [o.id]
       };
-      // console.log(this.RadioList)
     },
     //重置输入框
     // resetForm(formName) {
@@ -299,11 +295,10 @@ export default {
             //判断是否信息采集完成
           }
           if (this.authentication.investorTypeName == null) {
-              console.log(this.authentication.investorTypeName)
-              this.values = 0;
-            } else {
-              this.values = 1; //信息采集完成界面
-            }
+            this.values = 0;
+          } else {
+            this.values = 1; //信息采集完成界面
+          }
         }
       );
     }
@@ -329,11 +324,11 @@ export default {
     }
   }
   .button_submit {
-      padding: 50px 0;
-      /deep/.el-button--primary {
-        width: 100%;
-      }
+    padding: 50px 0;
+    /deep/.el-button--primary {
+      width: 100%;
     }
+  }
   .radiosplay {
     margin-top: 50px;
     .Congratulations {

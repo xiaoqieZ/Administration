@@ -231,7 +231,7 @@ export default {
     if (!openId) {
       openId = storage.get("openId");
     }
-    // openId = "oHnB5wBgy_FXh1ICjO0sV44DFO9k";
+    openId = "oHnB5wBgy_FXh1ICjO0sV44DFO9k";
     if (!openId) {
       var cHost = location.origin + "/#/Publicfore";
       ajax.get.bind(this)(

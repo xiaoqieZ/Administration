@@ -46,7 +46,7 @@
       </div>
     </div>
     <div class="kong" v-show="muj==1">
-      <div class="kgtitle">不实名的话不太想给你展示产品</div>
+      <div class="kgtitle">需要先完成投资者认定相关信息才可以选购基金产品喔！</div>
       <div class="img">
         <img src="../../../static/img/sgd.png" alt="表情包" />
       </div>
@@ -58,7 +58,7 @@
       width="80%"
       center
     >
-      <span>需要先完成实名认证相关信息才可以选购基金产品喔！</span>
+      <span>需要先完成投资者认定相关信息才可以选购基金产品喔！</span>
       <span slot="footer" class="dialog-footer">
         <el-button @click="centerDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="dssy">去认证</el-button>
