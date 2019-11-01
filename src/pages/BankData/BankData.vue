@@ -2,7 +2,7 @@
   <div id="app">
     <div slot="产品列表" style="font-size:16px;">产品列表</div>
     <div class="currenminput">
-      <div class="left">
+      <div class="addButton">
         <el-button type="primary" size="small" @click="Addproduct">添加产品</el-button>
       </div>
       <!-- 表格数据操作 -->
@@ -669,9 +669,9 @@ export default {
 };
 </script>
  
- <style lang="less" >
+ <style lang="less" scoped>
 .currenminput {
-  .left {
+  .addButton {
     padding: 10px 0;
   }
   .spanColor {

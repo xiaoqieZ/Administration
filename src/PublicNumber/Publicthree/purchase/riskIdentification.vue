@@ -233,37 +233,37 @@ export default {
     },
     //简介数据
     getbrief() {
-      this.encapsulation("/api/Management/Product/Product/", res => {
+      this.encapsulation("/api/Information/Present/Product/", res => {
         this.briefData = res.data.data;
       });
     },
     //风控信息
     getRisk() {
-      this.encapsulation("/api/Management/Product/Risk/", res => {
+      this.encapsulation("/api/Information/Present/Product/Risk/", res => {
         this.RiskData = res.data.data;
       });
     },
     //费用信息
     getCost() {
-      this.encapsulation("/api/Management/Product/Rate/", res => {
+      this.encapsulation("/api/Information/Present/Product/Rate/", res => {
         this.CostData = res.data.data;
       });
     },
     //投资信息
     getInvestment() {
-      this.encapsulation("/api/Management/Product/Investment/", res => {
+      this.encapsulation("/api/Information/Present/Product/Investment/", res => {
         this.InvestmentData = res.data.data;
       });
     },
     //经理信息
     getmanager() {
-      this.encapsulation("/api/Management/Product/Manager/", res => {
+      this.encapsulation("/api/Information/Present/Product/Manager/", res => {
         this.managerData = res.data.data;
       });
     },
     //机构信息
     getmechanism() {
-      this.encapsulation("api/Management/Product/Mechanism/", res => {
+      this.encapsulation("/api/Information/Present/Product/Mechanism/", res => {
         this.mechanismData = res.data.data;
       });
     }
@@ -280,7 +280,7 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .shopings {
   .xinxi {
     padding-top: 50px;
@@ -316,4 +316,42 @@ export default {
     }
   }
 }
+</style>
+<style lang="less" scoped>
+.shopings {
+  .xinxi {
+    padding-top: 50px;
+    /deep/.van-tabs__content {
+      padding: 0 10px;
+      .brief {
+        padding-top: 10px;
+        .brief_title {
+          height: 30px;
+          font-size: 17px;
+          line-height: 30px;
+          border-left: 5px solid #26a2ff;
+          font-weight: 600;
+        }
+        .brief_list {
+          height: 40px;
+          line-height: 40px;
+          border-bottom: 1px solid;
+          display: flex;
+          justify-content: space-between;
+        }
+        .fanwei {
+          padding-top: 10px;
+          .Range {
+            font-size: 17px;
+            padding: 2px;
+          }
+          .Range_p {
+            text-indent: 2em;
+          }
+        }
+      }
+    }
+  }
+}
+
 </style>

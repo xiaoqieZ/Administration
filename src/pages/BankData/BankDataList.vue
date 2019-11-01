@@ -455,8 +455,8 @@
           </div>
         </div>
       </el-tab-pane>
-      <!-- 报表管理 -->
-      <el-tab-pane v-if="edit" name="second" label="报表管理">
+      <!-- 报告管理 -->
+      <el-tab-pane v-if="edit" name="second" label="报告管理">
         <el-button type="primary" @click="delNetReport">删除</el-button>
         <el-button type="primary" @click="downloadReport">下载</el-button>
         <el-button type="primary" @click="clickAddReport">添加</el-button>
@@ -466,7 +466,7 @@
               <el-select v-model="formLabelAlign.reportType" placeholder="请选择报告类型">
                 <el-option
                   :label="item.text"
-                  :value="item.value"
+                  :value="Number(item.value)"
                   v-for="item in categoryData"
                   :key="item.value"
                 ></el-option>
@@ -546,7 +546,6 @@
                 v-if="scope.row.status==1"
                 @click="clickRelease(scope.$index, scope.row)"
               >发布</span>
-              <span v-if="scope.row.status!=1">发布</span>
               <span
                 class="spanColor"
                 v-if="scope.row.status!=1"
@@ -598,7 +597,7 @@
               <el-select v-model="formLabelAlign.noticeTypeName" placeholder="请选择报告类型">
                 <el-option
                   :label="item.text"
-                  :value="item.value"
+                  :value="Number(item.value)"
                   v-for="item in NoticeData"
                   :key="item.value"
                 ></el-option>
@@ -662,7 +661,6 @@
                 v-if="scope.row.status==1"
                 @click="clickReleaseNotice(scope.$index, scope.row)"
               >发布</span>
-              <span v-if="scope.row.status!=1">发布</span>
               <span
                 class="spanColor"
                 v-if="scope.row.status!=1"
@@ -1406,16 +1404,16 @@ export default {
       ccc: "",
       ddd: "",
       eee: "",
-      urlOne:'',
-      urlTow:'',
-      urlThree:'',
-      urlFour:'',
-      urlFive:'',
+      urlOne: "",
+      urlTow: "",
+      urlThree: "",
+      urlFour: "",
+      urlFive: ""
     };
   },
   methods: {
     go() {
-      this.$router.push({path:"/NavBar/DataDitionary/BankData"})
+      this.$router.push({ path: "/NavBar/DataDitionary/BankData" });
     },
     //移除文件钩子
     handleRemove(file, fileList) {
@@ -1718,16 +1716,46 @@ export default {
       ajax.authGet.bind(this)(
         "/api/Management/Product/Market/Contract/" + this.queryId,
         res => {
-          this.aaa = res.data.data.contractMaterial && res.data.data.contractMaterial.fileName;
-          this.urlOne=res.data.data.contractMaterial.fullPath;
-          this.bbb = res.data.data.riskDisclosureMaterial && res.data.data.riskDisclosureMaterial.fileName;
-          this.urlTow=res.data.data.riskDisclosureMaterial.fullPath;
-          this.ccc = res.data.data.othersMaterial1 && res.data.data.othersMaterial1.fileName;
-          this.urlThree=res.data.data.othersMaterial1.fullPath;
-          this.ddd = res.data.data.othersMaterial2 && res.data.data.othersMaterial2.fileName;
-          this.urlFour=res.data.data.othersMaterial2.fullPath;
-          this.eee = res.data.data.othersMaterial3 && res.data.data.othersMaterial3.fileName;
-          this.urlFive=res.data.data.othersMaterial3.fullPath;
+          this.aaa =
+            res.data.data.contractMaterial &&
+            res.data.data.contractMaterial.fileName;
+            this.contractMaterialId =res.data.data.contractMaterial &&
+            res.data.data.contractMaterial.id;
+          this.urlOne =
+            res.data.data.contractMaterial &&
+            res.data.data.contractMaterial.fullPath;
+          this.bbb =
+            res.data.data.riskDisclosureMaterial &&
+            res.data.data.riskDisclosureMaterial.fileName;
+             this.riskDisclosureMaterialId =res.data.data.riskDisclosureMaterial &&
+            res.data.data.riskDisclosureMaterial.id;
+          this.urlTow =
+            res.data.data.riskDisclosureMaterial &&
+            res.data.data.riskDisclosureMaterial.fullPath;
+          this.ccc =
+            res.data.data.othersMaterial1 &&
+            res.data.data.othersMaterial1.fileName;
+             this.othersMaterialId1 =res.data.data.othersMaterial1 &&
+            res.data.data.othersMaterial1.id;
+          this.urlThree =
+            res.data.data.othersMaterial1 &&
+            res.data.data.othersMaterial1.fullPath;
+          this.ddd =
+            res.data.data.othersMaterial2 &&
+            res.data.data.othersMaterial2.fileName;
+            this.othersMaterialId2 =res.data.data.othersMaterial2 &&
+            res.data.data.othersMaterial2.id;
+          this.urlFour =
+            res.data.data.othersMaterial2 &&
+            res.data.data.othersMaterial2.fullPath;
+          this.eee =
+            res.data.data.othersMaterial3 &&
+            res.data.data.othersMaterial3.fileName;
+            this.othersMaterialId3 =res.data.data.othersMaterial3 &&
+            res.data.data.othersMaterial3.id;
+          this.urlFive =
+            res.data.data.othersMaterial3 &&
+            res.data.data.othersMaterial3.fullPath;
         }
       );
     },
@@ -1887,7 +1915,7 @@ export default {
     holdPositions(i, row) {
       let data = {
         productId: this.queryId,
-        userId: row.userId,
+        userId: row.userId
       };
       this.$router.push({
         path: "/NavBar/DataDitionary/PositionManagement",
@@ -2350,7 +2378,7 @@ export default {
 };
 </script>
 
-<style lang="less" >
+<style lang="less" scoped>
 .data_title {
   .retrue_eter {
     height: 56px;
@@ -2457,16 +2485,15 @@ export default {
       text-align: center;
     }
   }
-  @media screen and (min-width: 1620px) { 
-      .AddList {
-        height: 660px;
-      }
+  @media screen and (min-width: 1620px) {
+    .AddList {
+      height: 660px;
+    }
   }
-  @media screen and (max-width: 1620px) { 
-      .AddList {
-        height: 530px;
-      }
+  @media screen and (max-width: 1620px) {
+    .AddList {
+      height: 530px;
+    }
   }
 }
- 
 </style>

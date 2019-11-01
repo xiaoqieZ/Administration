@@ -1,7 +1,6 @@
  <template>
   <div id="app">
     <div slot="投资者份额" style="font-size:16px;">投资者份额</div>
-    <vue-scroll>
       <div class="currenminput">
         <div class="left">
           <el-select v-model="nameForm.customerType">
@@ -38,18 +37,18 @@
         <!-- 勾选框 -->
         <el-table-column type="selection" width="55"></el-table-column>
         <!-- 索引 -->
-        <el-table-column align="center" type="index" prop="data" label="序号" width="100"></el-table-column>
-        <el-table-column align="center" prop="data" label="姓名/机构名称" width="180">
+        <el-table-column align="center" type="index" prop="data" label="序号"></el-table-column>
+        <el-table-column align="center" prop="data" label="姓名/机构名称">
           <template slot-scope="scope">
             <span>{{scope.row.created_at}}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="data" label="客户类型" width="180">
+        <el-table-column align="center" prop="data" label="客户类型">
           <template slot-scope="scope">
             <span>{{scope.row.title}}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="data" label="风险等级" width="180">
+        <el-table-column align="center" prop="data" label="风险等级">
           <template slot-scope="scope">
             <span>{{scope.row.title}}</span>
           </template>
@@ -64,7 +63,7 @@
             <span>{{scope.row.content}}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" width="280" label="持仓份额"></el-table-column>
+        <el-table-column align="center" label="持仓份额"></el-table-column>
       </el-table>
 
       <!-- 页码 -->
@@ -79,7 +78,6 @@
           :total="totalCount.count"
         ></el-pagination>
       </div>
-    </vue-scroll>
   </div>
 </template>
 
@@ -168,12 +166,9 @@ export default {
 };
 </script>
  
- <style lang="less">
+ <style lang="less" scoped>
 .currenminput {
-  height: auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  padding-top: 10px;
   .el-input {
     width: 220px;
   }

@@ -32,27 +32,43 @@
           </div>
           <el-divider direction="vertical"></el-divider>
         </div>
-        <!-- <div class="hometswrip" v-else>
-          实名认证后，才能为您匹配适合您的产品
-        </div>-->
       </div>
       <div class="Information">
         <span>热门资讯</span>
         <span @click="ition">更多</span>
       </div>
-    </div>
-    <div class="cesname">
-      <div class="count_list" v-for="item in countData" :key="item.id" v-if="item.isHotSpot==1">
-        <van-collapse v-model="activeName" accordion>
-          <van-collapse-item :title="item.title" :name="item.id">{{item.content}}</van-collapse-item>
-        </van-collapse>
-        <div class="count_img">
-          <a :href="item.link">
-            <img :src="item.filePath" alt />
-          </a>
+      <div class="cesname">
+        <div class="count_list" v-for="item in countData" :key="item.id" v-if="item.isHotSpot==1">
+          <van-collapse v-model="activeName" accordion>
+            <van-collapse-item :title="item.title" :name="item.id">{{item.content}}</van-collapse-item>
+          </van-collapse>
+          <div class="count_img">
+            <a :href="item.link">
+              <img :src="item.filePath" alt />
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="hometlist">
+        <div class="Information">
+          <span>披露</span>
+          <span @click="disclosureClick">更多</span>
+        </div>
+        <div class="cesname">
+          <div class="count_list" v-for="items in disclosureData" :key="items.id+items.messageType">
+            <div class="disclosure" @click="disclosureClickId(items)">
+              <van-notice-bar :scrollable="false">
+                <span>{{items.messageTypeName}}：</span>&nbsp;
+                <span>{{items.date}}</span>&nbsp;
+                <span>{{items.title}}</span>
+              </van-notice-bar>
+              <el-divider direction="vertical"></el-divider>
+            </div>
+          </div>
         </div>
       </div>
     </div>
+
     <tabbar-home></tabbar-home>
   </div>
 </template>
@@ -70,7 +86,8 @@ export default {
       activeName: "",
       page: 1,
       num: 2,
-      popularData: []
+      popularData: [],
+      disclosureData: []
     };
   },
   store,
@@ -122,9 +139,29 @@ export default {
     },
     //获取新闻资讯
     getCount() {
-      ajax.authGet.bind(this)("/api/Information/Present/News/2", res => {
+      ajax.authGet.bind(this)("/api/Information/Present/News/1", res => {
         this.countData = res.data.data;
       });
+      //信息披露
+      let data = {
+        pageIndex: 1,
+        pageSize: 5
+      };
+      ajax.authPost.bind(this)(
+        "/api/Information/Present/ProductMessage",
+        data,
+        res => {
+          this.disclosureData = res.data.data.list;
+        }
+      );
+    },
+    //披露
+    disclosureClick() {
+      this.$router.push({ path: "/Disclosure" });
+    },
+    disclosureClickId(row) {
+      let list = { id: row.id, messageType: row.messageType };
+      this.$router.push({ path: "/Disclosure", query: { list } });
     }
   },
   created() {
@@ -144,9 +181,9 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .home-page {
-  padding-top: 40px;
+  padding: 40px 0 90px 0;
   background: #dde1e6;
   .el-carousel__item h3 {
     color: #475669;
@@ -224,17 +261,21 @@ export default {
       align-items: center;
       justify-content: space-between;
     }
-  }
-  .cesname {
-    padding: 0 10px 60px 10px;
-    .count_list {
-      border-bottom: 2px solid;
-      .count_img {
-        width: 100%;
-        height: 160px;
-        img {
+    .cesname {
+      padding: 10px;
+      border-bottom: 1px solid;
+      .count_list {
+        .count_img {
           width: 100%;
-          height: 100%;
+          height: 160px;
+          img {
+            width: 100%;
+            height: 100%;
+          }
+        }
+        .disclosure {
+          width: 100%;
+          height: 44px;
         }
       }
     }

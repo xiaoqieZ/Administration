@@ -83,15 +83,15 @@
                 <span class="mr-right-18">·</span>
                 投资者份额
               </el-menu-item>
-              <el-menu-item index="/NavBar/CParameter/CCCtallocation">
+              <el-menu-item disabled index="/NavBar/CParameter/CCCtallocation">
                 <span class="mr-right-18">·</span>
                 投资者导入
               </el-menu-item>
-              <el-menu-item index="/NavBar/CParameter/CCCCtallocation">
+              <el-menu-item disabled index="/NavBar/CParameter/CCCCtallocation">
                 <span class="mr-right-18">·</span>
                 理财顾问
               </el-menu-item>
-              <el-menu-item index="/NavBar/CParameter/CCCCCtallocation">
+              <el-menu-item disabled index="/NavBar/CParameter/CCCCCtallocation">
                 <span class="mr-right-18">·</span>
                 智能自查
               </el-menu-item>
@@ -119,13 +119,13 @@
                 <span class="mr-right-18">.</span>
                 产品列表
               </el-menu-item>
-              <el-menu-item index="/NavBar/DataDitionary/BbankData">
+              <el-menu-item disabled index="/NavBar/DataDitionary/BbankData">
                 <span class="mr-right-18">.</span>
                 日历提醒
               </el-menu-item>
             </div>
           </el-submenu>
-
+ 
           <!-- 业务相关 -->
           <div class="grou-title" onselectstart="return false;">{{ isShow ? '业务':'业务相关' }}</div>
 
@@ -152,7 +152,7 @@
                 <span class="mr-right-18">·</span>
                 基金合同
               </el-menu-item>
-              <el-menu-item index="/NavBar/UserManage/UserRecord">
+              <el-menu-item disabled index="/NavBar/UserManage/UserRecord">
                 <span class="mr-right-18">·</span>
                 公文文件
               </el-menu-item>
@@ -180,7 +180,7 @@
               ></i>
             </template>
             <div v-show="!isShow">
-              <el-menu-item index="/NavBar/MemberManage/Aparameters">
+              <el-menu-item disabled index="/NavBar/MemberManage/Aparameters">
                 <span class="mr-right-18">·</span>
                 下载中心
               </el-menu-item>
@@ -204,15 +204,15 @@
               ></i>
             </template>
             <div v-show="!isShow">
-              <el-menu-item index="/NavBar/Pushmessages/Pushmessage">
+              <el-menu-item disabled index="/NavBar/Pushmessages/Pushmessage">
                 <span class="mr-right-18">·</span>
                 发送信息
               </el-menu-item>
-              <el-menu-item index="/NavBar/Pushmessages/Pushmessagetow">
+              <el-menu-item disabled index="/NavBar/Pushmessages/Pushmessagetow">
                 <span class="mr-right-18">·</span>
                 接收信息
               </el-menu-item>
-              <el-menu-item index="/NavBar/Pushmessages/Pushmessagethree">
+              <el-menu-item disabled index="/NavBar/Pushmessages/Pushmessagethree">
                 <span class="mr-right-18">·</span>
                 模板信息
               </el-menu-item>
@@ -240,7 +240,7 @@
                 <span class="mr-right-18">·</span>
                 页面设置
               </el-menu-item>
-              <el-menu-item index="/NavBar/Managements/Managementtow">
+              <el-menu-item disabled index="/NavBar/Managements/Managementtow">
                 <span class="mr-right-18">·</span>
                 投资者统计
               </el-menu-item>
@@ -252,15 +252,15 @@
                 <span class="mr-right-18">·</span>
                 权限管理
               </el-menu-item>
-              <el-menu-item index="/NavBar/Managements/Managementfive">
+              <el-menu-item disabled index="/NavBar/Managements/Managementfive">
                 <span class="mr-right-18">·</span>
                 使用统计
               </el-menu-item>
-              <el-menu-item index="/NavBar/Managements/Managementsix">
+              <el-menu-item disabled index="/NavBar/Managements/Managementsix">
                 <span class="mr-right-18">·</span>
                 同步设置
               </el-menu-item>
-              <el-menu-item index="/NavBar/Managements/Managementseven">
+              <el-menu-item disabled index="/NavBar/Managements/Managementseven">
                 <span class="mr-right-18">·</span>
                 认证管理
               </el-menu-item>
@@ -716,6 +716,16 @@ export default {
 }
 /deep/.el-menu{
   height: 88%;
+}
+@media screen and (min-width: 1920) {
+    /deep/.el-menu{
+  height: 88%;
+}
+}
+@media screen and (max-width: 1600) {
+    /deep/.el-menu{
+  height: 75%;
+}
 }
 </style>
 

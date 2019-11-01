@@ -8,7 +8,7 @@
           <div class="jurdic-bor">
             <div class="jurdic-zuh">
               <span>角色列表</span>
-              <span style="font-size:14px">(1代表管理员，0代表普通用户)</span>
+              <span style="font-size:14px">(<Icon type="ios-person-add" size="18" />管理员)</span>
               <el-input
                 placeholder="请输入角色名称查找"
                 prefix-icon="el-icon-search"
@@ -31,7 +31,8 @@
                     @click.stop="edit($event,item)"
                     size="20"
                   />
-                  <span style="float:right;line-height: 30px;">{{item.isAdmin}}</span>
+                  <Icon type="ios-person-add" style="float:right;line-height: 30px;" size="18" v-if="item.isAdmin==1"/>
+                  <!-- <span style="float:right;line-height: 30px;">{{item.isAdmin}}</span> -->
                   <!-- 确认删除 -->
                   <el-dialog
                     title="提示"

@@ -21,7 +21,10 @@
           <p>{{information.certificateTypeName}}</p>
           <span>{{information.certificateNo}}</span>
         </div>
-        <div class="confirm_list" v-if="confirmData.mechanismCertificateNo=confirmData.mechanismCertificateNo">
+        <div
+          class="confirm_list"
+          v-if="confirmData.mechanismCertificateNo=confirmData.mechanismCertificateNo"
+        >
           <p>机构证件号</p>
           <span>{{confirmData.mechanismCertificateNo}}</span>
         </div>
@@ -57,35 +60,35 @@
           <el-form-item label="账户名称">
             <el-input v-model="name"></el-input>
           </el-form-item>
-          <el-form-item  label="缴款账号">
-          <el-input v-model="account"></el-input>
+          <el-form-item label="缴款账号">
+            <el-input v-model="account"></el-input>
           </el-form-item>
-          <el-form-item  label="开户行信息">
-          <el-input v-model="bank"></el-input>
+          <el-form-item label="开户行信息">
+            <el-input v-model="bank"></el-input>
           </el-form-item>
-          <el-form-item  label="缴款证明">
-          <el-upload
-            class="upload-demo"
-            ref="upload"
-            :action="action"
-            :on-success="uploadPayment"
-            :file-list="fileList"
-            :headers="access_token"
-          >
-            <el-button size="small" type="primary">上传</el-button>
-          </el-upload>
+          <el-form-item label="缴款证明">
+            <el-upload
+              class="upload-demo"
+              ref="upload"
+              :action="action"
+              :on-success="uploadPayment"
+              :file-list="fileList"
+              :headers="access_token"
+            >
+              <el-button size="small" type="primary">上传</el-button>
+            </el-upload>
           </el-form-item>
-          <el-form-item  label="银行卡照">
-          <el-upload
-            class="upload-demo"
-            ref="upload"
-            :action="action"
-            :on-success="uploadBankcard"
-            :file-list="fileList"
-            :headers="access_token"
-          >
-            <el-button size="small" type="primary">上传</el-button>
-          </el-upload>
+          <el-form-item label="银行卡照">
+            <el-upload
+              class="upload-demo"
+              ref="upload"
+              :action="action"
+              :on-success="uploadBankcard"
+              :file-list="fileList"
+              :headers="access_token"
+            >
+              <el-button size="small" type="primary">上传</el-button>
+            </el-upload>
           </el-form-item>
         </el-form>
       </div>
@@ -100,40 +103,40 @@
           <p>短信验证码</p>
           <div class="confirm_button">
             <el-input v-model="Code"></el-input>
-            <div style="position: relative;" v-if="getswithy">
-            <van-count-down
-              ref="countDown"
-              style="position: absolute;"
-              :time="5000"
-              :auto-start="false"
-              format="ss"
-              @finish="finished"
-            />
-            <el-button @click="getShort" class="buttom_huo" v-if="getHide">获取验证码</el-button>
-          </div>
-          <div style="position: relative;" v-if="getGun">
-            <van-count-down
-              ref="countDown"
-              style="position: absolute;"
-              :time="5000"
-              :auto-start="true"
-              format="ss"
-              @finish="finished"
-            />
-            <el-button @click="reset" class="buttom_huo" v-if="getagain">重新获取</el-button>
-          </div>
+            <div style="position: relative;width: 100%;" v-if="getswithy">
+              <van-count-down
+                ref="countDown"
+                style="width: 98px;height: 40px;line-height: 40px;text-align: center;position: absolute;border: 1px solid #dcdfe6;top: -57;right: 0;"
+                :time="5000"
+                :auto-start="false"
+                format="ss"
+                @finish="finished"
+              />
+              <el-button @click="getShort" class="buttom_huo" v-if="getHide">获取验证码</el-button>
+            </div>
+            <div style="position: relative;width: 100%;" v-if="getGun">
+              <van-count-down
+                ref="countDown"
+                style="width: 98px;height: 40px;line-height: 40px;text-align: center;position: absolute;border: 1px solid #dcdfe6;top: -57;right: 0;"
+                :time="5000"
+                :auto-start="true"
+                format="ss"
+                @finish="finished"
+              />
+              <el-button @click="reset" class="buttom_huo" v-if="getagain">重新获取</el-button>
+            </div>
           </div>
         </div>
       </div>
       <div class="buttom">
-        <el-button type="primary" @click="submit">确认</el-button>
+        <el-button type="primary" @click="submit">确 认</el-button>
       </div>
     </div>
-    <div class="apply " v-if="fill">
-        <div class="successfully">
-            <p>都买申请提交成功</p>
-        </div>
-        <el-button type="primary" @click="complete">完成</el-button>
+    <div class="apply" v-if="fill">
+      <div class="successfully">
+        <p>购买申请提交成功</p>
+      </div>
+      <el-button type="primary" @click="complete">完成</el-button>
     </div>
   </div>
 </template>
@@ -143,8 +146,8 @@ import storage from "../../../api/storage.js";
 export default {
   data() {
     return {
-        list:true,//申购资料填写页面
-        fill:false,//申购成功页面
+      list: true, //申购资料填写页面
+      fill: false, //申购成功页面
       id: "", //产品Id
       name: "", //账户名称
       account: "", //缴款账号
@@ -163,14 +166,14 @@ export default {
       ),
       ReportId: "", //缴款文件id
       BankcardId: "", //银行卡id
-      confirmationMaterialId: '', //申购确认书
-      riskLevelName:{},
-      information:{},
-      whether:"",
+      confirmationMaterialId: "", //申购确认书
+      riskLevelName: {},
+      information: {},
+      whether: "",
       getswithy: true, //进入页面时，获取验证码功能
       getGun: false, //进入页面时，重亲获取功能隐藏
       getHide: true, //获取验证码按钮
-      getagain: false, //重新获取验证码按钮
+      getagain: false //重新获取验证码按钮
     };
   },
   methods: {
@@ -212,19 +215,25 @@ export default {
     },
     //获取用户可承受的风险等级
     getStorage() {
-      ajax.authGet.bind(this)("/api/Information/Account/Authentication",res=>{
-        this.risk = res.data.data;
-      });
+      ajax.authGet.bind(this)(
+        "/api/Information/Account/Authentication",
+        res => {
+          this.risk = res.data.data;
+        }
+      );
       //获取产品的风险等级
-      ajax.authGet.bind(this)("/api/Management/Product/Risk/"+this.$route.query.data,res=>{
-        this.riskLevelName = res.data.data;
-      });
-       //展示已认证的用户信息
+      ajax.authGet.bind(this)(
+        "/api/Information/Present/Product/Risk/" + this.$route.query.data,
+        res => {
+          this.riskLevelName = res.data.data;
+        }
+      );
+      //展示已认证的用户信息
       ajax.authGet.bind(this)("/api/Information/Account/GetByOpenId", res => {
-          this.information = res.data.data; 
+        this.information = res.data.data;
       });
       ajax.authGet.bind(this)("/api/Permission/IsQualified", res => {
-          this.whether = res.data.data; 
+        this.whether = res.data.data;
       });
     },
     //缴款证明
@@ -246,20 +255,20 @@ export default {
         paymentMaterialId: this.ReportId,
         bankCardMaterialId: this.BankcardId,
         confirmationMaterialId: this.confirmationMaterialId,
-        captcha:this.Code
+        captcha: this.Code
       };
       ajax.authPost.bind(this)(
         "/api/Information/Present/Product/Apply",
         data,
         res => {
-            this.fill=true
-            this.list=false
+          this.fill = true;
+          this.list = false;
         }
       );
     },
     //完成
-    complete(){
-        this.$router.push({path:'/Publicthree'})
+    complete() {
+      this.$router.push({ path: "/Publicthree" });
     }
   },
   mounted() {
@@ -269,7 +278,7 @@ export default {
   }
 };
 </script>
-<style lang="less">
+<style lang="less" scoped>
 .confirmation {
   padding-top: 50px;
   .confirm {
@@ -306,21 +315,21 @@ export default {
     }
   }
 }
-.buttom{
-          text-align: center;
-    padding-top: 53px;
-    /deep/.el-button--primary{
-        width: 100%;
-    }
+.buttom {
+  text-align: center;
+  padding: 50px 0;
+  /deep/.el-button--primary {
+    width: 100%;
   }
-.apply{
-      text-align: center;
-    .successfully{
-        width: 100%;
-      height: 400px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+}
+.apply {
+  text-align: center;
+  .successfully {
+    width: 100%;
+    height: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
-  }
+}
 </style>

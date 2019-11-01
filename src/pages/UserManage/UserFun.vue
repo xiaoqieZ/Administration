@@ -290,7 +290,7 @@ export default {
       }
       .dialog_count {
         /deep/.el-icon-arrow-up {
-          height: 125%;
+          height: 118%;
         }
         /deep/.el-select {
           display: contents;

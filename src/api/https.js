@@ -127,7 +127,7 @@ function authPostForm(url, data, then, cat) {
         if (!cat) {
             cat = res => {};
         }
-        url=stringfy(data);
+        url=stringfy(url,data);
 
         if (token) {
             return this.$axios({

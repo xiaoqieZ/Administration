@@ -519,16 +519,13 @@ export default {
  
  <style lang="less" scoped>
 .currenminput {
-  height: auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  padding-top: 10px;
   .el-input {
     width: 220px;
   }
-
   /deep/.el-input__icon {
     width: 100%;
+    height: 75%;
   }
   /deep/.el-button {
     height: 75%;

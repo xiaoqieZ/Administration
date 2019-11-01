@@ -255,7 +255,7 @@ export default {
 .Risk_heck {
   .Risk_count {
     padding-top: 10px;
-    /deep/.el-icon-arrow-up {
+    /deep/.el-input__icon {
       height: 75%;
     }
   }

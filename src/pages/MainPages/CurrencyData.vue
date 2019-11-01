@@ -377,12 +377,9 @@ export default {
 };
 </script>
  
- <style lang="less" >
+ <style lang="less" scoped>
 .currenminput {
-  height: auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  padding-top: 10px;
   .left {
     /deep/.el-input__suffix {
       height: 70%;

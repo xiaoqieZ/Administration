@@ -23,15 +23,22 @@
     </div>
     <P style="height:10px;background:#d4d2d2;"></P>
     <div class="funds">
-      <span>基金合同</span>
-      <div>
-        <!-- <p>{{contractData.contractMaterial.fullPath}}</p>
-        <p>{{contractData.othersMaterial1.fullPath}}</p>-->
-        <p>
-          <a :href="contractData" target="_blank">《【{{productData.name}}】基金合同》</a>
+      <div style="padding-top: 10px;">基金合同</div>
+      <div class="funds_p">
+        <p v-if="contractData!=null">
+          <a :href="contractData" target="_blank">《【{{contractfileName}}】》</a>
         </p>
-        <p>
-          <a :href="contractList" target="_blank">《{{productData.name}}_风险揭示书》</a>
+        <p v-if="contractList!=null">
+          <a :href="contractList" target="_blank">《{{contractListfileName}}》</a>
+        </p>
+        <p v-if="contractData1!=null">
+          <a :href="contractData1" target="_blank">《{{contractfileName1}}》</a>
+        </p>
+        <p v-if="contractList2!=null">
+          <a :href="contractList2" target="_blank">《{{contractListfileName2}}》</a>
+        </p>
+        <p v-if="contractList3!=null">
+          <a :href="contractList3" target="_blank">《{{contractListfileName3}}》</a>
         </p>
       </div>
     </div>
@@ -40,8 +47,25 @@
       <span>基金档案</span>
       <van-icon name="arrow" />
     </div>
+    <div class="cesname">
+          <div class="count_list" v-for="items in disclosureData" :key="items.id+items.messageType">
+            <div class="disclosure" @click="disclosureClickId(items)">
+              <van-notice-bar :scrollable="false">
+                <span>{{items.messageTypeName}}：</span>&nbsp;
+                <span>{{items.date}}</span>&nbsp;
+                <span>{{items.title}}</span>
+              </van-notice-bar>
+              <el-divider direction="vertical"></el-divider>
+            </div>
+          </div>
+        </div>
     <div class="anniu">
-      <el-button type="primary" style="width:48%" @click="purchase" v-if="marketData.purchase==1">购 买</el-button>
+      <el-button
+        type="primary"
+        style="width:48%"
+        @click="purchase"
+        v-if="marketData.purchase==1"
+      >购 买</el-button>
       <el-button
         type="warning"
         style="width:48%"
@@ -100,6 +124,9 @@ export default {
       docuId: "",
       contractData: "",
       contractList: "",
+      contractData1: "",
+      contractList2: "",
+      contractList3: "",
       form: {
         edeemCount: "",
         Verification: ""
@@ -111,9 +138,19 @@ export default {
       getagain: false, //重新获取验证码按钮
       getHide: true, //获取验证码按钮
       rules: {
-        edeemCount: [{ required: true, message: "请输入赎回数量", trigger: "blur" }],
-        Verification: [{ required: true, message: "请输入验证码", trigger: "blur" }]
-      }
+        edeemCount: [
+          { required: true, message: "请输入赎回数量", trigger: "blur" }
+        ],
+        Verification: [
+          { required: true, message: "请输入验证码", trigger: "blur" }
+        ]
+      },
+      contractfileName: "",
+      contractListfileName: "",
+      contractfileName1: "",
+      contractListfileName2: "",
+      contractListfileName3: "",
+      disclosureData:[]
     };
   },
   methods: {
@@ -135,6 +172,23 @@ export default {
           this.marketData = res.data.data;
         }
       );
+      //信息披露
+      let data = {
+        pageIndex: 1,
+        pageSize: 5
+      };
+      ajax.authPost.bind(this)(
+        "/api/Information/Present/ProductMessage",
+        data,
+        res => {
+          this.disclosureData = res.data.data.list;
+        }
+      );
+    },
+    //披露
+    disclosureClickId(row) {
+      let list = { id: row.id, messageType: row.messageType };
+      this.$router.push({ path: "/Disclosure", query: { list } });
     },
     //投资范围
     getRange() {
@@ -164,14 +218,64 @@ export default {
     //获取合同
     getContract() {
       ajax.authGet.bind(this)(
-        "/api/Management/Product/Market/Contract/" + this.$route.query.data,
+        "/api/Information/Present/Product/Contract/" + this.$route.query.data,
         res => {
           this.contractData =
             res.data.data.contractMaterial &&
             res.data.data.contractMaterial.fullPath;
+          this.contractfileName =
+            res.data.data.contractMaterial &&
+            res.data.data.contractMaterial.fileName;
           this.contractList =
+            res.data.data.riskDisclosureMaterial &&
+            res.data.data.riskDisclosureMaterial.fullPath;
+          this.contractListfileName =
+            res.data.data.riskDisclosureMaterial &&
+            res.data.data.riskDisclosureMaterial.fileName;
+
+          this.contractData1 =
             res.data.data.othersMaterial1 &&
             res.data.data.othersMaterial1.fullPath;
+          this.contractfileName1 =
+            res.data.data.othersMaterial1 &&
+            res.data.data.othersMaterial1.fileName;
+          this.contractList2 =
+            res.data.data.othersMaterial2 &&
+            res.data.data.othersMaterial2.fullPath;
+          this.contractListfileName2 =
+            res.data.data.othersMaterial2 &&
+            res.data.data.othersMaterial2.fileName;
+          this.contractList3 =
+            res.data.data.othersMaterial3 &&
+            res.data.data.othersMaterial3.fullPath;
+          this.contractListfileName3 =
+            res.data.data.othersMaterial3 &&
+            res.data.data.othersMaterial3.fileName;
+
+          if (this.contractfileName) {
+            var index = this.contractfileName.lastIndexOf(".");
+            this.contractfileName = this.contractfileName.substr(0, index);
+          }
+          if (this.contractListfileName) {
+            var index = this.contractListfileName.lastIndexOf(".");
+            this.contractListfileName = this.contractListfileName.substr(
+              0,
+              index
+            );
+          }
+
+          if (this.contractfileName1) {
+            var index = this.contractfileName1.lastIndexOf(".");
+            this.contractfileName1 = this.contractfileName1.substr(0, index);
+          }
+          if (this.contractList2) {
+            var index = this.contractList2.lastIndexOf(".");
+            this.contractList2 = this.contractList2.substr(0, index);
+          }
+          if (this.othersMaterial3) {
+            var index = this.othersMaterial3.lastIndexOf(".");
+            this.othersMaterial3 = this.othersMaterial3.substr(0, index);
+          }
         }
       );
     },
@@ -190,7 +294,7 @@ export default {
             res => {
               this.cognizance = false;
               this.$message({ message: res.data.message, type: "success" });
-              this.form.edeemCount=this.form.Verification=''
+              this.form.edeemCount = this.form.Verification = "";
             }
           );
         }
@@ -250,12 +354,32 @@ export default {
     }
   }
   .funds {
-    height: 70px;
-    line-height: 30px;
+    height: auto;
     padding: 0 10px;
     display: flex;
     justify-content: space-between;
+    .funds_p {
+      padding-top: 5px;
+    }
   }
+  .cesname {
+      padding: 10px;
+      border-bottom: 1px solid;
+      .count_list {
+        .count_img {
+          width: 100%;
+          height: 160px;
+          img {
+            width: 100%;
+            height: 100%;
+          }
+        }
+        .disclosure {
+          width: 100%;
+          height: 44px;
+        }
+      }
+    }
   .anniu {
     width: 100%;
     padding: 10px 10px;

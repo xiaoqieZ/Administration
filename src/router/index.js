@@ -42,6 +42,8 @@ import Publictow from '@/PublicNumber/Publictow/Publictow.vue'
 
 import Information from '@/PublicNumber/Publicone/Information/Information.vue'
 import Identification from '@/PublicNumber/Publicfore/TransactionRecord/Identification.vue'
+import Disclosure from '@/PublicNumber/Publicone/Information/Disclosure.vue'
+
 import ToDeploy from '@/PublicNumber/Publicfore/TransactionRecord/ToDeploy.vue'
 import Authentication from '@/PublicNumber/Publicfore/Information/Authentication.vue'
 import Assessment from '@/PublicNumber/Publicfore/Information/Assessment.vue'
@@ -82,6 +84,12 @@ export default new Router({
       name: 'Publicone',
       title: '首页',
       component: Publicone
+    },
+    {
+      path: '/Disclosure',
+      name: 'Disclosure',
+      title: '披露',
+      component: Disclosure
     },
     {
       path: '/Publicone/Information',
