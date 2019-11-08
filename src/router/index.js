@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import ErrorPage from '@/ErrorPage/ErrorPage'
+import ErrorPage from '@/ErrorPage/ErrorPage.vue'
 import NavBar from '@/NavBar/NavBarLeft'
 import Homepage from '@/pages/Homepage/Homepage'
 import Null from '@/components/CParameter'

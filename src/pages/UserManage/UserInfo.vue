@@ -4,7 +4,7 @@
     <div class="Risk_count">
       <el-input v-model="name" placeholder="输入机构名称搜索" @keyup.enter.native="handleIconClick"></el-input>
       <el-button icon="el-icon-search" @click="handleIconClick"></el-button>
-      <el-button type="primary" @click="centerDialogVisible = true">添加机构印章</el-button>
+      <el-button type="primary" @click="addjig">添加机构</el-button>
     </div>
     <!-- 数据表单 -->
     <div class="Risk_data">
@@ -39,12 +39,13 @@
         <el-table-column align="center" prop="data" label="操作">
           <template slot-scope="scope">
             <span
-              style="color:#409EFF"
+              style="color:#409EFF;cursor:pointer"
               @click="enable(scope.$index,scope.row)"
               v-if="scope.row.isAvailable==0"
             >启用</span>
-            <span style="color:#409EFF" @click="cancelEnable(scope.$index,scope.row)" v-else>取消启用</span>
-            <span style="color:#409EFF" @click="edit(scope.$index,scope.row)">设置印章</span>
+            <span style="color:#409EFF;cursor:pointer" @click="cancelEnable(scope.$index,scope.row)" v-else>取消启用</span>
+            <span style="color:#409EFF;cursor:pointer" @click="edit(scope.$index,scope.row)">编辑</span>
+            <span style="color:#409EFF;cursor:pointer" @click="SetUp(scope.$index,scope.row)">设置</span>
           </template>
         </el-table-column>
       </el-table>
@@ -59,8 +60,8 @@
           :total="questionnairecount.count"
         ></el-pagination>
       </div>
-      <!-- 添加机构印章弹窗 -->
-      <el-dialog title="添加机构印章" :visible.sync="centerDialogVisible" width="60%" center>
+      <!-- 添加机构弹窗 -->
+      <el-dialog title="添加机构" :visible.sync="centerDialogVisible" width="60%" center>
         <div class="dialog_list">
           <div class="dialog_title">请填写下列信息，进行账户认证</div>
           <div class="dialog_count">
@@ -81,7 +82,7 @@
                       <el-select v-model="form.mechanismType" placeholder="请选择机构类型">
                         <el-option
                           :label="item.text"
-                          :value="item.value"
+                          :value="Number(item.value)"
                           v-for="item in mechanism"
                           :key="item.value"
                         ></el-option>
@@ -91,7 +92,7 @@
                       <el-select v-model="form.mechanismRegisterType" placeholder="请选择注册类型">
                         <el-option
                           :label="item.text"
-                          :value="item.value"
+                          :value="Number(item.value)"
                           v-for="item in legalData"
                           :key="item.value"
                         ></el-option>
@@ -119,7 +120,7 @@
                       <el-select v-model="form.legalPersonOwnership" placeholder="请选择活动区域">
                         <el-option
                           :label="item.text"
-                          :value="item.value"
+                          :value="Number(item.value)"
                           v-for="item in commonData"
                           :key="item.value"
                         ></el-option>
@@ -166,7 +167,8 @@ export default {
       commonData: [],
       mechanism: [],
       legalData: [],
-      id: 0
+      id: 0,
+      mechanismData:{}
     };
   },
   methods: {
@@ -193,6 +195,11 @@ export default {
       ajax.authGet.bind(this)("/api/Common/27", res => {
         this.legalData = res.data.data;
       });
+    },
+    addjig(){
+      this.id=0;
+      this.centerDialogVisible = true;
+      this.form.mobile=this.form.email= this.form.mechanismType=this.form.mechanismRegisterType=this.form.name=this.form.legalPersonName=this.form.legalPersonIdCard=this.form.legalPersonProfession=this.form.legalPersonMobile=this.form.legalPersonOwnership=''
     },
     //弹窗确定按钮
     Preservation() {
@@ -247,8 +254,26 @@ export default {
         }
       );
     },
+    //编辑
+    edit(index,row){
+      this.centerDialogVisible = true;
+      this.id = row.id
+      ajax.authGet.bind(this)('/api/Management/Contract/Mechanism/'+row.id,res=>{
+        this.mechanismData = res.data.data;
+         this.form.mobile=this.mechanismData.mobile,
+        this.form.email=this.mechanismData.email,
+        this.form.mechanismType=this.mechanismData.mechanismType,
+        this.form.mechanismRegisterType=this.mechanismData.mechanismRegisterType,
+        this.form.name=this.mechanismData.name,
+        this.form.legalPersonName=this.mechanismData.legalPersonName,
+        this.form.legalPersonIdCard=this.mechanismData.legalPersonIdCard,
+        this.form.legalPersonProfession=this.mechanismData.legalPersonProfession,
+        this.form.legalPersonMobile=this.mechanismData.legalPersonMobile,
+        this.form.legalPersonOwnership=this.mechanismData.legalPersonOwnership
+      })
+    },
     //设置印章
-    edit(index, row) {
+    SetUp(index, row) {
       let data = {
         id: row.id,
         legalPersonName: row.legalPersonName,
@@ -299,6 +324,9 @@ export default {
         }
         /deep/.el-select {
           display: contents;
+        }
+        /deep/.el-input{
+          width: 90%;
         }
       }
     }

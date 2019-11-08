@@ -7,13 +7,20 @@
     <div class="fit">
       <div class="pian">
         <div class="Previous_page">
-          <el-button size="mini" type="success" @click="previousPage">上一页</el-button>
-          <span>{{pageIndex}}页</span>
-          <el-button size="mini" type="success" @click="nextPage">下一页</el-button>
+          <div>
+            <el-button size="mini" type="success" @click="previousPage">上一页</el-button>
+          </div>&nbsp;&nbsp;
+          <span>第{{pageIndex}}页</span>&nbsp;&nbsp;
+          <div>
+            <el-button size="mini" type="success" @click="nextPage">下一页</el-button>
+          </div>&nbsp;&nbsp;
           <div class="jump">
-            <div style="text-align: center;">总共{{contractData.pageCount}}页</div>
+            <div style="text-align: center;">总共{{contractData.pageCount}}页</div>&nbsp;&nbsp;
             <div style="line-height: 60px;width: 60px;">
               <el-input v-model="jumpPage" placeholder="跳转到合同页" @keyup.enter.native="sureSearch"></el-input>
+            </div>&nbsp;&nbsp;
+            <div>
+              <el-button type="primary" size="mini" @click="sureSearch">跳转</el-button>
             </div>
           </div>
         </div>
@@ -22,9 +29,9 @@
           <img :src="pageData" alt />
         </div>
         <div class="Previous_page">
-          <el-button size="mini" type="success" @click="previousPage">上一页</el-button>
-          <span>{{pageIndex}}</span>
-          <el-button size="mini" type="success" @click="nextPage">下一页</el-button>
+          <el-button size="mini" type="success" @click="previousPage">上一页</el-button>&nbsp;&nbsp;
+          <span>第{{pageIndex}}页</span>&nbsp;&nbsp;
+          <el-button size="mini" type="success" @click="nextPage">下一页</el-button>&nbsp;&nbsp;
           <p style="text-align: center;">总共{{contractData.pageCount}}页</p>
         </div>
       </div>
@@ -35,7 +42,7 @@
           <el-button @click="addS">添加</el-button>
           <el-select v-model="score" @change="deop">
             <el-option
-              :label="item.confirmationTypeName+'-'+item.confirmationName+'(第'+item.pageIndex+'页)'"
+              :label="item.confirmationName+'(第'+item.pageIndex+'页)'"
               :value="item.id"
               v-for="item in confirmationData"
               :key="item.id"
@@ -353,12 +360,16 @@ export default {
       }
       this.confirmationData = array;
 
+      var width = 749;
+      var height = 1123;
       for (var i = 0; i < array.length; i++) {
-        var drag =
-          this.allDragger[array[i].id + ""] || this.drawImage(array[i]);
-        this.allDragger[array[i].id + ""] = drag;
-        drag.bind.call(document.getElementById("seal" + array[i].id));
+        var item = array[i];
+        var drag = this.allDragger[item.id + ""] || this.drawImage(item);
+        this.allDragger[item.id + ""] = drag;
+        drag.bind.call(document.getElementById("seal" + item.id));
         drag.setVisible(true);
+        drag.setLeft(item.pointX ? item.pointX * width : 0);
+        drag.setTop(item.pointY ? item.pointY * height : 0);
         drag.reset();
       }
     },
@@ -439,6 +450,7 @@ export default {
       var bindTarget = undefined;
 
       var onmousedown = function(e) {
+        e.preventDefault && e.preventDefault();
         if (bindTarget != this.id) {
           target = undefined;
           return;
@@ -457,15 +469,18 @@ export default {
         target.style.cursor = "move";
       };
       // 鼠标抬起事件
-      var onmouseup = function() {
-        if (!target) return;
+      var onmouseup = function(e) {
+        e.preventDefault && e.preventDefault();
         // 开关关闭
         isDown = false;
+        if (!target) return;
         target.style.cursor = "default";
         target = undefined;
       };
+      window.onmouseup = onmouseup;
       // 鼠标移动
       window.onmousemove = function(e) {
+        e.preventDefault && e.preventDefault();
         if (isDown === false || !target) {
           return;
         }
@@ -476,41 +491,42 @@ export default {
         var width = nx - (x - left);
         var height = ny - (y - top);
         position[target.id] = {
-          width: width,
-          height: height
+          left: width,
+          top: height
         };
         // console.log(width,height)
         target.style.left = width + "px";
         target.style.top = height + "px";
       };
+
       return function() {
         if (!position[this.id]) {
           console.log(this);
           this.onmousedown = onmousedown;
           this.onmouseup = onmouseup;
           position[this.id] = {
-            width: 0,
-            height: 0
+            left: 0,
+            top: 0
           };
         }
 
         return {
           getLeft: function() {
-            return position[this.id] ? position[this.id].width || 0 : 0;
+            return position[this.id] ? position[this.id].left || 0 : 0;
           }.bind(this),
           getTop: function() {
-            return position[this.id] ? position[this.id].height || 0 : 0;
+            return position[this.id] ? position[this.id].top || 0 : 0;
           }.bind(this),
           setLeft: function(t) {
             position[this.id] = position[this.id] || {};
-            position[this.id].width = t;
+            position[this.id].left = t;
             if (bindTarget) {
               document.getElementById(bindTarget).style.left = t + "px";
             }
           }.bind(this),
           setTop: function(t) {
             position[this.id] = position[this.id] || {};
-            position[this.id].height = t;
+            position[this.id].top = t;
             if (bindTarget) {
               document.getElementById(bindTarget).style.top = t + "px";
             }
@@ -573,11 +589,17 @@ export default {
   margin-top: 30px;
   display: flex;
   .Previous_page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     padding-right: 20px;
     .jump {
       display: flex;
       justify-content: center;
       align-items: center;
+      /deep/.el-input__inner{
+        height: 28px;
+      }
     }
   }
   .pian {
@@ -601,8 +623,8 @@ export default {
     }
   }
   .rigth {
-    margin-left: 30px;
-    border-right: 1px solid;
+    margin: 60px 0 0 30px;
+    border: 1px solid;
     .rigth_title {
       text-align: center;
       color: rgb(91, 163, 247);

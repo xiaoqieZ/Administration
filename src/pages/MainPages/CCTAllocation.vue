@@ -37,33 +37,32 @@
         <!-- 勾选框 -->
         <el-table-column type="selection" width="55"></el-table-column>
         <!-- 索引 -->
-        <el-table-column align="center" type="index" prop="data" label="序号"></el-table-column>
+        <el-table-column align="center" type="index" prop="data" label="序号" width="55"></el-table-column>
         <el-table-column align="center" prop="data" label="姓名/机构名称">
           <template slot-scope="scope">
-            <span>{{scope.row.created_at}}</span>
+            <span>{{scope.row.name}}</span>
           </template>
         </el-table-column>
         <el-table-column align="center" prop="data" label="客户类型">
           <template slot-scope="scope">
-            <span>{{scope.row.title}}</span>
+            <span>{{scope.row.customerTypeName}}</span>
           </template>
         </el-table-column>
         <el-table-column align="center" prop="data" label="风险等级">
           <template slot-scope="scope">
-            <span>{{scope.row.title}}</span>
+            <span>{{scope.row.riskLevelName}}</span>
           </template>
         </el-table-column>
         <el-table-column align="center" prop="data" label="投资者类型">
           <template slot-scope="scope">
-            <span>{{scope.row.content}}</span>
+            <span>{{scope.row.investorTypeName}}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="data" label="持仓产品">
+        <el-table-column align="center" prop="data" label="持仓份额">
           <template slot-scope="scope">
-            <span>{{scope.row.content}}</span>
+            <span>{{scope.row.holdCount}}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="持仓份额"></el-table-column>
       </el-table>
 
       <!-- 页码 -->
@@ -175,7 +174,7 @@ export default {
   .searchright {
     right: 0;
     .el-input__icon {
-      width: 75%;
+      width: 100%;
     }
   }
   /deep/.el-button {

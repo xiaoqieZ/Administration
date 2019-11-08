@@ -123,7 +123,7 @@
                 </p>
                 <p>
                   修改记录：
-                  <span style="color:#409eff" @click="modify=true">查看详情</span>
+                  <span style="color:#409eff;cursor:pointer" @click="modify=true">查看详情</span>
                 </p>
                 <p>
                   认证通过时间：
@@ -143,11 +143,11 @@
                 </p>
                 <p>
                   认证材料：
-                  <span style="color:#409eff" @click="Science=true">查看详情</span>
+                  <span style="color:#409eff;cursor:pointer" @click="Science=true">查看详情</span>
                 </p>
                 <p>
                   认证详情：
-                  <span style="color:#409eff" @click="CertificationDetails=true">查看详情</span>
+                  <span style="color:#409eff;cursor:pointer" @click="CertificationDetails=true">查看详情</span>
                 </p>
               </div>
             </el-col>
@@ -166,7 +166,7 @@
           </p>
           <p>
             问卷详情：
-            <span style="color:#409eff" @click="questionnairePage(item)">查看详情</span>
+            <span style="color:#409eff;cursor:pointer" @click="questionnairePage(item)">查看详情</span>
           </p>
         </div>
       </div>
@@ -193,7 +193,7 @@
                 </p>
                 <p>
                   认定详情：
-                  <span style="color:#409eff" @click="cognizance=true">查看详情</span>
+                  <span style="color:#409eff;cursor:pointer" @click="cognizance=true">查看详情</span>
                 </p>
               </div>
             </el-col>
@@ -209,7 +209,7 @@
                 </p>
                 <p>
                   认定材料：
-                  <span style="color:#409eff" @click="ConfirmationMaterials=true">查看详情</span>
+                  <span style="color:#409eff;cursor:pointer" @click="ConfirmationMaterials=true">查看详情</span>
                 </p>
               </div>
             </el-col>
@@ -231,7 +231,7 @@
                 </p>
                 <p>
                   认定材料：
-                  <span style="color:#409eff" @click="qualifiedCognizance=true">查看详情</span>
+                  <span style="color:#409eff;cursor:pointer" @click="qualifiedCognizance=true">查看详情</span>
                 </p>
               </div>
             </el-col>
@@ -243,7 +243,7 @@
                 </p>
                 <p>
                   认定详情：
-                  <span style="color:#409eff" @click="qualified=true">查看详情</span>
+                  <span style="color:#409eff;cursor:pointer" @click="qualified=true">查看详情</span>
                 </p>
               </div>
             </el-col>
@@ -251,7 +251,7 @@
         </div>
       </div>
       <!-- 线下资料 -->
-      <div class="essential_content">
+      <div class="essential_content" v-show="isShow">
         <div class="essential_title">
           <span style="border-left: 3px solid #409eff;"></span>&nbsp;线下资料
         </div>
@@ -269,7 +269,7 @@
               <div class="grid-content bg-purple-light">
                 <p>
                   资料详情：
-                  <span style="color:#409eff" @click="dataList=true">查看详情</span>
+                  <span style="color:#409eff;cursor:pointer" @click="dataList=true">查看详情</span>
                 </p>
               </div>
             </el-col>
@@ -585,7 +585,8 @@ export default {
       qualifiedMaterialData: [], //合格投资者认证材料
       qualifiedData: [], //合格投资者认证详情
       arraysQuestionnaire: {},
-      content: {}
+      content: {},
+      isShow:false,
     };
   },
   methods: {

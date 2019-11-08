@@ -101,10 +101,10 @@
                     <el-input v-model="ruleForm.fundRecordNumber"></el-input>
                   </el-form-item>
                   <el-form-item label="基金规模(单位/万)" prop="fundScale">
-                    <el-input v-model="ruleForm.fundScale"></el-input>
+                    <el-input type="number" v-model="ruleForm.fundScale"></el-input>
                   </el-form-item>
                   <el-form-item label="基金存续期(单位/年)" prop="fundDuration">
-                    <el-input v-model="ruleForm.fundDuration"></el-input>
+                    <el-input type="number" v-model="ruleForm.fundDuration"></el-input>
                   </el-form-item>
                   <el-form-item label="私募基金管理人公示信息url" prop="adminPublicityUrl">
                     <el-input v-model="ruleForm.adminPublicityUrl"></el-input>
@@ -152,7 +152,7 @@
                     </el-col>
                   </el-form-item>
                   <el-form-item label="追加申购起点(单位/万)" prop="appendAmount">
-                    <el-input v-model="ruleForm.appendAmount"></el-input>
+                    <el-input type="number" v-model="ruleForm.appendAmount"></el-input>
                   </el-form-item>
                   <el-form-item label="募集账户账号" prop="account">
                     <el-input v-model="ruleForm.account"></el-input>
@@ -186,12 +186,14 @@
                   <el-form-item label="风险等级文件（必传）" prop="RiskLD">
                     <el-upload
                       class="upload-demo"
-                      ref="upload"
+                      ref="upload1"
                       :action="action"
                       :on-preview="handlePreview"
                       :on-remove="handleRemove"
+                      :on-change="handleChange"
                       :on-success="chengeing"
-                      :file-list="fileList"
+                      :on-error="upError1"
+                      :file-list="fileList1"
                       :headers="access_token"
                     >
                       <el-button size="small" type="primary">点击上传</el-button>
@@ -215,29 +217,29 @@
               <el-col :span="12">
                 <div class="grid-content bg-purple">
                   <el-form-item label="申购费" prop="applyRate">
-                    <el-input v-model="ruleForm.applyRate"></el-input>
+                    <el-input type="number" v-model="ruleForm.applyRate"></el-input>
                   </el-form-item>
                   <el-form-item label="管理费" prop="manageRate">
-                    <el-input v-model="ruleForm.manageRate"></el-input>
+                    <el-input type="number" v-model="ruleForm.manageRate"></el-input>
                   </el-form-item>
                   <el-form-item label="外包服务费" prop="outsourcingRate">
-                    <el-input v-model="ruleForm.outsourcingRate"></el-input>
+                    <el-input type="number" v-model="ruleForm.outsourcingRate"></el-input>
                   </el-form-item>
                   <el-form-item label="业绩报酬" prop="performanceRemunerationRate">
-                    <el-input v-model="ruleForm.performanceRemunerationRate"></el-input>
+                    <el-input type="number" v-model="ruleForm.performanceRemunerationRate"></el-input>
                   </el-form-item>
                 </div>
               </el-col>
               <el-col :span="12">
                 <div class="grid-content bg-purple-light">
                   <el-form-item label="赎回费" prop="redeemRate">
-                    <el-input v-model="ruleForm.redeemRate"></el-input>
+                    <el-input type="number" v-model="ruleForm.redeemRate" step="0.1"></el-input>
                   </el-form-item>
                   <el-form-item label="托管费" prop="trusteeshipRate">
-                    <el-input v-model="ruleForm.trusteeshipRate"></el-input>
+                    <el-input type="number" v-model="ruleForm.trusteeshipRate"></el-input>
                   </el-form-item>
                   <el-form-item label="投资顾问费" prop="investmentConsultantRate">
-                    <el-input v-model="ruleForm.investmentConsultantRate"></el-input>
+                    <el-input type="number" v-model="ruleForm.investmentConsultantRate"></el-input>
                   </el-form-item>
                 </div>
               </el-col>
@@ -250,14 +252,14 @@
                     <el-input type="textarea" v-model="ruleForm.scale"></el-input>
                   </el-form-item>
                   <el-form-item label="投资限制概况" prop="limit">
-                    <el-input v-model="ruleForm.limit"></el-input>
+                    <el-input type="textarea" v-model="ruleForm.limit"></el-input>
                   </el-form-item>
                 </div>
               </el-col>
               <el-col :span="12">
                 <div class="grid-content bg-purple-light">
                   <el-form-item label="投资策略" prop="policy">
-                    <el-input v-model="ruleForm.policy"></el-input>
+                    <el-input type="textarea" v-model="ruleForm.policy"></el-input>
                   </el-form-item>
                 </div>
               </el-col>
@@ -343,7 +345,7 @@
           <el-button type="primary" @click="downloadContent">下载净值内容</el-button>
           <el-button type="primary" @click="exportExcel">下载模板</el-button>
           <el-button type="primary" @click="centerupload=true">上传</el-button>
-          <el-button type="primary" @click="centerDialogVisible = true">添加</el-button>
+          <el-button type="primary" @click="centerDialogVisibleAdd">添加</el-button>
           <!-- 添加 -->
           <el-dialog title="提示" :visible.sync="centerDialogVisible" width="30%" center>
             <el-form label-width="100px" :model="formLabelAlign">
@@ -384,26 +386,27 @@
           <!-- 上传 -->
           <el-dialog title="提示" :visible.sync="centerupload" width="30%" center>
             <el-form label-width="100px" :model="formLabelAlign">
-              <el-form-item label="净值短信通知">
-                <el-input v-model="formLabelAlign.smsNotify"></el-input>
-              </el-form-item>
-              <el-form-item label="净值邮件通知">
-                <el-input v-model="formLabelAlign.emailNotify"></el-input>
-              </el-form-item>
-              <el-form-item label="净值微信通知">
-                <el-input v-model="formLabelAlign.weChatNotify"></el-input>
-              </el-form-item>
+              <el-checkbox-group v-model="formLabelAlign.smsNotify" @change="listget">
+                <el-checkbox disabled>短信通知</el-checkbox>
+              </el-checkbox-group>
+              <el-checkbox-group v-model="formLabelAlign.emailNotify" @change="listge">
+                <el-checkbox>邮件通知</el-checkbox>
+              </el-checkbox-group>
+              <el-checkbox-group v-model="formLabelAlign.weChatNotify" @change="listg">
+                <el-checkbox>微信通知</el-checkbox>
+              </el-checkbox-group>
               <el-upload
                 class="upload-demo"
-                ref="upload"
+                ref="upload2"
                 :data="uploadCenter"
                 :action="actionUpload"
                 :on-preview="handlePreview"
                 :on-remove="handleRemove"
                 :on-success="SuccessWorth"
-                :on-error="errorWorth"
+                :on-change="handleChange"
+                :on-error="upError2"
                 :auto-upload="false"
-                :file-list="fileList"
+                :file-list="fileList2"
                 :headers="access_token"
               >
                 <el-button size="small" type="primary">点击上传附件</el-button>
@@ -490,12 +493,14 @@
             </el-form-item>
             <el-upload
               class="upload-demo"
-              ref="upload"
+              ref="upload3"
               :action="actionReport"
               :on-preview="handlePreview"
               :on-remove="handleRemove"
               :on-success="chengecheng"
-              :file-list="fileList"
+              :on-error="upError3"
+              :on-change="handleChange"
+              :file-list="fileList3"
               :headers="access_token"
             >
               <el-button size="small" type="primary">点击上传报表附件</el-button>
@@ -605,12 +610,14 @@
             </el-form-item>
             <el-upload
               class="upload-demo"
-              ref="upload"
+              ref="upload4"
               :action="actionNotice"
               :on-preview="handlePreview"
               :on-remove="handleRemove"
               :on-success="chengeNotice"
-              :file-list="fileList"
+              :on-error="upError4"
+              :on-change="handleChange"
+              :file-list="fileList4"
               :headers="access_token"
             >
               <el-button size="small" type="primary">点击上传公告管理附件</el-button>
@@ -691,8 +698,9 @@
               <el-input
                 v-model="formLabelAlign.Investment"
                 placeholder="请输入内容"
-                suffix-icon="el-icon-search"
+                @keyup.enter.native="getInvestment"
               ></el-input>
+              <el-button class="el-icon-search" type="primary" @click="getInvestment"></el-button>
               <!-- 表格数据操作 -->
               <el-table :data="tabelInvestment" stripe id="out-table" style="width: 100%">
                 <!-- 勾选框 -->
@@ -758,8 +766,9 @@
               <el-input
                 v-model="formLabelAlign.potential"
                 placeholder="请输入内容"
-                suffix-icon="el-icon-search"
+                @keyup.enter.native="getpotential"
               ></el-input>
+              <el-button class="el-icon-search" type="primary" @click="getpotential"></el-button>
               <!-- 表格数据操作 -->
               <el-table :data="tabelPotentialList" stripe id="out-table" style="width: 100%">
                 <!-- 勾选框 -->
@@ -888,7 +897,7 @@
             </div>
           </div>
           <!-- 可售设置 -->
-          <div class="Marketing_Branch">
+          <div class="Marketing_Branch" v-show="isShow">
             <div class="Marketing_list">
               <div class="Marketing_title">可售设置</div>
               <div class="Marketing_Record">
@@ -1012,10 +1021,12 @@
               <p>基金合同</p>
               <el-upload
                 class="upload-demo"
-                ref="upload"
+                ref="upload5"
                 :action="actionSettings"
                 :on-success="chengeScontractMaterialId"
-                :file-list="fileList"
+                :on-error="upError5"
+                :on-change="handleChange"
+                :file-list="fileList5"
                 :headers="access_token"
               >
                 <el-button size="small" type="primary">点击上传文件</el-button>
@@ -1038,10 +1049,12 @@
               <p>风险揭示书</p>
               <el-upload
                 class="upload-demo"
-                ref="upload"
+                ref="upload6"
                 :action="actionSettings"
                 :on-success="chengeSriskDisclosureMaterialId"
-                :file-list="fileList"
+                :on-error="upError6"
+                :on-change="handleChange"
+                :file-list="fileList6"
                 :headers="access_token"
               >
                 <el-button size="small" type="primary">点击上传文件</el-button>
@@ -1064,10 +1077,12 @@
               <p>其他材料1</p>
               <el-upload
                 class="upload-demo"
-                ref="upload"
+                ref="upload7"
                 :action="actionSettings"
                 :on-success="chengeSothersMaterialId1"
-                :file-list="fileList"
+                :on-error="upError7"
+                :on-change="handleChange"
+                :file-list="fileList7"
                 :headers="access_token"
               >
                 <el-button size="small" type="primary">点击上传文件</el-button>
@@ -1090,10 +1105,12 @@
               <p>其他材料2</p>
               <el-upload
                 class="upload-demo"
-                ref="upload"
+                ref="upload8"
                 :action="actionSettings"
                 :on-success="chengeSothersMaterialId2"
-                :file-list="fileList"
+                :on-error="upError8"
+                :on-change="handleChange"
+                :file-list="fileList8"
                 :headers="access_token"
               >
                 <el-button size="small" type="primary">点击上传文件</el-button>
@@ -1116,10 +1133,12 @@
               <p>其他材料3</p>
               <el-upload
                 class="upload-demo"
-                ref="upload"
+                ref="upload9"
                 :action="actionSettings"
                 :on-success="chengeSothersMaterialId3"
-                :file-list="fileList"
+                :on-error="upError9"
+                :on-change="handleChange"
+                :file-list="fileList9"
                 :headers="access_token"
               >
                 <el-button size="small" type="primary">点击上传文件</el-button>
@@ -1162,6 +1181,7 @@ import ajax from "../../api/https.js";
 export default {
   data() {
     return {
+      worthId: "",
       activeInvestor: "investor",
       activeName: "edits",
       statementData: [],
@@ -1205,9 +1225,9 @@ export default {
       returnVisit: false,
       centerupload: false,
       formLabelAlign: {
-        smsNotify: "",
-        emailNotify: "",
-        weChatNotify: "",
+        smsNotify: 0,
+        emailNotify: 0,
+        weChatNotify: 0,
         unitWorth: "",
         cumulativeWorth: "",
         dateOfWorth: "",
@@ -1234,7 +1254,15 @@ export default {
       tabelNoticeData: [], //报告管理数
       tabelNoticeList: [], //报告管理数据
       tabelNoticePage: "", //数据条数
-      fileList: [],
+      fileList1: [],
+      fileList2: [],
+      fileList3: [],
+      fileList4: [],
+      fileList5: [],
+      fileList6: [],
+      fileList7: [],
+      fileList8: [],
+      fileList9: [],
       ruleForm: {
         name: "", //基金名称
         fundType: "", //基金类型
@@ -1306,6 +1334,7 @@ export default {
         mail: 0,
         weChat: 0
       },
+      investmentName: "",
       marketData: {},
       queryId: "",
       rules: {
@@ -1498,9 +1527,12 @@ export default {
             "/api/Management/Product/Save",
             data,
             res => {
+              this.$message({
+                message: "提交成功",
+                type: "success"
+              });
               this.$router.push({
                 path: "/NavBar/DataDitionary/BankData"
-                // query: { nav }
               });
             }
           );
@@ -1511,7 +1543,38 @@ export default {
     },
     //风险评级文件
     chengeing(response, file, fileList) {
-      this.ProductMapId = response.data.id;
+      this.ProductMapId = ajax.getMaterialId.bind(this)(response, () => {
+        //还原
+        this.clearFiles1();
+      });
+    },
+    //移除/还原文件列表
+    clearFiles1() {
+      this.$refs["upload1"].clearFiles();
+    },
+    clearFiles2() {
+      this.$refs["upload2"].clearFiles();
+    },
+    clearFiles3() {
+      this.$refs["upload3"].clearFiles();
+    },
+    clearFiles4() {
+      this.$refs["upload4"].clearFiles();
+    },
+    clearFiles5() {
+      this.$refs["upload5"].clearFiles();
+    },
+    clearFiles6() {
+      this.$refs["upload6"].clearFiles();
+    },
+    clearFiles7() {
+      this.$refs["upload7"].clearFiles();
+    },
+    clearFiles8() {
+      this.$refs["upload8"].clearFiles();
+    },
+    clearFiles9() {
+      this.$refs["upload9"].clearFiles();
     },
     //重置
     resetForm(formName) {
@@ -1627,9 +1690,87 @@ export default {
         this.ruleForm.weChat = 0;
       }
     },
-    // 添加净值
+    //添加净值
+    centerDialogVisibleAdd() {
+      this.centerDialogVisible = true;
+      this.worthId = 0;
+    },
+    upError1(err, file, fileList) {
+      this.$message({
+        message: "上传失败",
+        type: "error"
+      });
+      //还原
+      this.clearFiles1();
+    },
+    upError2(err, file, fileList) {
+      this.$message({
+        message: "上传失败",
+        type: "error"
+      });
+      //还原
+      this.clearFiles2();
+    },
+    upError3(err, file, fileList) {
+      this.$message({
+        message: "上传失败",
+        type: "error"
+      });
+      //还原
+      this.clearFiles3();
+    },
+    upError4(err, file, fileList) {
+      this.$message({
+        message: "上传失败",
+        type: "error"
+      });
+      //还原
+      this.clearFiles4();
+    },
+    upError5(err, file, fileList) {
+      this.$message({
+        message: "上传失败",
+        type: "error"
+      });
+      //还原
+      this.clearFiles5();
+    },
+    upError6(err, file, fileList) {
+      this.$message({
+        message: "上传失败",
+        type: "error"
+      });
+      //还原
+      this.clearFiles6();
+    },
+    upError7(err, file, fileList) {
+      this.$message({
+        message: "上传失败",
+        type: "error"
+      });
+      //还原
+      this.clearFiles7();
+    },
+    upError8(err, file, fileList) {
+      this.$message({
+        message: "上传失败",
+        type: "error"
+      });
+      //还原
+      this.clearFiles8();
+    },
+    upError9(err, file, fileList) {
+      this.$message({
+        message: "上传失败",
+        type: "error"
+      });
+      //还原
+      this.clearFiles9();
+    },
+    // 添加/编辑净值
     addNetWorth() {
       let data = {
+        id: this.worthId,
         productId: this.queryId,
         unitWorth: this.formLabelAlign.unitWorth,
         cumulativeWorth: this.formLabelAlign.cumulativeWorth,
@@ -1719,15 +1860,16 @@ export default {
           this.aaa =
             res.data.data.contractMaterial &&
             res.data.data.contractMaterial.fileName;
-            this.contractMaterialId =res.data.data.contractMaterial &&
-            res.data.data.contractMaterial.id;
+          this.contractMaterialId =
+            res.data.data.contractMaterial && res.data.data.contractMaterial.id;
           this.urlOne =
             res.data.data.contractMaterial &&
             res.data.data.contractMaterial.fullPath;
           this.bbb =
             res.data.data.riskDisclosureMaterial &&
             res.data.data.riskDisclosureMaterial.fileName;
-             this.riskDisclosureMaterialId =res.data.data.riskDisclosureMaterial &&
+          this.riskDisclosureMaterialId =
+            res.data.data.riskDisclosureMaterial &&
             res.data.data.riskDisclosureMaterial.id;
           this.urlTow =
             res.data.data.riskDisclosureMaterial &&
@@ -1735,24 +1877,24 @@ export default {
           this.ccc =
             res.data.data.othersMaterial1 &&
             res.data.data.othersMaterial1.fileName;
-             this.othersMaterialId1 =res.data.data.othersMaterial1 &&
-            res.data.data.othersMaterial1.id;
+          this.othersMaterialId1 =
+            res.data.data.othersMaterial1 && res.data.data.othersMaterial1.id;
           this.urlThree =
             res.data.data.othersMaterial1 &&
             res.data.data.othersMaterial1.fullPath;
           this.ddd =
             res.data.data.othersMaterial2 &&
             res.data.data.othersMaterial2.fileName;
-            this.othersMaterialId2 =res.data.data.othersMaterial2 &&
-            res.data.data.othersMaterial2.id;
+          this.othersMaterialId2 =
+            res.data.data.othersMaterial2 && res.data.data.othersMaterial2.id;
           this.urlFour =
             res.data.data.othersMaterial2 &&
             res.data.data.othersMaterial2.fullPath;
           this.eee =
             res.data.data.othersMaterial3 &&
             res.data.data.othersMaterial3.fileName;
-            this.othersMaterialId3 =res.data.data.othersMaterial3 &&
-            res.data.data.othersMaterial3.id;
+          this.othersMaterialId3 =
+            res.data.data.othersMaterial3 && res.data.data.othersMaterial3.id;
           this.urlFive =
             res.data.data.othersMaterial3 &&
             res.data.data.othersMaterial3.fullPath;
@@ -1788,19 +1930,20 @@ export default {
     // 净值管理页面的编辑按钮
     clickEdit(i, row) {
       this.centerDialogVisible = !this.centerDialogVisible;
-      let data = {
-        worthId: row.id
-      };
-      ajax.authGet.bind(this)("/api/Management/Product/Worth", data, res => {
-        console.log(res);
-        if (res.data.code == 200) {
-          this.formLabelAlign.unitWorth = res.data.data.unitWorth;
-          this.formLabelAlign.cumulativeWorth = res.data.data.cumulativeWorth;
-          this.formLabelAlign.dateOfWorth = res.data.data.dateOfWorth;
+      this.worthId = row.id;
+      ajax.authGet.bind(this)(
+        "/api/Management/Product/Worth?worthId=" + row.id,
+        res => {
+          console.log(res);
+          if (res.data.code == 200) {
+            this.formLabelAlign.unitWorth = res.data.data.unitWorth;
+            this.formLabelAlign.cumulativeWorth = res.data.data.cumulativeWorth;
+            this.formLabelAlign.dateOfWorth = res.data.data.dateOfWorth;
+          }
         }
-      });
+      );
     },
-    // 报表管理数据
+    // 报告管理数据
     getPresentation() {
       let pages = { pageIndex: this.page, pageSize: this.num };
       ajax.authPost.bind(this)(
@@ -1847,31 +1990,43 @@ export default {
         }
       });
     },
+    //文件上传个数
+    handleChange(file, fileList) {
+      this.fileList = fileList.length > 1 ? fileList.splice(0, 1) : fileList;
+    },
     //潜在投资者管理数据
     getInvestment() {
-      this.getpot("/api/Management/Query/Potential", res => {
-        console.log(res);
-        if (res.data.code == 200) {
-          this.tabelInvestment = res.data.data.list;
-          this.tabelInvestmentPage = res.data.data.page;
+      this.getpot(
+        "/api/Management/Query/Potential",
+        this.formLabelAlign.investmentName,
+        res => {
+          console.log(res);
+          if (res.data.code == 200) {
+            this.tabelInvestment = res.data.data.list;
+            this.tabelInvestmentPage = res.data.data.page;
+          }
         }
-      });
+      );
     },
     //投资者管理数据
     getpotential() {
-      this.getpot("/api/Management/Query/InvestorAsset", res => {
-        console.log(res);
-        if (res.data.code == 200) {
-          this.tabelPotentialList = res.data.data.list;
-          this.tabelPotentialListPage = res.data.data.page;
+      this.getpot(
+        "/api/Management/Query/InvestorAsset",
+        this.formLabelAlign.potential,
+        res => {
+          console.log(res);
+          if (res.data.code == 200) {
+            this.tabelPotentialList = res.data.data.list;
+            this.tabelPotentialListPage = res.data.data.page;
+          }
         }
-      });
+      );
     },
-
     //封装潜在投资人跟投资人的方法
-    getpot(url, r) {
+    getpot(url, name, r) {
       let data = {
         productId: this.queryId,
+        name: name,
         pageIndex: this.page,
         pageSize: this.num
       };
@@ -1953,7 +2108,7 @@ export default {
         }
       );
     },
-    //报表发布
+    //报告发布
     clickRelease(i, row) {
       ajax.authPostForm.bind(this)(
         "/api/Management/Product/Report/Publish",
@@ -1963,7 +2118,7 @@ export default {
         }
       );
     },
-    //取消报表发布
+    //取消报告发布
     clickcancel(i, row) {
       ajax.authPostForm.bind(this)(
         "/api/Management/Product/Report/Private",
@@ -1999,7 +2154,7 @@ export default {
         }
       );
     },
-    //报表添加提交
+    //报告添加提交
     addReport() {
       let data = {
         id: this.ReportrowId,
@@ -2021,10 +2176,10 @@ export default {
         }
       );
     },
-    //报表添加按钮
+    //报告添加按钮
     clickAddReport() {
       this.centerDialogReport = true;
-      this.ReportId = 0;
+      this.ReportrowId = 0;
       this.formLabelAlign.reportType = this.formLabelAlign.title = this.formLabelAlign.reportDate =
         "";
     },
@@ -2044,13 +2199,20 @@ export default {
     },
     //报表文件上传成功回调
     chengecheng(response, file, fileList) {
-      this.ReportId = response.data.id;
+      this.ReportId = ajax.getMaterialId.bind(this)(response, () => {
+        //还原
+        this.clearFiles3();
+      });
     },
     //净值上传成功的回调
     SuccessWorth(response, file, fileList) {
-      this.$message(response.message);
+      ajax.getMaterialId.bind(this)(response, () => {
+        //还原
+        this.clearFiles3();
+      });
       this.centerupload = false;
       this.clearUploadedImage();
+      this.getNetWorth();
       this.formLabelAlign.smsNotify = this.formLabelAlign.emailNotify = this.formLabelAlign.weChatNotify =
         "";
     },
@@ -2098,7 +2260,10 @@ export default {
     },
     //公告文件上传成功的回调
     chengeNotice(response, file, fileList) {
-      this.NoticefileId = response.data.id;
+      this.NoticefileId = ajax.getMaterialId.bind(this)(response, () => {
+        //还原
+        this.clearFiles4();
+      });
     },
     //报表删除
     delNetReport() {
@@ -2286,23 +2451,41 @@ export default {
     },
     //购买设置里面基金合同成功回调
     chengeScontractMaterialId(response, file, fileList) {
-      this.contractMaterialId = response.data.id;
+      this.contractMaterialId = ajax.getMaterialId.bind(this)(response, () => {
+        //还原
+        this.clearFiles5();
+      });
     },
     //购买设置里面风险揭示书成功回调
     chengeSriskDisclosureMaterialId(response, file, fileList) {
-      this.riskDisclosureMaterialId = response.data.id;
+      this.riskDisclosureMaterialId = ajax.getMaterialId.bind(this)(
+        response,
+        () => {
+          //还原
+          this.clearFiles6();
+        }
+      );
     },
     //购买设置里面其他材料1成功回调
     chengeSothersMaterialId1(response, file, fileList) {
-      this.othersMaterialId1 = response.data.id;
+      this.othersMaterialId1 = ajax.getMaterialId.bind(this)(response, () => {
+        //还原
+        this.clearFiles7();
+      });
     },
     //购买设置里面其他材料2成功回调
     chengeSothersMaterialId2(response, file, fileList) {
-      this.othersMaterialId2 = response.data.id;
+      this.othersMaterialId2 = ajax.getMaterialId.bind(this)(response, () => {
+        //还原
+        this.clearFiles8();
+      });
     },
     //购买设置里面其他材料3成功回调
     chengeSothersMaterialId3(response, file, fileList) {
-      this.othersMaterialId3 = response.data.id;
+      this.othersMaterialId3 = ajax.getMaterialId.bind(this)(response, () => {
+        //还原
+        this.clearFiles9();
+      });
     },
     //确定上传文件
     confirmUpload() {
@@ -2409,7 +2592,7 @@ export default {
     }
     /deep/.el-input__icon {
       //选择框图标
-      height: 75%;
+      height: 100%;
     }
     /deep/.el-form-item__error {
       //输入框提示
@@ -2418,8 +2601,8 @@ export default {
     }
     /deep/.el-upload-list--text {
       position: absolute;
-      bottom: 60px;
-      left: 85px;
+      bottom: 10px;
+      left: 200px;
     }
     .submitButton {
       text-align: center;
@@ -2427,7 +2610,7 @@ export default {
   }
   /deep/.el-input__icon {
     //选择框图标
-    height: 75%;
+    height: 100%;
   }
   .spanColor {
     color: #409eff;
@@ -2438,7 +2621,7 @@ export default {
     }
   }
   .returnVisit {
-    .el-input--suffix {
+    /deep/.el-input--suffix {
       width: 100%;
     }
   }

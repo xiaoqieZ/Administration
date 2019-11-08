@@ -13,7 +13,7 @@
       </div>
       <div class="plops" v-for="(item,index) in popularData" :key="item.productId">
         <div class="period">
-          <Icon type="ios-bookmark" size="20" />运集期
+          <Icon type="ios-bookmark" size="20" />运作期
         </div>
         <div class="product_auto" @click="change(item)">
           <div class="huaihe">

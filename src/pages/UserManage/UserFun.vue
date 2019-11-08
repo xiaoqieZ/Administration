@@ -34,13 +34,13 @@
         <el-table-column align="center" prop="data" label="操作">
           <template slot-scope="scope">
             <div v-if="scope.row.isAvailable==0">
-              <span style="color:#409EFF" @click="enable(scope.$index,scope.row)">启用</span>              
-              <span style="color:#409EFF" @click="edit(scope.$index,scope.row)">编辑</span>
-              <span style="color:#409EFF" @click="setUp(scope.$index,scope.row)">设置</span>
+              <span style="color:#409EFF;cursor:pointer" @click="enable(scope.$index,scope.row)">启用</span>
+              <span style="color:#409EFF;cursor:pointer" @click="edit(scope.$index,scope.row)">编辑</span>
+              <span style="color:#409EFF;cursor:pointer" @click="setUp(scope.$index,scope.row)">设置</span>
             </div>
             <div v-else>
-              <span style="color:#409EFF" @click="cancelEnable(scope.$index,scope.row)">取消启用</span>
-            <span style="color:#409EFF" @click="editSigning(scope.$index,scope.row)">发起签约</span>
+              <span style="color:#409EFF;cursor:pointer" @click="cancelEnable(scope.$index,scope.row)">取消启用</span>
+              <span style="color:#409EFF;cursor:pointer" @click="editSigning(scope.$index,scope.row)">发起签约</span>
             </div>
           </template>
         </el-table-column>
@@ -71,27 +71,32 @@
                   ref="upload"
                   :action="action"
                   :on-success="chengeNotice"
+                  :on-change="handleChange"
+                  :on-error="upError"
                   :file-list="fileList"
                   :headers="access_token"
                 >
                   <el-button size="small" type="primary">点击上传文件</el-button>
-                  <ul class="el-upload-list el-upload-list--text" v-if="form.originMaterial.fileName!=''">
-                  <li tabindex="0" class="el-upload-list__item is-success">
-                    <a class="el-upload-list__item-name" :href="form.originMaterial.fullPath">
-                      <i class="el-icon-document"></i>
-                      {{form.originMaterial.fileName}}
-                    </a>
-                    <label class="el-upload-list__item-status-label">
-                      <i class="el-icon-upload-success el-icon-circle-check"></i>
-                    </label>
-                    <i class="el-icon-close"></i>
-                    <i class="el-icon-close-tip">按 delete 键可删除</i>
-                  </li>
-                </ul>
+                  <ul
+                    class="el-upload-list el-upload-list--text"
+                    v-if="form.originMaterial.fileName!=''"
+                  >
+                    <li tabindex="0" class="el-upload-list__item is-success">
+                      <a class="el-upload-list__item-name" :href="form.originMaterial.fullPath">
+                        <i class="el-icon-document"></i>
+                        {{form.originMaterial.fileName}}
+                      </a>
+                      <label class="el-upload-list__item-status-label">
+                        <i class="el-icon-upload-success el-icon-circle-check"></i>
+                      </label>
+                      <i class="el-icon-close"></i>
+                      <i class="el-icon-close-tip">按 delete 键可删除</i>
+                    </li>
+                  </ul>
                 </el-upload>
               </el-form-item>
               <el-form-item label="基金产品">
-                <el-select v-model="form.productId" placeholder="请选择基金产品">
+                <el-select v-model="form.productId" :disabled="disabled" placeholder="请选择基金产品">
                   <el-option
                     :label="item.name"
                     :value="item.id"
@@ -101,7 +106,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="机构">
-                <el-select v-model="form.mechanismId" placeholder="请选择机构">
+                <el-select v-model="form.mechanismId" :disabled="disabled" placeholder="请选择机构">
                   <el-option
                     :label="item.name"
                     :value="item.id"
@@ -130,6 +135,7 @@ import ajax from "../../api/https.js";
 export default {
   data() {
     return {
+      disabled:false,
       name: "",
       page: 1,
       num: 6,
@@ -142,7 +148,7 @@ export default {
         remark: "",
         productId: "",
         mechanismId: "",
-        originMaterial:{fileName:''}
+        originMaterial: { fileName: "" }
       },
       id: 0,
       fileList: [],
@@ -152,7 +158,7 @@ export default {
       action: ajax.doms.bind(this)("/api/Management/Contract/Upload"),
       mechanism: [],
       legalData: [],
-      id:0
+      id: 0
     };
   },
   methods: {
@@ -185,13 +191,25 @@ export default {
     },
     //合同文件上传成功的回调
     chengeNotice(response, file, fileList) {
-      this.form.originMaterialId = response.data.id;
+      this.form.originMaterialId = ajax.getMaterialId.bind(this)(
+        response,
+        () => {
+          //还原
+          this.clearFiles();
+        }
+      );
+    },
+    //移除/还原文件列表
+    clearFiles() {
+      this.$refs["upload"].clearFiles();
     },
     //添加弹窗
-    centerAdd(){
-      this.centerDialogVisible=true;
-      this.id=0;
-      this.form.productId=this.form.name=this.form.originMaterialId=this.form.remark=this.form.mechanismId=this.form.originMaterial.fileName=''
+    centerAdd() {
+      this.centerDialogVisible = true;
+      this.id = 0;
+      this.disabled=false
+      this.form.productId = this.form.name = this.form.originMaterialId = this.form.remark = this.form.mechanismId = this.form.originMaterial.fileName =
+        "";
     },
     //弹窗确定添加按钮
     Preservation() {
@@ -206,8 +224,9 @@ export default {
       ajax.authPost.bind(this)("/api/Management/Contract", data, res => {
         this.centerDialogVisible = false;
         this.getQuestionnaireData();
-        this.id=0;
-        this.form.productId=this.form.name=this.form.originMaterialId=this.form.remark=this.form.mechanismId=''
+        this.id = 0;
+        this.form.productId = this.form.name = this.form.originMaterialId = this.form.remark = this.form.mechanismId =
+          "";
       });
     },
     //操作栏 启动
@@ -236,23 +255,39 @@ export default {
       };
       this.$router.push({
         path: "/NavBar/UserManage/SealEditor",
-        query:{data}
+        query: { data }
       });
     },
+    upError(err, file, fileList) {
+      this.$message({
+        message: "上传失败",
+        type: "error"
+      });
+      //还原
+      this.clearFiles();
+    },
     // 编辑
-    edit(index,row){
-      this.centerDialogVisible=true
-      this.id=row.id
-      ajax.authGet.bind(this)('/api/Management/Contract/'+row.id,res=>{
-        this.form=res.data.data
-      })
+    edit(index, row) {
+      this.disabled=true
+      this.centerDialogVisible = true;
+      this.id = row.id;
+      ajax.authGet.bind(this)("/api/Management/Contract/" + row.id, res => {
+        this.form = res.data.data;
+      });
     },
     //发起签约
-    editSigning(index,row){
+    editSigning(index, row) {
       let data = {
-        id:row.id
-      }
-      this.$router.push({path: '/NavBar/UserManage/AccountManage', query:{data}})
+        id: row.id
+      };
+      this.$router.push({
+        path: "/NavBar/UserManage/AccountManage",
+        query: { data }
+      });
+    },
+    //文件上传个数
+    handleChange(file, fileList) {
+      this.fileList = fileList.length > 1 ? fileList.splice(0, 1) : fileList;
     },
     //每页显示数据量变更
     handleSizeChange(val) {

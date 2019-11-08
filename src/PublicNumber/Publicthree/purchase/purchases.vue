@@ -17,9 +17,13 @@
       <span>{{productData.riskLevelName}}</span>
     </div>
     <div class="fund">
-      <van-collapse v-model="activeNames">
-        <van-collapse-item title="投资范围" name="1">{{productRange.scale}}</van-collapse-item>
-      </van-collapse>
+      <div class="fund_isshow">
+        <div class="fund_justify" @click="showClick">
+          <p>投资范围</p>
+          <p style="color:#409EFF;cursor:pointer">{{isShow==true?'收起':'查看详情'}}</p>
+        </div>
+        <div v-show="isShow">{{productRange.scale}}</div>
+      </div>
     </div>
     <P style="height:10px;background:#d4d2d2;"></P>
     <div class="funds">
@@ -48,17 +52,17 @@
       <van-icon name="arrow" />
     </div>
     <div class="cesname">
-          <div class="count_list" v-for="items in disclosureData" :key="items.id+items.messageType">
-            <div class="disclosure" @click="disclosureClickId(items)">
-              <van-notice-bar :scrollable="false">
-                <span>{{items.messageTypeName}}：</span>&nbsp;
-                <span>{{items.date}}</span>&nbsp;
-                <span>{{items.title}}</span>
-              </van-notice-bar>
-              <el-divider direction="vertical"></el-divider>
-            </div>
-          </div>
+      <div class="count_list" v-for="items in disclosureData" :key="items.id+items.messageType">
+        <div class="disclosure" @click="disclosureClickId(items)">
+          <van-notice-bar :scrollable="false">
+            <span>{{items.messageTypeName}}：</span>&nbsp;
+            <span>{{items.date}}</span>&nbsp;
+            <span>{{items.title}}</span>
+          </van-notice-bar>
+          <el-divider direction="vertical"></el-divider>
         </div>
+      </div>
+    </div>
     <div class="anniu">
       <el-button
         type="primary"
@@ -84,7 +88,7 @@
             <div v-if="getswithy">
               <van-count-down
                 ref="countDown"
-                :time="5000"
+                :time="30000"
                 :auto-start="false"
                 format="ss"
                 @finish="finished"
@@ -94,7 +98,7 @@
             <div v-if="getGun">
               <van-count-down
                 ref="countDown"
-                :time="5000"
+                :time="30000"
                 :auto-start="true"
                 format="ss"
                 @finish="finished"
@@ -117,9 +121,9 @@ import ajax from "../../../api/https.js";
 export default {
   data() {
     return {
+      isShow:false,
       productData: [],
       textarea: "",
-      activeNames: ["0"],
       productRange: {}, //投资范围
       docuId: "",
       contractData: "",
@@ -150,7 +154,7 @@ export default {
       contractfileName1: "",
       contractListfileName2: "",
       contractListfileName3: "",
-      disclosureData:[]
+      disclosureData: []
     };
   },
   methods: {
@@ -268,13 +272,19 @@ export default {
             var index = this.contractfileName1.lastIndexOf(".");
             this.contractfileName1 = this.contractfileName1.substr(0, index);
           }
-          if (this.contractList2) {
-            var index = this.contractList2.lastIndexOf(".");
-            this.contractList2 = this.contractList2.substr(0, index);
+          if (this.contractListfileName2) {
+            var index = this.contractListfileName2.lastIndexOf(".");
+            this.contractListfileName2 = this.contractListfileName2.substr(
+              0,
+              index
+            );
           }
-          if (this.othersMaterial3) {
-            var index = this.othersMaterial3.lastIndexOf(".");
-            this.othersMaterial3 = this.othersMaterial3.substr(0, index);
+          if (this.contractListfileName3) {
+            var index = this.contractListfileName3.lastIndexOf(".");
+            this.contractListfileName3 = this.contractListfileName3.substr(
+              0,
+              index
+            );
           }
         }
       );
@@ -299,6 +309,10 @@ export default {
           );
         }
       });
+    },
+    //投资范围查看
+    showClick(){
+      this.isShow=!this.isShow
     },
     //倒计时结束的回调
     finished() {
@@ -343,7 +357,6 @@ export default {
     text-align: center;
   }
   .fund {
-    height: 50px;
     line-height: 50px;
     padding: 0 10px;
     border-bottom: 1px solid;
@@ -351,6 +364,13 @@ export default {
     justify-content: space-between;
     .van-icon-arrow {
       line-height: 50px;
+    }
+    .fund_isshow{
+      width: 100%;
+      .fund_justify{
+      display: flex;
+      justify-content: space-between
+    }
     }
   }
   .funds {
@@ -363,23 +383,23 @@ export default {
     }
   }
   .cesname {
-      padding: 10px;
-      border-bottom: 1px solid;
-      .count_list {
-        .count_img {
+    padding: 10px;
+    border-bottom: 1px solid;
+    .count_list {
+      .count_img {
+        width: 100%;
+        height: 160px;
+        img {
           width: 100%;
-          height: 160px;
-          img {
-            width: 100%;
-            height: 100%;
-          }
-        }
-        .disclosure {
-          width: 100%;
-          height: 44px;
+          height: 100%;
         }
       }
+      .disclosure {
+        width: 100%;
+        height: 44px;
+      }
     }
+  }
   .anniu {
     width: 100%;
     padding: 10px 10px;

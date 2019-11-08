@@ -20,6 +20,9 @@
           <el-button type="danger" size="mini" @click="cancel(item)">取 消</el-button>
           <el-button type="primary" size="mini" @click="toDeploy(item)">去签署</el-button>
         </div>
+        <div class="sign_button" v-if="item.signTime&&item.signStatus==2">
+          <el-button type="info" size="mini">管理员待签署</el-button>
+        </div>
         <div class="sign_button" v-if="item.signStatus==3">
           <el-button type="info" size="mini">已签署</el-button>
           <el-button type="primary" size="mini" @click="downloadClick(item)">下 载</el-button>
@@ -28,9 +31,8 @@
         <el-dialog title="下载" :visible.sync="download" width="80%" center>
           <div>{{item.contractName}}</div>
           <el-input v-model="email" placeholder="请输入邮箱地址"></el-input>
-          <a>下发至邮箱</a>
           <span slot="footer" class="dialog-footer">
-            <el-button type="primary" @click="download = false">下载到手机</el-button>
+            <el-button type="primary" :loading="loading" @click="SendOut">发送至邮箱</el-button>
             <el-button @click="download = false">取 消</el-button>
           </span>
         </el-dialog>
@@ -48,7 +50,9 @@ export default {
       num: 100,
       signData: [],
       download: false,
-      email: ""
+      email: "",
+      id: "",
+      loading: false
     };
   },
   methods: {
@@ -72,7 +76,7 @@ export default {
       ajax.authPost.bind(this)(
         "/api/Information/Present/Product/Sign/Failure/" + row.id,
         res => {
-          this.getSign()
+          this.getSign();
         }
       );
     },
@@ -80,17 +84,39 @@ export default {
     toDeploy(row) {
       let data = {
         contractId: row.contractId,
-        id:row.id
+        id: row.id
       };
       this.$router.push({
         path: "/Publicfore/TransactionRecord/ToDeploy",
         query: { data }
       });
     },
-    //下载净值模板
+    //下载对话框
     downloadClick(row) {
       this.download = true;
-      // window.open(row.contractMaterial.fullPath, "_blank");
+      this.id = row.id;
+    },
+    //下载
+    SendOut() {
+      this.loading = true;
+      let data = {
+        id: this.id,
+        email: this.email
+      };
+      ajax.authPostForm.bind(this)(
+        "/api/Information/Present/Product/Sign/Send",
+        data,
+        res => {
+          this.loading = false;
+          this.$message({
+            message:"发送成功",
+            type:'success'
+          });
+          this.download = false;
+        }
+      ).catch(res=>{
+        this.loading = false;
+      });
     }
   },
   mounted() {

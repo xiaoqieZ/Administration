@@ -29,6 +29,8 @@
                     :action="action"
                     :show-file-list="false"
                     :on-success="(res,file)=>handleAvatarSuccess(res,file,newItem,index)"
+                    :on-change="handleChange"
+                    :on-error="upError"
                     :before-upload="beforeAvatarUpload"
                     :headers="access_token"
                   >
@@ -143,9 +145,9 @@ export default {
     },
     // 图片的格式
     beforeAvatarUpload(file) {
-      const isLt2M = file.size / 1024 / 1024 < 2;
+      const isLt2M = file.size / 1024 / 1024 < 10;
       if (!isLt2M) {
-        this.$message.error("上传头像图片大小不能超过 2MB!");
+        this.$message.error("上传头像图片大小不能超过 10MB!");
       }
       return isLt2M;
     },
@@ -158,6 +160,10 @@ export default {
         }
       );
     },
+    //文件上传个数
+    handleChange(file, fileList) {
+      this.fileList = fileList.length > 1 ? fileList.splice(0, 1) : fileList;
+    },
     //选择题选中
     ChangeRadio(item, index, open, num) {
       this.listId[index] = {
@@ -165,6 +171,14 @@ export default {
         optionId: [open.id]
       };
       // console.log(this.listId)
+    },
+    upError(err, file, fileList) {
+      this.$message({
+        message: "上传失败",
+        type: "error"
+      });
+      //还原
+      this.clearFiles();
     },
     ChangeRadio2(item, index, open, num) {
       if (this.a[index]) {
@@ -228,7 +242,7 @@ export default {
     //弹窗确认
     center() {
       this.centerDialogVisible = false;
-      this.$router.push({path:'/Publicfore'})
+      this.$router.push({ path: "/Publicfore" });
     }
   },
   mounted() {
@@ -301,11 +315,11 @@ export default {
           }
         }
       }
-      /deep/.el-radio-group{
-          display: inline-grid !important;
-          /deep/.el-radio{
-            padding-top: 10px;
-          }
+      /deep/.el-radio-group {
+        display: inline-grid !important;
+        /deep/.el-radio {
+          padding-top: 10px;
+        }
       }
     }
   }

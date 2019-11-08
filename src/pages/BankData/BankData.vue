@@ -10,8 +10,8 @@
         <!-- 勾选框 -->
         <!-- <el-table-column type="selection" width="55"></el-table-column> -->
         <!-- 索引 -->
-        <el-table-column align="center" type="index" prop="data" label="序号" ></el-table-column>
-        <el-table-column align="center" prop="fundRecordNumber" label="产品编号" >
+        <el-table-column align="center" type="index" prop="data" label="序号"></el-table-column>
+        <el-table-column align="center" prop="fundRecordNumber" label="产品编号">
           <template slot-scope="scope">
             <span>{{scope.row.fundRecordNumber}}</span>
           </template>
@@ -41,11 +41,6 @@
             <span>{{scope.row.recommendName}}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="purchaseName" label="推销状态">
-          <template slot-scope="scope">
-            <span>{{scope.row.purchaseName}}</span>
-          </template>
-        </el-table-column>
         <el-table-column align="center" prop="purchaseName" label="排序">
           <template slot-scope="scope">
             <span></span>
@@ -54,11 +49,7 @@
                 <Icon @click="sort(scope.$index, scope.row,-1)" type="md-arrow-dropup" size="26" />
               </el-tooltip>
               <el-tooltip class="item" effect="dark" content="下移" placement="bottom">
-                <Icon
-                  @click="sort(scope.$index, scope.row,1)"
-                  type="md-arrow-dropdown"
-                  size="26"
-                />
+                <Icon @click="sort(scope.$index, scope.row,1)" type="md-arrow-dropdown" size="26" />
               </el-tooltip>
             </ButtonGroup>
           </template>
@@ -91,7 +82,7 @@
           :total="tabelPage.count"
         ></el-pagination>
       </div>
-      
+
       <!-- 招募说明书上传 -->
       <el-dialog title="提示" :visible.sync="centerDialogVisible" width="50%" center>
         <div class="upload">
@@ -118,17 +109,17 @@
           </el-table>
         </template>
         <!-- 页码 -->
-      <div align="center">
-        <el-pagination
-          background
-          @size-change="handleSizeList"
-          @current-change="handleCurrentPage"
-          :current-page="pages"
-          :page-size="nums"
-          layout="total, prev, pager, next, jumper"
-          :total="getCount.count"
-        ></el-pagination>
-      </div>
+        <div align="center">
+          <el-pagination
+            background
+            @size-change="handleSizeList"
+            @current-change="handleCurrentPage"
+            :current-page="pages"
+            :page-size="nums"
+            layout="total, prev, pager, next, jumper"
+            :total="getCount.count"
+          ></el-pagination>
+        </div>
         <span slot="footer" class="dialog-footer">
           <el-button @click="centerDialogVisible = false">取 消</el-button>
           <el-button type="primary" @click="centerDialogVisible = false">确 定</el-button>
@@ -141,10 +132,9 @@
           ref="upload"
           :data="uploadData"
           :action="action"
-          :on-preview="handlePreview"
-          :on-remove="handleRemove"
           :on-change="handleChange"
           :on-success="chenggeing"
+          :on-error="upError"
           :limit="1"
           :file-list="fileList"
           :headers="access_token"
@@ -502,9 +492,9 @@ export default {
         manager: {},
         mechanism: {}
       },
-      material:'',
-      materialId:'',
-      getCount:'',
+      material: "",
+      materialId: "",
+      getCount: ""
     };
   },
   methods: {
@@ -541,51 +531,66 @@ export default {
           console.log(res);
           if (res.data.code == 200) {
             this.getRecruit = res.data.data.list;
-            this.getCount = res.data.data.page
+            this.getCount = res.data.data.page;
           }
         }
       );
     },
     // 排序
-    sort(i, row,o){
-        let up = o;
-        let data = {id:row.id,up:up};
-        ajax.authPostForm.bind(this)('/api/Management/Product/Order',data,res=>{
-            // console.log(res);
-            this.getList();
-        })
+    sort(i, row, o) {
+      let up = o;
+      let data = { id: row.id, up: up };
+      ajax.authPostForm.bind(this)(
+        "/api/Management/Product/Order",
+        data,
+        res => {
+          // console.log(res);
+          this.getList();
+        }
+      );
     },
     // 清空文件列表
-    clearUploadedImage () {
+    clearUploadedImage() {
       this.$refs.upload.clearFiles();
-    },
-    // 上传成功的回调
-    chenggeing(response, file, fileList) {
-      this.materialId = response.data.id
     },
     // 提交上传招募书
     SubmitUploadFile() {
       this.uploadData.productId = this.productId;
       let data = {
-        productId:this.productId,
-        materialId:this.materialId
-      }
-      ajax.authPost.bind(this)('/api/Management/Product/Prospectus/Save',data,res=>{
-        this.UploadFile = false;
-        this.supplement(0,this.productId);
-      })
+        productId: this.productId,
+        materialId: this.materialId
+      };
+      ajax.authPost.bind(this)(
+        "/api/Management/Product/Prospectus/Save",
+        data,
+        res => {
+          this.UploadFile = false;
+          this.supplement(0, this.productId);
+        }
+      );
+    },
+    // 上传成功的回调
+    chenggeing(response, file, fileList) {
+      this.materialId = ajax.getMaterialId.bind(this)(response, () => {
+        //还原
+        this.clearFiles()
+      });
+    },
+    //移除/还原文件列表
+    clearFiles() {
+      this.$refs["upload"].clearFiles();
     },
     //文件上传个数
     handleChange(file, fileList) {
-      this.fileList = fileList.length > 1 ? fileList.splice(0, 1) : fileList;
-    //   console.log(this.fileList);
+      fileList.length > 1 ? fileList.splice(0, 1) : fileList;
     },
-    //移除文件钩子
-    handleRemove(file, fileList) {
-    },
-    //点击文件列表中已上传的文件时的钩子
-    handlePreview(file) {
-      // console.log(file);
+    upError(err, file, fileList) {
+      this.$message({
+        message:'上传失败',
+        type:'error'
+      })
+      //还原
+      this.clearFiles()
     },
     // 操作里面的查看详情
     changeSee(i, row) {
@@ -600,7 +605,7 @@ export default {
       }); //基本信息
       this.getll("/api/Management/Product/Risk/", res => {
         this.getSeeOneList.risk = res;
-        this.material = res.material.fullPath
+        this.material = res.material.fullPath;
       }); //风险信息
       this.getll("/api/Management/Product/Rate/", res => {
         this.getSeeOneList.rate = res;
@@ -617,7 +622,7 @@ export default {
     },
     getll(u, cb) {
       ajax.authGet.bind(this)(u + this.changeSeeId, res => {
-          cb(res.data.data); 
+        cb(res.data.data);
       });
     },
     //删除啊
@@ -654,14 +659,14 @@ export default {
     handleSizeList: function(val) {
       // console.log(val);
       this.nums = val;
-      this.supplement(0,this.productId);
+      this.supplement(0, this.productId);
     },
     //页码变更
     handleCurrentPage: function(val) {
       // console.log(val);
       this.pages = val;
-      this.supplement(0,this.productId);
-    },
+      this.supplement(0, this.productId);
+    }
   },
   created() {
     this.getList();
@@ -681,7 +686,7 @@ export default {
     padding: 20px 0;
     border-top: 5px solid;
   }
-  /deep/.el-dialog__body{
+  /deep/.el-dialog__body {
     height: 450px;
     overflow: scroll;
   }

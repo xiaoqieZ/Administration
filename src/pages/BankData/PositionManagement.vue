@@ -1,7 +1,9 @@
 <template>
   <div>
     <div class="title">
-      <div><el-button icon="el-icon-d-arrow-left" @click="prev">产品编辑</el-button></div>&nbsp;&nbsp;
+      <div>
+        <el-button icon="el-icon-d-arrow-left" @click="prev">产品编辑</el-button>
+      </div>&nbsp;&nbsp;
       <div style="font-weight: 600;padding-bottom: 10px;">{{PositionHolder.fundTypeName}}</div>
     </div>
     <div class="Hold">
@@ -73,7 +75,13 @@
           <div class="chill_item">
             <div class="HoldNum">冷静期回访</div>
             <el-form-item label="冷静期设置" prop="coolDownPeriod">
-              <el-input v-model="ruleForm.coolDownPeriod"></el-input>
+              <InputNumber
+                :max="10000"
+                :min="0"
+                v-model="ruleForm.coolDownPeriod"
+                :formatter="value => ` ${value} 小时`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+                :parser="value => value.replace(/\$\s?|(,*)/g, '')"
+              ></InputNumber>
             </el-form-item>
             <el-form-item label="冷静期后回访设置" prop="resource">
               <el-radio-group v-model="ruleForm.resource">
@@ -84,15 +92,17 @@
           </div>
           <!-- 双录视频 -->
           <div>
-            <div class="HoldNum">双路视频</div>
+            <div class="HoldNum">双录视频</div>
             <div class="holdVideo">
               <p>普通投资者申请成为专业投资者-请上传视频（选填）</p>
               <el-upload
                 class="upload-demo"
-                ref="upload"
+                ref="upload1"
                 :action="actionNotice"
                 :on-success="chengeNotice"
-                :file-list="fileList"
+                :on-error="upError1"
+                :on-change="handleChange"
+                :file-list="fileList1"
                 :headers="access_token"
               >
                 <el-button size="small" type="primary">点击上传文件</el-button>
@@ -102,23 +112,27 @@
               <p>向普通投资者销售高风险产品或服务-请上传双录视频（选填）</p>
               <el-upload
                 class="upload-demo"
-                ref="upload"
+                ref="upload2"
                 :action="actionNotice"
                 :on-success="chengeNo"
-                :file-list="fileList"
+                :on-error="upError2"
+                :on-change="handleChange"
+                :file-list="fileList2"
                 :headers="access_token"
               >
                 <el-button size="small" type="primary">点击上传文件</el-button>
               </el-upload>
             </div>
             <div class="holdVideo">
-              <p>调整投资者分类、基金产品或者服务等级以及适当性匹配意见-请上传双路视频（选填）</p>
+              <p>调整投资者分类、基金产品或者服务等级以及适当性匹配意见-请上传双录视频（选填）</p>
               <el-upload
                 class="upload-demo"
-                ref="upload"
+                ref="upload3"
                 :action="actionNotice"
                 :on-success="chengeNoti"
-                :file-list="fileList"
+                :on-error="upError3"
+                :on-change="handleChange"
+                :file-list="fileList3"
                 :headers="access_token"
               >
                 <el-button size="small" type="primary">点击上传文件</el-button>
@@ -128,10 +142,12 @@
               <p>像普通投资者销售基金产品或服务前对其进行风险提示-请上传视频（选填）</p>
               <el-upload
                 class="upload-demo"
-                ref="upload"
+                ref="upload4"
                 :action="actionNotice"
                 :on-success="chenge"
-                :file-list="fileList"
+                :on-error="upError4"
+                :on-change="handleChange"
+                :file-list="fileList4"
                 :headers="access_token"
               >
                 <el-button size="small" type="primary">点击上传文件</el-button>
@@ -147,9 +163,14 @@
             <el-table-column type="selection" width="55"></el-table-column>
             <!-- 索引 -->
             <el-table-column align="center" type="index" prop="data" label="序号" width="60"></el-table-column>
-            <el-table-column align="center" prop="fundScale" label="操作">
+            <el-table-column align="center" prop="fundScale" label="操作类型">
               <template slot-scope="scope">
                 <span>{{scope.row.operationTypeName}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column align="center" prop="fundScale" label="操作状态">
+              <template slot-scope="scope">
+                <span>{{scope.row.operationStatusName}}</span>
               </template>
             </el-table-column>
             <el-table-column align="center" prop="creationTime" label="净值时间">
@@ -179,7 +200,47 @@
             </el-table-column>
             <el-table-column align="center" prop="isQualified" label="双路视频">
               <template slot-scope="scope">
-                <span class="spanColor">视频接口暂无</span>
+                <a
+                  v-if="scope.row.investorTypeApplyMaterial"
+                  :href="scope.row.investorTypeApplyMaterial&&scope.row.investorTypeApplyMaterial.fullPath"
+                  target="_blanck"
+                  title="普通投资者申请成为专业投资者-请上传视频"
+                >
+                  <p class="spanColor">转化视频</p>
+                </a>
+                <a
+                  v-if="scope.row.saleHigherRiskMaterial"
+                  :href="scope.row.saleHigherRiskMaterial&&scope.row.saleHigherRiskMaterial.fullPath"
+                  target="_blanck"
+                  title="向普通投资者销售高风险产品或服务-请上传双录视频"
+                >
+                  <p class="spanColor">双录视频1</p>
+                </a>
+                <a
+                  v-if="scope.row.adjustMaterial"
+                  :href="scope.row.adjustMaterial&&scope.row.adjustMaterial.fullPath"
+                  target="_blanck"
+                  title="调整投资者分类、基金产品或者服务等级以及适当性匹配意见-请上传双路视频"
+                >
+                  <p class="spanColor">双录视频2</p>
+                </a>
+                <a
+                  v-if="scope.row.riskWarningMaterial"
+                  :href="scope.row.riskWarningMaterial&&scope.row.riskWarningMaterial.fullPath"
+                  target="_blanck"
+                  title="像普通投资者销售基金产品或服务前对其进行风险提示-请上传视频"
+                >
+                  <p class="spanColor">风险提示视频</p>
+                </a>
+              </template>
+            </el-table-column>
+            <el-table-column align="center" prop="isQualified" label="操作">
+              <template slot-scope="scope">
+                <span
+                  class="spanColor"
+                  v-if="scope.row.operationStatus==2||scope.row.operationStatus==3"
+                  @click="cancel(scope.$index,scope.row)"
+                >取消</span>
               </template>
             </el-table-column>
           </el-table>
@@ -209,7 +270,7 @@ import ajax from "../../api/https.js";
 export default {
   data() {
     return {
-      activeName:"fourth",
+      activeName: "fourth",
       PositionHolder: {}, //持仓者信息
       ruleForm: {
         region: "",
@@ -218,7 +279,7 @@ export default {
         name: "",
         desc: "",
         relateOrder: "",
-        coolDownPeriod: "",
+        coolDownPeriod: "0",
         resource: 0,
         fileId: "",
         saleHigherRiskMaterialId: "",
@@ -232,7 +293,10 @@ export default {
       access_token: {
         Authorization: "Bearer " + sessionStorage.getItem("access_token")
       },
-      fileList: [],
+      fileList1: [],
+      fileList2: [],
+      fileList3: [],
+      fileList4: [],
       rules: {
         date1: [
           {
@@ -325,6 +389,38 @@ export default {
         }
       );
     },
+    upError1(err, file, fileList) {
+      this.$message({
+        message: "上传失败",
+        type: "error"
+      });
+      //还原
+      this.clearFiles1();
+    },
+    upError2(err, file, fileList) {
+      this.$message({
+        message: "上传失败",
+        type: "error"
+      });
+      //还原
+      this.clearFiles2();
+    },
+    upError3(err, file, fileList) {
+      this.$message({
+        message: "上传失败",
+        type: "error"
+      });
+      //还原
+      this.clearFiles3();
+    },
+    upError4(err, file, fileList) {
+      this.$message({
+        message: "上传失败",
+        type: "error"
+      });
+      //还原
+      this.clearFiles4();
+    },
     // 确定发送按钮
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
@@ -349,9 +445,11 @@ export default {
             "/api/Management/Product/Invest/Save",
             data,
             res => {
-              this.getDataName()
-              this.getTabelPotentialList()
-               this.$message({message:res.data.message,type:"success"});
+              this.getDataName();
+              this.getTabelPotentialList();
+              this.$message({ message: res.data.message, type: "success" });
+              this.ruleForm.region = this.ruleForm.date1 = this.ruleForm.delivery = this.ruleForm.name = this.ruleForm.desc = this.ruleForm.relateOrder = this.ruleForm.coolDownPeriod = this.ruleForm.resource = this.ruleForm.fileId = this.ruleForm.saleHigherRiskMaterialId = this.ruleForm.adjustMaterialId = this.ruleForm.riskWarningMaterialId =
+                "";
             }
           );
         } else {
@@ -359,6 +457,15 @@ export default {
           return false;
         }
       });
+    },
+    //取消
+    cancel(index, row) {
+      ajax.authPost.bind(this)(
+        "/api/Management/Product/Invest/Cancel?operationId=" + row.id,
+        res => {
+          this.getTabelPotentialList();
+        }
+      );
     },
     prev() {
       this.$router.go(-1);
@@ -371,16 +478,54 @@ export default {
     },
     //文件上传成功的回调
     chengeNotice(response, file, fileList) {
-      this.ruleForm.fileId = response.data.id;
+      this.ruleForm.fileId = ajax.getMaterialId.bind(this)(response, () => {
+        //还原
+        this.clearFiles1();
+      });
+    },
+    //文件上传个数
+    handleChange(file, fileList) {
+      fileList.length > 1 ? fileList.splice(0, 1) : fileList;
+    },
+    //移除/还原文件列表
+    clearFiles1() {
+      this.$refs["upload1"].clearFiles();
+    },
+    clearFiles2() {
+      this.$refs["upload2"].clearFiles();
+    },
+    clearFiles3() {
+      this.$refs["upload3"].clearFiles();
+    },
+    clearFiles4() {
+      this.$refs["upload4"].clearFiles();
     },
     chengeNo(response, file, fileList) {
-      this.ruleForm.saleHigherRiskMaterialId = response.data.id;
+      this.ruleForm.saleHigherRiskMaterialId = ajax.getMaterialId.bind(this)(
+        response,
+        () => {
+          //还原
+          this.clearFiles2();
+        }
+      );
     },
     chengeNoti(response, file, fileList) {
-      this.ruleForm.adjustMaterialId = response.data.id;
+      this.ruleForm.adjustMaterialId = ajax.getMaterialId.bind(this)(
+        response,
+        () => {
+          //还原
+          this.clearFiles3();
+        }
+      );
     },
     chenge(response, file, fileList) {
-      this.ruleForm.riskWarningMaterialId = response.data.id;
+      this.ruleForm.riskWarningMaterialId = ajax.getMaterialId.bind(this)(
+        response,
+        () => {
+          //还原
+          this.clearFiles4();
+        }
+      );
     }
     // //每页显示数据量变更
     // handleSize: function(val) {
@@ -403,7 +548,7 @@ export default {
 };
 </script>
 <style lang="less">
-.title{
+.title {
   display: flex;
   height: 50px;
   line-height: 40px;
@@ -413,7 +558,7 @@ export default {
   overflow: scroll;
   background: #fff;
   padding: 10px;
-  
+
   .HoldNum {
     border-left: 4px solid #2d8cf0;
   }
@@ -445,6 +590,9 @@ export default {
       }
     }
   }
-  
+}
+.spanColor {
+  color: #409eff;
+  cursor: pointer;
 }
 </style>

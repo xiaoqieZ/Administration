@@ -157,7 +157,7 @@ export default {
         addressPit: "", // 地址
         landlinePit: "" // 座机
       },
-      radio: 1, ////性别
+      radio: "1", ////性别
       values: 0, //信息采集页面跟提交页面的变量
       list: "2",
       inputName: false, //禁用输入框

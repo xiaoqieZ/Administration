@@ -37,10 +37,12 @@
                 <div>
                   <el-upload
                     class="upload-demo"
-                    ref="upload"
+                    ref="upload1"
                     :action="action"
                     :on-success="chengeSothersMaterialId2"
-                    :file-list="fileImg"
+                    :on-error="upError2"
+                    :on-change="handleChange"
+                    :file-list="fileImg1"
                     :headers="access_token"
                   >
                     <el-button size="small" type="primary">点击上传文件</el-button>
@@ -48,6 +50,9 @@
                 </div>
               </el-form-item>
               <el-form-item>
+                <div class="submit">
+                  <el-button type="success" @click="toupdateMechanism">生成印章</el-button>
+                </div>
                 <div class="imgList">
                   <img
                     :src="mechanismSeal.material.fullPath == '' ? '../../../static/img/sgd.jpg':mechanismSeal.material.fullPath"
@@ -55,9 +60,6 @@
                 </div>
               </el-form-item>
             </el-form>
-            <div class="submit">
-              <el-button type="success" @click="toupdateMechanism">生成印章</el-button>
-            </div>
           </div>
         </el-col>
         <el-col :span="12">
@@ -87,10 +89,12 @@
                 <div>
                   <el-upload
                     class="upload-demo"
-                    ref="upload"
+                    ref="upload2"
                     :action="actions"
                     :on-success="chengeSothersMaterialId"
-                    :file-list="fileImg"
+                    :on-error="upError2"
+                    :on-change="handleChange"
+                    :file-list="fileImg2"
                     :headers="access_token"
                   >
                     <el-button size="small" type="primary">点击上传文件</el-button>
@@ -98,6 +102,9 @@
                 </div>
               </el-form-item>
               <el-form-item>
+                <div class="submit">
+                  <el-button type="success" @click="toupdatePersonal">生成印章</el-button>
+                </div>
                 <div class="imgList">
                   <img
                     :src="legalPersonSeal.material.fullPath == '' ? '../../../static/img/sgd.jpg':legalPersonSeal.material.fullPath"
@@ -105,13 +112,10 @@
                 </div>
               </el-form-item>
             </el-form>
-            <div class="submit">
-              <el-button type="success" @click="toupdatePersonal">生成印章</el-button>
-            </div>
           </div>
         </el-col>
       </el-row>
-      <div class="submit" style="padding-top:50px">
+      <div class="submits" style="padding-top:50px">
         <el-button @click="submit" type="primary">提 交</el-button>
       </div>
     </div>
@@ -127,7 +131,8 @@ export default {
       access_token: {
         Authorization: "Bearer " + sessionStorage.getItem("access_token")
       },
-      fileImg: [],
+      fileImg1: [],
+      fileImg2: [],
       actions: ajax.doms.bind(this)(
         "/api/Management/Contract/LegalPerson/Upload"
       ),
@@ -137,15 +142,15 @@ export default {
         horizontal: "",
         chord: "",
         sealType: "1",
-        sealColor: "",
+        sealColor: "1",
         material: {
           fullPath: "" //生成个人印章
         }
       },
       legalPersonSeal: {
         identification: "",
-        sealType: "",
-        sealColor: "",
+        sealType: "2",
+        sealColor: "1",
         material: {
           fullPath: "" //生成个人印章
         }
@@ -161,8 +166,8 @@ export default {
       MechanismListThree: "",
       MechanismValueThree: "",
 
-      responseId: '', //机构上传文件的Id
-      materialId: '' //个人上传文件的Id
+      responseId: "", //机构上传文件的Id
+      materialId: "" //个人上传文件的Id
     };
   },
   methods: {
@@ -228,12 +233,24 @@ export default {
     },
     //上传机构印章成功回调
     chengeSothersMaterialId2(response, file, fileList) {
-      this.responseId = response.data.id;
-      //   console.log(response.data.id);
+      this.responseId = ajax.getMaterialId.bind(this)(response, () => {
+        //还原
+        this.clearFiles1();
+      });
+    },
+    //移除/还原文件列表
+    clearFiles1() {
+      this.$refs["upload1"].clearFiles();
+    },
+    //移除/还原文件列表
+    clearFiles2() {
+      this.$refs["upload2"].clearFiles();
     },
     chengeSothersMaterialId(response, file, fileList) {
-      this.materialId = response.data.id;
-      console.log(this.materialId);
+      this.materialId = ajax.getMaterialId.bind(this)(response, () => {
+        //还原
+        this.clearFiles2();
+      });
     },
     //生成机构印章
     toupdateMechanism() {
@@ -263,6 +280,26 @@ export default {
         data
       );
     },
+    //文件上传个数
+    handleChange(file, fileList) {
+      this.fileList = fileList.length > 1 ? fileList.splice(0, 1) : fileList;
+    },
+    upError1(err, file, fileList) {
+      this.$message({
+        message: "上传失败",
+        type: "error"
+      });
+      //还原
+      this.clearFiles1();
+    },
+    upError2(err, file, fileList) {
+      this.$message({
+        message: "上传失败",
+        type: "error"
+      });
+      //还原
+      this.clearFiles2();
+    },
     //提交
     submit() {
       let data = {
@@ -274,14 +311,14 @@ export default {
           chord: this.mechanismSeal.chord,
           sealType: this.mechanismSeal.sealType,
           sealColor: this.mechanismSeal.sealColor,
-          materialId:this.responseId
+          materialId: this.responseId
         },
         legalPersonSeal: {
           identification: this.legalPersonSeal.identification,
           title: this.fileList.legalPersonName,
           sealType: this.legalPersonSeal.sealType,
           sealColor: this.legalPersonSeal.sealColor,
-          materialId:this.materialId
+          materialId: this.materialId
         }
       };
       ajax.authPost.bind(this)(
@@ -316,6 +353,12 @@ export default {
   .purple {
     height: 568px;
     overflow: scroll;
+    /deep/.el-col-12 {
+      border-left: 1px solid;
+      /deep/.el-input {
+        width: 75%;
+      }
+    }
     .title {
       height: 60px;
       line-height: 60px;
@@ -326,39 +369,37 @@ export default {
   .imgList {
     width: 100px;
     height: 100px;
-    margin: auto;
     img {
       width: 100%;
       height: 100%;
     }
   }
-  .submit {
+  .submits {
     text-align: center;
   }
   @media screen and (min-width: 1620px) {
-      .purple {
-        height: 730px;
-        overflow: scroll;
-        .title {
-          height: 60px;
-          line-height: 60px;
-          font-weight: 600;
-          text-align: center;
-        }
+    .purple {
+      height: 730px;
+      overflow: scroll;
+      .title {
+        height: 60px;
+        line-height: 60px;
+        font-weight: 600;
+        text-align: center;
       }
     }
-    @media screen and (max-width: 1620px) {
-      .purple {
-        height: 610px;
-        overflow: scroll;
-        .title {
-          height: 60px;
-          line-height: 60px;
-          font-weight: 600;
-          text-align: center;
-        }
+  }
+  @media screen and (max-width: 1620px) {
+    .purple {
+      height: 610px;
+      overflow: scroll;
+      .title {
+        height: 60px;
+        line-height: 60px;
+        font-weight: 600;
+        text-align: center;
       }
     }
+  }
 }
-
 </style>

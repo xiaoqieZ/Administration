@@ -35,7 +35,7 @@
                 <van-count-down
                   ref="countDown"
                   style="width: 98px;height: 40px;line-height: 40px;text-align: center;position: absolute;border: 1px solid #dcdfe6;top: 0;right: 0;"
-                  :time="5000"
+                  :time="30000"
                   :auto-start="false"
                   format="ss"
                   @finish="finished"
@@ -46,7 +46,7 @@
                 <van-count-down
                   ref="countDown"
                   style="width: 98px;height: 40px;line-height: 40px;text-align: center;position: absolute;border: 1px solid #dcdfe6;top: 0;right: 0;"
-                  :time="5000"
+                  :time="30000"
                   :auto-start="true"
                   format="ss"
                   @finish="finished"
@@ -221,7 +221,7 @@
               <van-count-down
                 ref="countDown"
                 style="width: 98px;height: 40px;line-height: 40px;text-align: center;position: absolute;border: 1px solid #dcdfe6;top: 0;right: 0;"
-                :time="5000"
+                :time="30000"
                 :auto-start="false"
                 format="ss"
                 @finish="finished"
@@ -232,7 +232,7 @@
               <van-count-down
                 ref="countDown"
                 style="width: 98px;height: 40px;line-height: 40px;text-align: center;position: absolute;border: 1px solid #dcdfe6;top: 0;right: 0;"
-                :time="5000"
+                :time="30000"
                 :auto-start="true"
                 format="ss"
                 @finish="finished"
@@ -527,8 +527,9 @@ export default {
         this.Business = res.data.data;
       });
     },
-    //修改
+    //确定修改
     modifyClick() {
+      if(this.form.text!=''&&this.form.Verification!=''){
       let data = {
         modifyType: this.form.radio,
         modifyContent: this.form.text,
@@ -539,16 +540,17 @@ export default {
         this.form.radio = this.form.text = this.form.Verification = "";
         this.getPersonal();
       });
+    }else{
+      this.$message({
+        message:'输入框不能留空',
+        type:"warning"
+      })
+    }
     }
   },
   mounted() {
-    this.getPersonal();
-    //判断用户页面填写情况，填写信息页面完成提交后，退出界面再次进来就是补充信息界面
-    // if (this.information.mobile != "") {
-    //   this.current = 1;
-    //   this.fill = 2;
-    // }
     this.getCustomer();
+    this.getPersonal()
   }
 };
 </script>

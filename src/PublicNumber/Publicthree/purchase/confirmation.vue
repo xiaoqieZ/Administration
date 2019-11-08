@@ -69,10 +69,12 @@
           <el-form-item label="缴款证明">
             <el-upload
               class="upload-demo"
-              ref="upload"
+              ref="upload1"
               :action="action"
               :on-success="uploadPayment"
-              :file-list="fileList"
+              :on-change="handleChange"
+              :on-error="upError1"
+              :file-list="fileList1"
               :headers="access_token"
             >
               <el-button size="small" type="primary">上传</el-button>
@@ -81,10 +83,12 @@
           <el-form-item label="银行卡照">
             <el-upload
               class="upload-demo"
-              ref="upload"
+              ref="upload2"
               :action="action"
               :on-success="uploadBankcard"
-              :file-list="fileList"
+              :on-error="upError2"
+              :on-change="handleChange"
+              :file-list="fileList2"
               :headers="access_token"
             >
               <el-button size="small" type="primary">上传</el-button>
@@ -107,7 +111,7 @@
               <van-count-down
                 ref="countDown"
                 style="width: 98px;height: 40px;line-height: 40px;text-align: center;position: absolute;border: 1px solid #dcdfe6;top: -57;right: 0;"
-                :time="5000"
+                :time="30000"
                 :auto-start="false"
                 format="ss"
                 @finish="finished"
@@ -118,7 +122,7 @@
               <van-count-down
                 ref="countDown"
                 style="width: 98px;height: 40px;line-height: 40px;text-align: center;position: absolute;border: 1px solid #dcdfe6;top: -57;right: 0;"
-                :time="5000"
+                :time="30000"
                 :auto-start="true"
                 format="ss"
                 @finish="finished"
@@ -159,7 +163,8 @@ export default {
       access_token: {
         Authorization: "Bearer " + sessionStorage.getItem("access_token")
       },
-      fileList: [],
+      fileList1: [],
+      fileList2: [],
       action: ajax.doms.bind(this)(
         "/api/Information/Present/Product/Apply/Material/" +
           this.$route.query.data
@@ -213,6 +218,22 @@ export default {
         this.confirmData = res.data.data;
       });
     },
+    upError1(err, file, fileList) {
+      this.$message({
+        message:'上传失败',
+        type:'error'
+      })
+      //还原
+      this.clearFiles1()
+    },
+    upError2(err, file, fileList) {
+      this.$message({
+        message:'上传失败',
+        type:'error'
+      })
+      //还原
+      this.clearFiles2()
+    },
     //获取用户可承受的风险等级
     getStorage() {
       ajax.authGet.bind(this)(
@@ -238,11 +259,28 @@ export default {
     },
     //缴款证明
     uploadPayment(response, file, fileList) {
-      this.ReportId = response.data.id;
+      this.ReportId = ajax.getMaterialId.bind(this)(response, () => {
+        //还原
+        this.clearFiles1();
+      });
+    },
+    //移除/还原文件列表
+    clearFiles1() {
+      this.$refs["upload1"].clearFiles();
+    },
+    clearFiles2() {
+      this.$refs["upload2"].clearFiles();
     },
     //银行卡
     uploadBankcard(response, file, fileList) {
-      this.BankcardId = response.data.id;
+      this.BankcardId = ajax.getMaterialId.bind(this)(response, () => {
+        //还原
+        this.clearFiles2();
+      });
+    },
+    //文件上传个数
+    handleChange(file, fileList) {
+      this.fileList = fileList.length > 1 ? fileList.splice(0, 1) : fileList;
     },
     //提交
     submit() {

@@ -1,7 +1,7 @@
 <template>
   <div style="height:100%;background:#F0F1F7">
      <!-- @mouseenter="hoverNav" @mouseleave="leaveNav" -->
-    <div>
+    <div class="title_list">
       <el-col
         :span="12"
         class="c-nav-show"
@@ -35,6 +35,7 @@
         <!-- 遇到的坑：1.不配置路由的话，不会有高亮。2.配置类名时，类名必须与路由名一致，图标才能有高亮。3.不需要展开的导航菜单需要再methods里面重新配置。 -->
           <!-- 首页 -->         
            <el-menu-item
+           v-show="Kill"
               index="/NavBar/Homepage/Homepage"
               class="issingleMenu"
               style="user-select:none"
@@ -83,15 +84,15 @@
                 <span class="mr-right-18">·</span>
                 投资者份额
               </el-menu-item>
-              <el-menu-item disabled index="/NavBar/CParameter/CCCtallocation">
+              <el-menu-item v-show="Kill" index="/NavBar/CParameter/CCCtallocation">
                 <span class="mr-right-18">·</span>
                 投资者导入
               </el-menu-item>
-              <el-menu-item disabled index="/NavBar/CParameter/CCCCtallocation">
+              <el-menu-item v-show="Kill" index="/NavBar/CParameter/CCCCtallocation">
                 <span class="mr-right-18">·</span>
                 理财顾问
               </el-menu-item>
-              <el-menu-item disabled index="/NavBar/CParameter/CCCCCtallocation">
+              <el-menu-item v-show="Kill" index="/NavBar/CParameter/CCCCCtallocation">
                 <span class="mr-right-18">·</span>
                 智能自查
               </el-menu-item>
@@ -119,7 +120,7 @@
                 <span class="mr-right-18">.</span>
                 产品列表
               </el-menu-item>
-              <el-menu-item disabled index="/NavBar/DataDitionary/BbankData">
+              <el-menu-item v-show="Kill" index="/NavBar/DataDitionary/BbankData">
                 <span class="mr-right-18">.</span>
                 日历提醒
               </el-menu-item>
@@ -152,7 +153,7 @@
                 <span class="mr-right-18">·</span>
                 基金合同
               </el-menu-item>
-              <el-menu-item disabled index="/NavBar/UserManage/UserRecord">
+              <el-menu-item v-show="Kill" index="/NavBar/UserManage/UserRecord">
                 <span class="mr-right-18">·</span>
                 公文文件
               </el-menu-item>
@@ -163,7 +164,7 @@
             </div>
           </el-submenu>
           <!-- 备案材料 -->
-          <el-submenu index="MemberManage" onselectstart="return false;">
+          <el-submenu index="MemberManage" v-show="Kill" onselectstart="return false;">
             <template slot="title">
               <i
                 class="nav-open-icon"
@@ -180,14 +181,14 @@
               ></i>
             </template>
             <div v-show="!isShow">
-              <el-menu-item disabled index="/NavBar/MemberManage/Aparameters">
+              <el-menu-item v-show="Kill" index="/NavBar/MemberManage/Aparameters">
                 <span class="mr-right-18">·</span>
                 下载中心
               </el-menu-item>
             </div>
           </el-submenu>
           <!-- 推送信息 -->
-          <el-submenu index="Pushmessages" onselectstart="return false;">
+          <el-submenu index="Pushmessages" v-show="Kill" onselectstart="return false;">
             <template slot="title">
               <i
                 class="nav-open-icon"
@@ -204,15 +205,15 @@
               ></i>
             </template>
             <div v-show="!isShow">
-              <el-menu-item disabled index="/NavBar/Pushmessages/Pushmessage">
+              <el-menu-item v-show="Kill" index="/NavBar/Pushmessages/Pushmessage">
                 <span class="mr-right-18">·</span>
                 发送信息
               </el-menu-item>
-              <el-menu-item disabled index="/NavBar/Pushmessages/Pushmessagetow">
+              <el-menu-item v-show="Kill" index="/NavBar/Pushmessages/Pushmessagetow">
                 <span class="mr-right-18">·</span>
                 接收信息
               </el-menu-item>
-              <el-menu-item disabled index="/NavBar/Pushmessages/Pushmessagethree">
+              <el-menu-item v-show="Kill" index="/NavBar/Pushmessages/Pushmessagethree">
                 <span class="mr-right-18">·</span>
                 模板信息
               </el-menu-item>
@@ -240,7 +241,7 @@
                 <span class="mr-right-18">·</span>
                 页面设置
               </el-menu-item>
-              <el-menu-item disabled index="/NavBar/Managements/Managementtow">
+              <el-menu-item v-show="Kill" index="/NavBar/Managements/Managementtow">
                 <span class="mr-right-18">·</span>
                 投资者统计
               </el-menu-item>
@@ -252,15 +253,15 @@
                 <span class="mr-right-18">·</span>
                 权限管理
               </el-menu-item>
-              <el-menu-item disabled index="/NavBar/Managements/Managementfive">
+              <el-menu-item v-show="Kill" index="/NavBar/Managements/Managementfive">
                 <span class="mr-right-18">·</span>
                 使用统计
               </el-menu-item>
-              <el-menu-item disabled index="/NavBar/Managements/Managementsix">
+              <el-menu-item v-show="Kill" index="/NavBar/Managements/Managementsix">
                 <span class="mr-right-18">·</span>
                 同步设置
               </el-menu-item>
-              <el-menu-item disabled index="/NavBar/Managements/Managementseven">
+              <el-menu-item v-show="Kill" index="/NavBar/Managements/Managementseven">
                 <span class="mr-right-18">·</span>
                 认证管理
               </el-menu-item>
@@ -341,6 +342,7 @@ export default {
       },
       name:'',
       userData:{},
+      Kill:false
     }
   },
   mounted(){
@@ -491,8 +493,6 @@ export default {
   font-size: 14px;
   color: #fff;
   position: absolute;
-  left: 0;
-  right: 0;
   bottom: 0;
   .listtime{
     width: 265px;
@@ -709,22 +709,17 @@ export default {
   padding-left: 20px;
 }
 .c-nav-show/deep/.__vuescroll {
-  height: 85% !important;
+  height: 60% ;
 }
 .c-nav-show/deep/.__panel{
   margin:0 !important; 
 }
 /deep/.el-menu{
-  height: 88%;
+  height: 70%;
 }
 @media screen and (min-width: 1920) {
-    /deep/.el-menu{
-  height: 88%;
-}
-}
-@media screen and (max-width: 1600) {
-    /deep/.el-menu{
-  height: 75%;
+    .c-nav-show/deep/.el-menu{
+  height: 100%;
 }
 }
 </style>

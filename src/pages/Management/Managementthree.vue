@@ -17,17 +17,17 @@
               ></el-input>
               <div class="jurdic-name">
                 <div class="jurdic-qiez" v-for="item in getAllData" :key="item.id">
-                  <span @click="ChangeRadio($event,item)">{{item.name}}</span>
+                  <span @click="ChangeRadio($event,item)" style="cursor:pointer">{{item.name}}</span>
                   <Icon
                     type="ios-trash"
-                    style="float:right;line-height: 30px;"
+                    style="float:right;line-height: 30px;cursor:pointer"
                     @click.stop="del"
                     color="red"
                     size="22"
                   />
                   <Icon
                     type="ios-create-outline"
-                    style="float:right;line-height: 30px;"
+                    style="float:right;line-height: 30px;cursor:pointer"
                     @click.stop="edit($event,item)"
                     size="20"
                   />

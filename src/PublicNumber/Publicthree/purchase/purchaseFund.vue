@@ -281,6 +281,12 @@ export default {
       }
     }
   }
+  .checkbox_class {
+    /deep/.el-dialog__body {
+      height: 500px;
+      overflow: scroll;
+    }
+  }
   /deep/.el-checkbox {
     white-space: normal;
     word-break: break-all;

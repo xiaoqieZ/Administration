@@ -8,7 +8,9 @@
     </div>
     <!-- 数据表单 -->
     <div class="Risk_data">
-      <div class="Risk_button">
+      <div class="Risk_count">
+        <el-input v-model="nikoName" placeholder="输入机构名称搜索" @keyup.enter.native="handleIconClick"></el-input>
+        <el-button icon="el-icon-search" @click="handleIconClick"></el-button>
         <el-button icon="el-icon-plus" @click="dialogUser=true">新增用户</el-button>
       </div>
       <el-table :data="subscriptionData" stripe id="out-table" style="width: 100%">
@@ -49,10 +51,10 @@
                 <el-checkbox disabled>短信通知</el-checkbox>
               </el-checkbox-group>
               <el-checkbox-group v-model="scope.row.emailNotify" @change="listge">
-                <el-checkbox >邮件通知</el-checkbox>
+                <el-checkbox>邮件通知</el-checkbox>
               </el-checkbox-group>
               <el-checkbox-group v-model="scope.row.weChatNotify" @change="listg">
-                <el-checkbox >微信通知</el-checkbox>
+                <el-checkbox>微信通知</el-checkbox>
               </el-checkbox-group>
             </div>
           </template>
@@ -61,18 +63,41 @@
           <template slot-scope="scope">
             <span v-if="scope.row.contractMaterial==null">点击查看</span>
             <div v-else>
-              <a :href="scope.row.contractMaterial==null?null:scope.row.contractMaterial.fullPath" target="_blank">点击查看</a>
+              <a
+                :href="scope.row.contractMaterial==null?null:scope.row.contractMaterial.fullPath"
+                target="_blank"
+              >点击查看</a>
             </div>
           </template>
         </el-table-column>
         <el-table-column align="center" prop="data" label="操作">
           <template slot-scope="scope">
             <div>
-              <span style="color:#409EFF"  v-if="scope.row.signStatus==2 || scope.row.signStatus==1" @click="cancel(scope.$index,scope.row)">取消</span>
-              <span style="color:#409EFF" v-if="scope.row.checkTime == null" @click="sign(scope.$index,scope.row)">签署</span>
-              <span style="color:#409EFF"  v-if="scope.row.signStatus==1" @click="Launch(scope.$index,scope.row)">发起</span>
-              <span style="color:#409EFF" v-if="scope.row.signStatus!=3" @click="dele(scope.$index,scope.row)">删除</span>
-              <span style="color:#409EFF" v-if="scope.row.signStatus==4 || scope.row.signStatus==2" @click="Reset(scope.$index,scope.row)">重置</span>
+              <span
+                style="color:#409EFF;cursor:pointer"
+                v-if="scope.row.signStatus==2 || scope.row.signStatus==1"
+                @click="cancel(scope.$index,scope.row)"
+              >取消</span>
+              <span
+                style="color:#409EFF;cursor:pointer"
+                v-if="scope.row.checkTime == null"
+                @click="sign(scope.$index,scope.row)"
+              >签署</span>
+              <span
+                style="color:#409EFF;cursor:pointer"
+                v-if="scope.row.signStatus==1"
+                @click="Launch(scope.$index,scope.row)"
+              >发起</span>
+              <span
+                style="color:#409EFF;cursor:pointer"
+                v-if="scope.row.signStatus!=3"
+                @click="dele(scope.$index,scope.row)"
+              >删除</span>
+              <span
+                style="color:#409EFF;cursor:pointer"
+                v-if="scope.row.signStatus==4 || scope.row.signStatus==2"
+                @click="Reset(scope.$index,scope.row)"
+              >重置</span>
             </div>
           </template>
         </el-table-column>
@@ -124,7 +149,8 @@ export default {
       roleUsers: [], //用户搜索返回的数据
       resourceShort: 0,
       resourcEmail: 0,
-      resourceWeChat: 0
+      resourceWeChat: 0,
+      nikoName: ""
     };
   },
   methods: {
@@ -189,6 +215,23 @@ export default {
     handleSelect(item) {
       this.userid = item.id;
     },
+    //搜索
+    handleIconClick() {
+      let data = {
+        userName: this.nikoName,
+        contractId: this.$route.query.data.id,
+        pageSize: this.num,
+        pageIndex: this.page
+      };
+      ajax.authPost.bind(this)(
+        "/api/Management/Query/UserContract",
+        data,
+        res => {
+          this.subscriptionData = res.data.data.list;
+          this.questionnairecount = res.data.data.page;
+        }
+      );
+    },
     //  模糊搜索
     querySearch(queryString, cb) {
       ajax.authGet.bind(this)(
@@ -242,12 +285,16 @@ export default {
         data,
         res => {
           this.getSubscriptionData();
+          this.$message({
+            message: "发起签约成功",
+            type: "success"
+          });
         }
       );
     },
     //删除
     dele(index, row) {
-        ajax.authPost.bind(this)(
+      ajax.authPost.bind(this)(
         "/api/Management/Contract/Sign/Remove/" + row.id,
         res => {
           this.getSubscriptionData();
@@ -282,15 +329,18 @@ export default {
 
 <style lang="less" scoped>
 .sign_contract {
-
   .sign_title {
     height: 50px;
     line-height: 40px;
     display: flex;
   }
-  .Risk_button {
-    height: 50px;
-    line-height: 50px;
+  .Risk_data {
+    .Risk_count {
+      padding-top: 10px;
+      /deep/.el-input {
+        width: 35%;
+      }
+    }
   }
 }
 </style>

@@ -15,11 +15,13 @@
     <div class="myhomettop">
       <div class="myhometimg">
         <div class="imges">
-          <img :src="userData.portrait==null?'../../static/img/youliya.jpg':userData.portrait" alt="头像" />
+          <!-- <van-skeleton title avatar :row="3" :loading="loading" avatar-shape="square" avatar-size="80" v-if="loading==true"/>
+          <img :src="userData.portrait" style="position: absolute;top: 0;" v-else/> -->
+          <img :src="userData.portrait==null?'static/img/lanjiazai.png':userData.portrait" style="position: absolute;top: 0;" />
         </div>
       </div>
-      <div class="myhomerequrey">
-        <p>
+        <div style="padding-left: 20px;">
+          <p>
           姓名：
           <span>{{userData.nickName==null?'- -':userData.nickName}}</span>
         </p>
@@ -37,8 +39,8 @@
           类别：
           <span>{{userData.customerTypeName==null?'- -':userData.customerTypeName}}</span>
         </p>
+        </div>
       </div>
-    </div>
     <div v-if="IsAdmin==true">
       <el-button @click.native="gos" type="primary" plain style="width:100%">
         <i class="el-icon-menu"></i>&nbsp;进入后台系统
@@ -90,7 +92,7 @@
           </div>
         </router-link>
         <router-link to="/Publicfore/Information/Conversion">
-          <div class="myhometupdey" v-if="investorTypeList.investorType==2">
+          <div class="myhometupdey" v-if="investorTypeList.investorType==2&&isQualified==true">
             <p>
               <i class="el-icon-user"></i>
               <span>投资者转化(普转专)</span>
@@ -147,10 +149,11 @@
         <div class="myhometupdey">
           <p>
             <i class="el-icon-document-copy"></i>
-            <span>合同电子</span>
+            <span>电子合同</span>
           </p>
           <p>
             <router-link to="/Publicfore/TransactionRecord/Identification">
+              <span v-if="countData!=0">待签署合同{{countData}}份</span> 
               <el-button type="warning" size="mini">去签署</el-button>
             </router-link>
           </p>
@@ -176,12 +179,15 @@ export default {
       investorTypeList: {},
       userData: {},
       IsAdmin: "",
-      openId: ""
+      openId: "",
+      isQualified: "",
+      countData:'',
+      loading:true
     };
   },
   methods: {
     gos() {
-      this.$router.push({ path: "/NavBar/Homepage/Homepage" });
+      this.$router.push({ path: "/NavBar/CParameter/CurrencyData" });
       // console.log(121212)
     },
     //获取Token接口
@@ -191,7 +197,7 @@ export default {
           openId: this.openId
         })
         .then(res => {
-          //   console.log(res);         
+          //   console.log(res);
           this.getStorage();
           this.getTotalAssets();
           this.getInvestorType();
@@ -205,12 +211,21 @@ export default {
       ajax.authGet.bind(this)("/api/Information/Present/Asset", res => {
         this.TotalAssets = res.data.data;
       });
+      //是否是合格投资者
+      ajax.authGet.bind(this)("/api/Permission/IsQualified", res => {
+        this.isQualified = res.data.data;
+      });
+      //获取待签署的合同数
+      ajax.authGet.bind(this)('/api/Information/Present/Signing/Count',res=>{
+        this.countData = res.data.data
+      })
     },
 
     getStorage() {
       //用户信息
       ajax.authGet.bind(this)("/api/Information/Account/GetByOpenId", res => {
         this.userData = res.data.data;
+        this.loading = false;
       });
       //是否是管理员
       ajax.authGet.bind(this)("/api/Permission/IsAdmin", res => {
@@ -221,7 +236,8 @@ export default {
       ajax.authGet.bind(this)(
         "/api/Information/Account/Authentication",
         res => {
-          this.investorTypeList.investorType = res.data.data&&res.data.data.investorType;
+          this.investorTypeList.investorType =
+            res.data.data && res.data.data.investorType;
         }
       );
     }
@@ -231,7 +247,10 @@ export default {
     if (!openId) {
       openId = storage.get("openId");
     }
-    openId = "oHnB5wBgy_FXh1ICjO0sV44DFO9k";
+    // openId = "oHnB5wBgy_FXh1ICjO0sV44DFO9k";
+    //openId = "oHnB5wBgy_FXh1ICjO0sV44DFO9k1";
+    // openId = "oHnB5wBgy_FXh1ICjO0sV44DFO9k2";
+    openId = "oHnB5wBgy_FXh1ICjO0sV44DFO9k3";
     if (!openId) {
       var cHost = location.origin + "/#/Publicfore";
       ajax.get.bind(this)(
@@ -249,6 +268,10 @@ export default {
     storage.set("openId", openId);
     this.openId = openId;
     this.getName();
+
+    if (window.touchSet) {
+      document.body.removeEventListener("touchmove",window.touchSet);
+    }
   },
   components: {
     "tabbar-home": tebbarhome
@@ -269,7 +292,7 @@ export default {
     .myhometimg {
       .imges {
         width: 80px;
-        height: 120px;
+        height: 80px;
         position: relative;
         img {
           width: 100%;

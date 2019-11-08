@@ -1,8 +1,7 @@
 <template>
   <div class="About-us">
     <mt-header fixed title="关于我们"></mt-header>
-    <div class="complete" v-if="aboutUs.length==0">需要完成投资者认定，才能进入</div>
-    <div class="Aboutcenter" v-for="item in aboutUs" :key="item.id" v-else>
+    <div class="Aboutcenter" v-for="item in aboutUs" :key="item.id">
       <div class="Aboutcenter_content">
         <h4>{{item.title}}</h4>
         <p>{{item.content}}</p>

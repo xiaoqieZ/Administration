@@ -63,7 +63,7 @@
       <el-table-column align="center" prop="name" label="姓名/机构名称" width="180">
         <template slot-scope="scope">
           <span
-            style="color: #409eff"
+            style="color: #409eff;cursor:pointer"
             @click="personalData(scope.$index, scope.row)"
           >{{scope.row.name}}</span>
         </template>

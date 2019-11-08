@@ -48,9 +48,9 @@
               style="color:#409EFF"
               @click="enable(scope.$index,scope.row)"
             >{{scope.row.isAvailable==1?'':'启动'}}</span>
-            <span style="color:#409EFF" @click="edit(scope.$index,scope.row)">编辑</span>
-            <span style="color:#409EFF" @click="SeeData(scope.$index,scope.row)">查看</span>
-            <span style="color:#409EFF" @click="Score(scope.$index,scope.row)">分值</span>
+            <span style="color:#409EFF;cursor:pointer" @click="edit(scope.$index,scope.row)">编辑</span>
+            <span style="color:#409EFF;cursor:pointer" @click="SeeData(scope.$index,scope.row)">查看</span>
+            <span style="color:#409EFF;cursor:pointer" @click="Score(scope.$index,scope.row)">分值</span>
           </template>
         </el-table-column>
       </el-table>

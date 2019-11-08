@@ -33,13 +33,15 @@
                 </el-form-item>
                 <el-upload
                   class="upload-demo"
-                  ref="upload"
+                  ref="upload1"
                   :data="uploadData"
                   :action="action"
                   :on-preview="handlePreview"
                   :on-remove="handleRemove"
-                  :on-success="chengecheng"
-                  :file-list="fileList"
+                  :on-success="chengecheng1"
+                  :on-error="upError1"
+                  :on-change="handleChange"
+                  :file-list="fileList1"
                   :headers="access_token"
                   list-type="picture"
                 >
@@ -127,13 +129,15 @@
                 </el-form-item>
                 <el-upload
                   class="upload-demo"
-                  ref="upload"
+                  ref="upload2"
                   :data="uploadjournalism"
                   :action="action"
                   :on-preview="handlePreview"
                   :on-remove="handleRemove"
-                  :on-success="chengecheng"
-                  :file-list="fileList"
+                  :on-success="chengecheng2"
+                  :on-error="upError2"
+                  :on-change="handleChange"
+                  :file-list="fileList2"
                   :headers="access_token"
                   list-type="picture"
                 >
@@ -246,13 +250,15 @@
                 </el-form-item>
                 <el-upload
                   class="upload-demo"
-                  ref="upload"
+                  ref="upload3"
                   :data="uploadAbout"
                   :action="action"
                   :on-preview="handlePreview"
                   :on-remove="handleRemove"
-                  :on-success="chengecheng"
-                  :file-list="fileList"
+                  :on-success="chengecheng3"
+                  :on-error="upError3"
+                  :on-change="handleChange"
+                  :file-list="fileList3"
                   :headers="access_token"
                   list-type="picture"
                 >
@@ -376,7 +382,9 @@ export default {
         ustitle: [{ required: true, message: "请输入标题", trigger: "blur" }],
         uscontent: [{ required: true, message: "请输入内容", trigger: "blur" }]
       },
-      fileList: [],
+      fileList1: [],
+      fileList2: [],
+      fileList3: [],
       access_token: {
         Authorization: "Bearer " + sessionStorage.getItem("access_token")
       },
@@ -394,6 +402,30 @@ export default {
     };
   },
   methods: {
+    upError1(err, file, fileList) {
+      this.$message({
+        message: "上传失败",
+        type: "error"
+      });
+      //还原
+      this.clearFiles1();
+    },
+    upError2(err, file, fileList) {
+      this.$message({
+        message: "上传失败",
+        type: "error"
+      });
+      //还原
+      this.clearFiles2();
+    },
+    upError3(err, file, fileList) {
+      this.$message({
+        message: "上传失败",
+        type: "error"
+      });
+      //还原
+      this.clearFiles3();
+    },
     //勾选出发事件钩子
     delselect(selection, row) {
       console.log(selection);
@@ -432,11 +464,43 @@ export default {
         }
       });
     },
+    //文件上传个数
+    handleChange(file, fileList) {
+      this.fileList = fileList.length > 1 ? fileList.splice(0, 1) : fileList;
+    },
     //报表文件上传成功回调
-    chengecheng(response, file, fileList) {
-      this.currentFileId = response.data.id; //轮播图的ID
-      this.JournalismId = response.data.id; //新闻图的ID
-      this.aboutId = response.data.id; //关于图的ID
+    chengecheng1(response, file, fileList) {
+      //轮播图的ID
+      this.currentFileId = ajax.getMaterialId.bind(this)(response, () => {
+        //还原
+        this.clearFiles1();
+      });
+    },
+    chengecheng2(response, file, fileList) {
+      //新闻图的ID
+      this.JournalismId = ajax.getMaterialId.bind(this)(response, () => {
+        //还原
+        this.clearFiles2();
+      });
+    },
+    chengecheng3(response, file, fileList) {
+      //关于
+      this.aboutId = ajax.getMaterialId.bind(this)(response, () => {
+        //还原
+        this.clearFiles3();
+      });
+    },
+    //移除/还原文件列表
+    clearFiles1() {
+      this.$refs["upload1"].clearFiles();
+    },
+    //移除/还原文件列表
+    clearFiles2() {
+      this.$refs["upload2"].clearFiles();
+    },
+    //移除/还原文件列表
+    clearFiles3() {
+      this.$refs["upload3"].clearFiles();
     },
     //清空上传成功后的文件列表
     clearUploadedImage() {
@@ -639,19 +703,20 @@ export default {
       height: 397px;
       overflow: hidden scroll;
     }
-    @media screen and (min-width: 1620px) { 
-     /deep/.el-table--enable-row-transition {
-      height: 580px;
-    }
-  }
-  @media screen and (max-width: 1080px) { 
+    @media screen and (min-width: 1620px) {
       /deep/.el-table--enable-row-transition {
-      height: 320px;
+        height: 580px;
+      }
     }
-  }
+    @media screen and (max-width: 1080px) {
+      /deep/.el-table--enable-row-transition {
+        height: 320px;
+      }
+    }
   }
   .spanColor {
     color: #409eff;
+    cursor:pointer;
   }
 }
 // height: 397px;

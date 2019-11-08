@@ -19,6 +19,8 @@
                 :action="action"
                 :show-file-list="false"
                 :on-success="(res,file)=>handleAvatarSuccess(res,file,newItem)"
+                :on-change="handleChange"
+                :on-error="upError"
                 :before-upload="beforeAvatarUpload"
                 :headers="access_token"
               >
@@ -43,9 +45,9 @@
           </el-form-item>
         </el-form>
       </div>
-       <div class="button_submit">
-         <el-button type="primary" @click="audit">提交审核</el-button>
-       </div>
+      <div class="button_submit">
+        <el-button type="primary" @click="audit">提交审核</el-button>
+      </div>
     </div>
     <!-- 您的信息正在审核中 -->
     <div class="audit" v-show="inages==1">
@@ -124,6 +126,16 @@ export default {
         }
       });
     },
+    //文件上传个数
+    handleChange(file, fileList) {
+      this.fileList = fileList.length > 1 ? fileList.splice(0, 1) : fileList;
+    },
+    upError(err, file, fileList) {
+      this.$message({
+        message: "上传失败",
+        type: "error"
+      });
+    },
     //提交材料
     audit() {
       var array = [];
@@ -162,21 +174,23 @@ export default {
     },
     //图片上传成功的回调，获取id
     handleAvatarSuccess(res, file, newItem) {
-      newItem.imageUrl = res.data.fullPath; // URL.createObjectURL(file.raw);
+      newItem.imageUrl = res.data.fullPath;
       newItem.img = res.data;
       this.getImgId = res.data;
+      console.log(file)
     },
     // 图片的格式
     beforeAvatarUpload(file) {
-      // const isJPG = file.type === "image/jpeg";
+      // const isJPG = file.type === "image/heic";
+      // const extension = file.name.split('.')[1] === 'heif'
       // if (!isJPG) {
-      //   this.$message.error("上传头像图片只能是 JPG 格式!");
+      //   this.$message.error("上传头像图片只能是 hevc 格式!");
       // }
-      const isLt2M = file.size / 1024 / 1024 < 10;
-      if (!isLt2M) {
+      const isLt20M = file.size / 1024 / 1024 < 20;
+      if (!isLt20M) {
         this.$message.error("上传头像图片大小不能超过 10MB!");
       }
-      return isLt2M;
+      return isLt20M;
     },
     getcail() {
       ajax.authGet.bind(this)("/api/Information/Account/CanSubmit", res => {
@@ -204,7 +218,7 @@ export default {
     //获取结构
     this.getMaterial();
     this.getcail();
-    this.getPersonal()
+    this.getPersonal();
   }
 };
 </script>
@@ -264,11 +278,11 @@ export default {
     padding-top: 30px;
   }
   .button_submit {
-      padding: 50px 0;
-      /deep/.el-button--primary {
-        width: 100%;
-      }
+    padding: 50px 0;
+    /deep/.el-button--primary {
+      width: 100%;
     }
+  }
 }
 .audit {
   margin-top: 50px;

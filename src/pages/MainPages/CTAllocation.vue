@@ -54,7 +54,7 @@
         <template slot-scope="scope">
           <div @click="checkDe(scope.$index, scope.row)">
             <Icon type="ios-eye" size="22" color="#409EFF" />
-            <span style="color:#409EFF">查看</span>
+            <span style="color:#409EFF;cursor:pointer">查看</span>
           </div>
         </template>
       </el-table-column>
@@ -66,7 +66,7 @@
           </div>
           <div @click="appropriate(scope.$index, scope.row)" v-else>
             <Icon type="ios-eye" size="22" color="#409EFF" />
-            <span style="color:#409EFF">查看</span>
+            <span style="color:#409EFF;cursor:pointer">查看</span>
           </div>
         </template>
       </el-table-column>
@@ -74,7 +74,7 @@
         <template slot-scope="scope">
           <div @click="qualified(scope.$index, scope.row)">
             <Icon type="ios-eye" size="22" color="#409EFF" />
-            <span style="color:#409EFF">查看</span>
+            <span style="color:#409EFF;cursor:pointer">查看</span>
           </div>
         </template>
       </el-table-column>
@@ -82,7 +82,7 @@
         <template slot-scope="scope">
           <div @click="supplement(scope.$index, scope.row)">
             <Icon type="ios-eye" size="22" color="#409EFF" />
-            <span style="color:#409EFF">查看</span>
+            <span style="color:#409EFF;cursor:pointer">查看</span>
           </div>
         </template>
       </el-table-column>
@@ -234,7 +234,7 @@
       <el-dialog title="审核材料" :append-to-body="true" :visible.sync="completion" width="30%">
         <div v-for="item in itemsy" :key="item.id">
           <div v-for="list in item.items">
-            <span @click="browse(list)">{{list.userMaterialType.name}}</span>
+            <span style="color:#409eff;cursor:pointer" @click="browse(list)">{{list.userMaterialType.name}}</span>
           </div>
         </div>
         <!-- <span slot="footer" class="dialog-footer">
@@ -525,10 +525,10 @@ export default {
   }
   /deep/.el-input__icon {
     width: 100%;
-    height: 75%;
+    height: 100%;
   }
   /deep/.el-button {
-    height: 75%;
+    height:100%;
   }
 }
 .el-dialog__header {
