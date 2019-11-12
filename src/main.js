@@ -20,6 +20,7 @@ import 'iview/dist/styles/iview.css'
 //导入Vant插件，用了轮播
 import Vant from 'vant'
 import 'vant/lib/index.css'
+import store from './store/index'
 
 import Axios from "axios"
 Vue.prototype.$axios = Axios
@@ -38,6 +39,7 @@ Vue.use(ElementUI)
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })

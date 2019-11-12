@@ -11,7 +11,7 @@
         <div class="PreviousStep_img" v-show="signData.length>0">
           <p>请在下框内书写签名采用</p>
           <div @click="centerDialogVisible = true">签名</div>
-          <div class="hello">
+          <div>
             <canvas id="canvas" width="350" height="230">Canvas画板</canvas>
             <div>
               <button @click="clear">清除</button>
@@ -185,7 +185,7 @@ class Draw {
   constructor(el) {
     this.el = el;
     this.canvas = document.getElementById(this.el);
-    //this.canvas.width = window.screen.width - 20;
+    this.canvas.width = Math.max(350, window.screen.width - 20);
     this.cxt = this.canvas.getContext("2d");
     this.stage_info = canvas.getBoundingClientRect();
     this.path = {
@@ -321,8 +321,8 @@ export default {
       hasConfirmationData: [],
       num: 0,
       previousStepbuttom: false,
-      loading:false,
-      primary:"primary",
+      loading: false,
+      primary: "primary"
     };
   },
   methods: {
@@ -388,18 +388,18 @@ export default {
       this.changeColor();
     },
     //已经确认的地方，确认按钮换成灰色样式
-    changeColor(){
+    changeColor() {
       var item =
         this.confirmationData.length > this.num
           ? this.confirmationData[this.num]
           : null;
-          if(item){
-            if(this.hasConfirmationData.indexOf(item.id) + 1){
-              this.primary="info"
-            }else{
-              this.primary="primary";
-            }
-          }
+      if (item) {
+        if (this.hasConfirmationData.indexOf(item.id) + 1) {
+          this.primary = "info";
+        } else {
+          this.primary = "primary";
+        }
+      }
     },
     clear() {
       this.draw.clear();
@@ -409,20 +409,16 @@ export default {
     },
     moveStep(num) {
       if (num == 1) {
-        //签名
-
         //   获取签名处类型的所有确认处
         ajax.authGet.bind(this)(
           "/api/Information/Present/Product/Sign/Confirmation/Sign?contractId=" +
             this.$route.query.data.contractId,
           res => {
             this.signData = res.data.data;
-
             this.VariableData1 = true;
             this.VariableData2 = false;
             this.VariableData3 = false;
             this.VariableData4 = false;
-
             if (!this.draw) {
               //画板
               this.draw = new Draw("canvas");
@@ -535,7 +531,7 @@ export default {
 
     //提交
     submi() {
-      this.loading=true;
+      this.loading = true;
       var data = this.draw.save();
       this.url = data.split(",")[1];
       let list = {
@@ -601,7 +597,7 @@ export default {
             "/api/Information/Present/Product/Sign/Submit",
             data,
             res => {
-              this.loading=false;
+              this.loading = false;
               if (res.data.code == 200) {
                 if (window.touchSet) {
                   document.body.removeEventListener(

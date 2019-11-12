@@ -61,7 +61,7 @@
       <span>需要先完成投资者认定相关信息才可以选购基金产品喔！</span>
       <span slot="footer" class="dialog-footer">
         <el-button @click="centerDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dssy">去认证</el-button>
+        <el-button type="primary" @click="dssy">去认定</el-button>
       </span>
     </el-dialog>
     <tabbar-home></tabbar-home>
@@ -130,7 +130,6 @@ export default {
       ajax.authGet.bind(this)(
         "/api/Information/Account/Authentication",
         res => {
-          console.log(res);
           if (res.data.code == 200) {
             this.authentication = res.data.data;
           }

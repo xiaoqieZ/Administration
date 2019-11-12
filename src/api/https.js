@@ -10,7 +10,7 @@ function thenCallBack(res, then, cat) {
             message: res.data.message,
             type:"error"
           });
-        cat.call(this,res);
+        cat&&cat.call(this,res);
     }
 
 }
@@ -22,12 +22,12 @@ function post(url, data, then, cat) {
         data=undefined;
     }
     if (!cat) {
-        cat = resCatch;
+        cat =res=>{};
     }
     var url = dom + url;
     this.$axios.post(url, data).then(res => {
         thenCallBack.call(this,res,then, cat);
-    }).catch(resCatch)
+    }).catch(resCatch.bind(this))
 }
 
 function get(url, data, then, cat) {
@@ -39,7 +39,7 @@ function get(url, data, then, cat) {
     var url = dom + url;
     this.$axios.get(url, data).then(res => {
         thenCallBack.call(this,res,then, cat);
-    }).cat(resCatch)
+    }).cat(resCatch.bind(this))
 }
 
 function doms(url) {
@@ -56,7 +56,7 @@ function auth(data) {
         baseURL: dom,
     }).then(res => {
         sessionStorage.setItem("access_token", res.data.data.access_token)
-    }).catch(resCatch)
+    }).catch(resCatch.bind(this))
 }
 
 function authGet(url, params, then, cat) {
@@ -69,7 +69,7 @@ function authGet(url, params, then, cat) {
         params=undefined;
     }
     if (!cat) {
-        cat = resCatch;
+        cat = res=>{};
     }
     if (token) {
         return this.$axios({
@@ -82,7 +82,7 @@ function authGet(url, params, then, cat) {
             baseURL: dom,
         }).then(res => {
             thenCallBack.call(this,res,then, cat);
-        }).catch(resCatch);
+        }).catch(resCatch.bind(this));
     } else {
         //异常页面
         this.$router.push({path: '/ErrorPage'})
@@ -99,7 +99,7 @@ function authPost(url, data, then, cat) {
         data=undefined;
     }
     if (!cat) {
-        cat = resCatch;
+        cat = res=>{};
     }
     if (token) {
         return this.$axios({
@@ -112,7 +112,7 @@ function authPost(url, data, then, cat) {
             baseURL: dom,
         }).then(res => {
             thenCallBack.call(this,res,then, cat);
-        }).catch(resCatch)
+        }).catch(resCatch.bind(this))
     } else {
         //异常页面
         this.$router.push({path: '/ErrorPage'})
@@ -127,7 +127,7 @@ function authPostForm(url, data, then, cat) {
         //获取access_token
         var token = sessionStorage.getItem("access_token");
         if (!cat) {
-            cat =resCatch;
+            cat =res=>{};
         }
         url=stringfy(url,data);
 
@@ -176,7 +176,10 @@ function getMaterialId(response,callback){
     }
 }
 function resCatch(res){
-    this.$message(res.message)
+    this.$message({
+        message: res.message,
+        type:"error"
+      })
 }
 
 export default {

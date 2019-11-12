@@ -13,13 +13,13 @@
     <div class="Return_list" v-if="queryData.see!=2">
       <div class="return_form" v-for="(item,index) in questionnaireData ">
         <el-form label-width="80px">
-          <el-form-item :label="'题目'+index">
+          <el-form-item :label="'题目'+(index+1)">
             <el-radio-group v-model="item.optionType">
               <el-radio :label="1">单选</el-radio>
               <el-radio :label="2">多选</el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item :label="'问题'+index">
+          <el-form-item :label="'问题'+(index+1)">
             <el-input v-model="item.title"></el-input>
             <el-select v-model="item.score">
               <el-option
@@ -49,13 +49,13 @@
         </el-form>
       </div>
       <div class="return_button" v-if="queryData.see==0">
-            <el-button type="primary" @click="submit">提 交</el-button>
-            <el-button type="primary" @click="addProblem">新增问题</el-button>
-            <el-button type="primary" @click="recovery">恢复默认</el-button>
-          </div>
-          <div class="return_button" v-else>
-            <el-button type="primary" @click="retrunSee">返 回</el-button>
-          </div>
+        <el-button type="primary" @click="submit">提 交</el-button>
+        <el-button type="primary" @click="addProblem">新增问题</el-button>
+        <el-button type="primary" @click="recovery">恢复默认</el-button>
+      </div>
+      <div class="return_button" v-else>
+        <el-button type="primary" @click="retrunSee">返 回</el-button>
+      </div>
     </div>
 
     <div class="Return_list" v-if="queryData.see==2">
@@ -106,10 +106,10 @@
         </el-form>
       </div>
       <div class="return_button">
-            <el-button type="primary" @click="addSubmit">{{queryData.see==2?'添 加':''}}</el-button>
-            <el-button type="primary" @click="addCountProblem(item,indexs)">新增问题</el-button>
-            <el-button type="primary" @click="recovery">恢复默认</el-button>
-          </div>
+        <el-button type="primary" @click="addSubmit">{{queryData.see==2?'添 加':''}}</el-button>
+        <el-button type="primary" @click="addCountProblem(item,indexs)">新增问题</el-button>
+        <el-button type="primary" @click="recovery">恢复默认</el-button>
+      </div>
     </div>
   </div>
 </template>
@@ -161,7 +161,7 @@ export default {
     },
     // 返回
     returnUpper() {
-      let data = this.queryData.questionnaireType
+      let data = this.queryData.questionnaireType;
       this.$router.push({
         path: "/NavBar/Managements/Managementfour",
         query: { data }

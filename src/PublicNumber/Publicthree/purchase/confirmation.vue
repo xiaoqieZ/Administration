@@ -111,7 +111,7 @@
               <van-count-down
                 ref="countDown"
                 style="width: 98px;height: 40px;line-height: 40px;text-align: center;position: absolute;border: 1px solid #dcdfe6;top: -57;right: 0;"
-                :time="30000"
+                :time="60000"
                 :auto-start="false"
                 format="ss"
                 @finish="finished"
@@ -122,7 +122,7 @@
               <van-count-down
                 ref="countDown"
                 style="width: 98px;height: 40px;line-height: 40px;text-align: center;position: absolute;border: 1px solid #dcdfe6;top: -57;right: 0;"
-                :time="30000"
+                :time="60000"
                 :auto-start="true"
                 format="ss"
                 @finish="finished"
@@ -152,7 +152,6 @@ export default {
     return {
       list: true, //申购资料填写页面
       fill: false, //申购成功页面
-      id: "", //产品Id
       name: "", //账户名称
       account: "", //缴款账号
       bank: "", //开户行信息
@@ -167,7 +166,7 @@ export default {
       fileList2: [],
       action: ajax.doms.bind(this)(
         "/api/Information/Present/Product/Apply/Material/" +
-          this.$route.query.data
+          this.$route.query.data.id
       ),
       ReportId: "", //缴款文件id
       BankcardId: "", //银行卡id
@@ -209,7 +208,7 @@ export default {
     },
     //返回产品Id
     Return() {
-      let data = this.id;
+      let data = this.$route.query.data.id;
       this.$router.push({ path: "/Publicthree/purchases", query: { data } });
     },
     // 获取投资者确认信息
@@ -244,7 +243,7 @@ export default {
       );
       //获取产品的风险等级
       ajax.authGet.bind(this)(
-        "/api/Information/Present/Product/Risk/" + this.$route.query.data,
+        "/api/Information/Present/Product/Risk/" + this.$route.query.data.id,
         res => {
           this.riskLevelName = res.data.data;
         }
@@ -285,7 +284,7 @@ export default {
     //提交
     submit() {
       let data = {
-        productId: this.id,
+        productId: this.$route.query.data.id,
         moneyAmount: this.rmb,
         accountName: this.name,
         account: this.account,
@@ -293,7 +292,8 @@ export default {
         paymentMaterialId: this.ReportId,
         bankCardMaterialId: this.BankcardId,
         confirmationMaterialId: this.confirmationMaterialId,
-        captcha: this.Code
+        signMaterialId:this.$route.query.data.signMaterialId,
+        captcha: this.Code,
       };
       ajax.authPost.bind(this)(
         "/api/Information/Present/Product/Apply",
@@ -310,7 +310,6 @@ export default {
     }
   },
   mounted() {
-    this.id = this.$route.query.data;
     this.getConfirm();
     this.getStorage();
   }

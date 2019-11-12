@@ -48,6 +48,16 @@
             <span>{{scope.row.customerTypeName}}</span>
           </template>
         </el-table-column>
+        <el-table-column align="center" prop="data" label="微信名称">
+          <template slot-scope="scope">
+            <span>{{scope.row.nickName}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" prop="data" label="产品名称">
+          <template slot-scope="scope">
+            <span>{{scope.row.productName}}</span>
+          </template>
+        </el-table-column>
         <el-table-column align="center" prop="data" label="风险等级">
           <template slot-scope="scope">
             <span>{{scope.row.riskLevelName}}</span>

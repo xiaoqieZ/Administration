@@ -177,7 +177,6 @@ export default {
       newItem.imageUrl = res.data.fullPath;
       newItem.img = res.data;
       this.getImgId = res.data;
-      console.log(file)
     },
     // 图片的格式
     beforeAvatarUpload(file) {

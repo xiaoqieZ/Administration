@@ -84,27 +84,16 @@ export default {
   data() {
     return {
       // points: [],
-
       // canvasTxt: null,
-
       // stage_info: [],
-
       // startX: 0,
-
       // startY: 0,
-
       // moveY: 0,
-
       // moveX: 0,
-
       // endY: 0,
-
       // endX: 0,
-
       // w: null,
-
       // h: null,
-
       // isDown: false
     };
   },

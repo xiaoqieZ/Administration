@@ -35,7 +35,7 @@
                 <van-count-down
                   ref="countDown"
                   style="width: 98px;height: 40px;line-height: 40px;text-align: center;position: absolute;border: 1px solid #dcdfe6;top: 0;right: 0;"
-                  :time="30000"
+                  :time="60000"
                   :auto-start="false"
                   format="ss"
                   @finish="finished"
@@ -46,7 +46,7 @@
                 <van-count-down
                   ref="countDown"
                   style="width: 98px;height: 40px;line-height: 40px;text-align: center;position: absolute;border: 1px solid #dcdfe6;top: 0;right: 0;"
-                  :time="30000"
+                  :time="60000"
                   :auto-start="true"
                   format="ss"
                   @finish="finished"
@@ -221,7 +221,7 @@
               <van-count-down
                 ref="countDown"
                 style="width: 98px;height: 40px;line-height: 40px;text-align: center;position: absolute;border: 1px solid #dcdfe6;top: 0;right: 0;"
-                :time="30000"
+                :time="60000"
                 :auto-start="false"
                 format="ss"
                 @finish="finished"
@@ -232,7 +232,7 @@
               <van-count-down
                 ref="countDown"
                 style="width: 98px;height: 40px;line-height: 40px;text-align: center;position: absolute;border: 1px solid #dcdfe6;top: 0;right: 0;"
-                :time="30000"
+                :time="60000"
                 :auto-start="true"
                 format="ss"
                 @finish="finished"
@@ -439,8 +439,7 @@ export default {
         console.log(res);
         if (res.data.code == 200) {
           this.information = res.data.data;
-          this.information.customerType = this.information.customerType.toString();
-          this.radio = this.information.customerType;
+          this.radio = res.data.data&&res.data.data.customerType&&res.data.data.customerType.toString();
           this.ruleForm.phone = this.information.mobile;
           this.ruleForm.mail = this.information.email;
           //判断用户是否注册

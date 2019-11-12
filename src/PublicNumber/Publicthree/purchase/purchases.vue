@@ -88,7 +88,7 @@
             <div v-if="getswithy">
               <van-count-down
                 ref="countDown"
-                :time="30000"
+                :time="60000"
                 :auto-start="false"
                 format="ss"
                 @finish="finished"
@@ -98,7 +98,7 @@
             <div v-if="getGun">
               <van-count-down
                 ref="countDown"
-                :time="30000"
+                :time="60000"
                 :auto-start="true"
                 format="ss"
                 @finish="finished"

@@ -8,7 +8,10 @@
           <div class="jurdic-bor">
             <div class="jurdic-zuh">
               <span>角色列表</span>
-              <span style="font-size:14px">(<Icon type="ios-person-add" size="18" />管理员)</span>
+              <span style="font-size:14px">
+                (
+                <Icon type="ios-person-add" size="18" />管理员)
+              </span>
               <el-input
                 placeholder="请输入角色名称查找"
                 prefix-icon="el-icon-search"
@@ -24,14 +27,21 @@
                     @click.stop="del"
                     color="red"
                     size="22"
+                    v-show="item.id!=1&&item.id!=2"
                   />
                   <Icon
                     type="ios-create-outline"
                     style="float:right;line-height: 30px;cursor:pointer"
                     @click.stop="edit($event,item)"
                     size="20"
+                    v-show="item.id!=1&&item.id!=2"
                   />
-                  <Icon type="ios-person-add" style="float:right;line-height: 30px;" size="18" v-if="item.isAdmin==1"/>
+                  <Icon
+                    type="ios-person-add"
+                    style="float:right;line-height: 30px;"
+                    size="18"
+                    v-if="item.isAdmin==1"
+                  />
                   <!-- <span style="float:right;line-height: 30px;">{{item.isAdmin}}</span> -->
                   <!-- 确认删除 -->
                   <el-dialog
@@ -170,7 +180,7 @@
             </div>
           </div>
           <!-- 权限设置 -->
-          <div class="jurdic-bor" v-show="diction">
+          <div class="jurdic-bor" v-show="false">
             <div class="jurdic-zuh">
               <span>权限设置</span>
               <div class="jurdic-name">
@@ -181,10 +191,6 @@
                   :props="defaultProps"
                   ref="tree"
                 ></el-tree>
-              </div>
-              <div class="tian">
-                <el-button type="primary" @click="getCheckedAdd">添加</el-button>
-                <el-button type="primary" @click="getCheckedNodes">提交</el-button>
               </div>
             </div>
           </div>
@@ -607,6 +613,16 @@ export default {
             border-bottom: 1px solid #ffffff;
           }
         }
+        @media screen and (max-width: 1620px) {
+          .jurdic-name {
+            height: 470px;
+          }
+        }
+        @media screen and (min-width: 1920px) {
+          .jurdic-name {
+            height: 500px;
+          }
+        }
         .tian {
           button {
             float: right;
@@ -614,7 +630,7 @@ export default {
         }
       }
     }
-  } 
+  }
 }
 /deep/.el-autocomplete-suggestion {
   z-index: 9999 !important;

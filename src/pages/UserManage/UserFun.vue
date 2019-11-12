@@ -56,8 +56,8 @@
           :total="questionnairecount.count"
         ></el-pagination>
       </div>
-      <!-- 添加机构印章弹窗 -->
-      <el-dialog title="添加合同" :visible.sync="centerDialogVisible" width="60%" center>
+      <!-- 添加合同弹窗 -->
+      <el-dialog title="添加合同" :visible.sync="centerDialogVisible" width="30%" center>
         <div class="dialog_list">
           <div class="dialog_title">请填写下列信息</div>
           <div class="dialog_count">
@@ -77,7 +77,8 @@
                   :headers="access_token"
                 >
                   <el-button size="small" type="primary">点击上传文件</el-button>
-                  <ul
+                  <div v-if="ulLi">
+                    <ul
                     class="el-upload-list el-upload-list--text"
                     v-if="form.originMaterial.fileName!=''"
                   >
@@ -86,13 +87,9 @@
                         <i class="el-icon-document"></i>
                         {{form.originMaterial.fileName}}
                       </a>
-                      <label class="el-upload-list__item-status-label">
-                        <i class="el-icon-upload-success el-icon-circle-check"></i>
-                      </label>
-                      <i class="el-icon-close"></i>
-                      <i class="el-icon-close-tip">按 delete 键可删除</i>
                     </li>
                   </ul>
+                  </div>
                 </el-upload>
               </el-form-item>
               <el-form-item label="基金产品">
@@ -135,6 +132,7 @@ import ajax from "../../api/https.js";
 export default {
   data() {
     return {
+      ulLi:true,
       disabled:false,
       name: "",
       page: 1,
@@ -191,6 +189,7 @@ export default {
     },
     //合同文件上传成功的回调
     chengeNotice(response, file, fileList) {
+      this.ulLi = false
       this.form.originMaterialId = ajax.getMaterialId.bind(this)(
         response,
         () => {
@@ -223,6 +222,7 @@ export default {
       };
       ajax.authPost.bind(this)("/api/Management/Contract", data, res => {
         this.centerDialogVisible = false;
+        // this.ulLi = true;
         this.getQuestionnaireData();
         this.id = 0;
         this.form.productId = this.form.name = this.form.originMaterialId = this.form.remark = this.form.mechanismId =

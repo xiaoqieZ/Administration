@@ -91,7 +91,7 @@
               <span
                 style="color:#409EFF;cursor:pointer"
                 v-if="scope.row.signStatus!=3"
-                @click="dele(scope.$index,scope.row)"
+                @click="deleSubmi(scope.$index,scope.row)"
               >删除</span>
               <span
                 style="color:#409EFF;cursor:pointer"
@@ -130,6 +130,14 @@
             <el-button type="primary" @click="addUser">确 定</el-button>
           </span>
         </el-dialog>
+
+        <el-dialog title="提示！" :visible.sync="dialogUserDel" width="30%" center>
+          <span>确认删除吗？</span>
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="dialogUserDel = false">取 消</el-button>
+            <el-button type="primary" @click="dele">确 定</el-button>
+          </span>
+        </el-dialog>
       </div>
     </div>
   </div>
@@ -140,6 +148,7 @@ import ajax from "../../api/https.js";
 export default {
   data() {
     return {
+      dialogUserDel:false,
       subscriptionData: [],
       questionnairecount: {},
       page: 1,
@@ -150,7 +159,8 @@ export default {
       resourceShort: 0,
       resourcEmail: 0,
       resourceWeChat: 0,
-      nikoName: ""
+      nikoName: "",
+      deleId:""
     };
   },
   methods: {
@@ -292,11 +302,16 @@ export default {
         }
       );
     },
+    deleSubmi(index, row){
+      this.dialogUserDel=true
+      this.deleId = row.id
+    },
     //删除
-    dele(index, row) {
+    dele() {
       ajax.authPost.bind(this)(
-        "/api/Management/Contract/Sign/Remove/" + row.id,
+        "/api/Management/Contract/Sign/Remove/" + this.deleId,
         res => {
+          this.dialogUserDel=false;
           this.getSubscriptionData();
         }
       );

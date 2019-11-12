@@ -596,7 +596,7 @@ export default {
     },
     //返回上一级
     returnUpper() {
-      this.$router.go(-1);
+      this.$router.push({path: '/NavBar/CParameter/CurrencyData'});
     },
     //问卷
     questionnairePage(i) {

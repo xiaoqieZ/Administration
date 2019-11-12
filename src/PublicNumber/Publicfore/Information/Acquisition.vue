@@ -207,8 +207,14 @@ export default {
     },
     // 提交信息
     submitForm(formName, index) {
+      var b=[]
+      for(var i=0; i<this.RadioList.length;i++){
+        if(this.RadioList[i]){
+          b.push(this.RadioList[i])
+        }
+      }
       //判断选择题是否全选
-      if (this.listOption.length==this.RadioList.length ) {
+      if (this.listOption.length==b.length ) {
         //重置输入框
         this.$refs[formName].validate(valid => {
           if (valid) {
@@ -231,9 +237,6 @@ export default {
                   this.values = 1;
               }
             );
-          } else {
-            console.log("error submit!!");
-            return false;
           }
         });
       } else {

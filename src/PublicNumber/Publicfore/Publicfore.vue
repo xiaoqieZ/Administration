@@ -248,7 +248,7 @@ export default {
       openId = storage.get("openId");
     }
     // openId = "oHnB5wBgy_FXh1ICjO0sV44DFO9k";
-    //openId = "oHnB5wBgy_FXh1ICjO0sV44DFO9k1";
+    // openId = "oHnB5wBgy_FXh1ICjO0sV44DFO9k1";
     // openId = "oHnB5wBgy_FXh1ICjO0sV44DFO9k2";
     openId = "oHnB5wBgy_FXh1ICjO0sV44DFO9k3";
     if (!openId) {

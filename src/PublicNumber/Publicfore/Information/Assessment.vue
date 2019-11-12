@@ -31,7 +31,7 @@
         </el-checkbox-group>
       </div>
       <div class="button_submit" v-if="subm">
-        <el-button type="primary" plain @click="submit">提交</el-button>
+        <el-button type="primary" v-show="showSubmit" plain @click="submit">提交</el-button>
       </div>
     </div>
     <div class="radiosplay" v-show="values==1">
@@ -77,6 +77,7 @@ import storage from "../../../api/storage.js";
 export default {
   data() {
     return {
+      showSubmit:true,
       subm: true,
       values: 0,
       radio: "",
@@ -95,7 +96,13 @@ export default {
   methods: {
     //提交答案
     submit() {
-      if (this.RadioList.length == this.getQuestlist.length) {
+      var b=[]
+      for(var i=0; i<this.RadioList.length;i++){
+        if(this.RadioList[i]){
+          b.push(this.RadioList[i])
+        }
+      }
+      if (b.length == this.getQuestlist.length) {
         let data = this.RadioList;
         ajax.authPost.bind(this)(
           "/api/Information/Account/Questionnaire",
@@ -126,10 +133,11 @@ export default {
     //题目请求
     getQuesttion() {
       ajax.authGet.bind(this)("/api/Information/Account/Questionnaire", res => {
-        console.log(res);
         if (res.data.code == 200) {
           this.getQuestlist = res.data.data;
         }
+      },res=>{
+        this.showSubmit=false;
       });
     },
     //选择题选中
@@ -189,7 +197,6 @@ export default {
   },
   mounted() {
     this.getPersonal();
-    // this.getQuesttion();
   }
 };
 </script>

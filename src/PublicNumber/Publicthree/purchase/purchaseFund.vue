@@ -80,16 +80,25 @@
     </div>
 
     <!-- //购买提示 -->
-    <el-dialog title="购买提示" :visible.sync="centerDialog" width="80%" center>
-      <div>
-        <p>重要提示:</p>
-        <p>1、本申请的受理并不表示对该申请是否成功确定，申请是否有效应由注册登记机构确认为准，如发生巨额退出，退出款项的支付办法将按产品合同和有关法律法规规定办理。</p>
-      </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="centerDialog = false">取 消</el-button>
-        <el-button type="primary" @click="centerConfirmation">确 定</el-button>
-      </span>
-    </el-dialog>
+    <div class="dialog_canvas">
+      <el-dialog title="购买提示" :visible.sync="centerDialog" width="100%" center @opened="opened">
+        <div>
+          <p>重要提示:</p>
+          <p>1、本申请的受理并不表示对该申请是否成功确定，申请是否有效应由注册登记机构确认为准，如发生巨额退出，退出款项的支付办法将按产品合同和有关法律法规规定办理。</p>
+          <div class="canvas">
+            <p>请在下方签字</p>
+            <canvas id="canvas" width="320" height="330">Canvas画板</canvas>
+            <div>
+              <button @click="clear">清除</button>
+            </div>
+          </div>
+        </div>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="centerDialog = false">取 消</el-button>
+          <el-button type="primary" @click="centerConfirmation">确 定</el-button>
+        </span>
+      </el-dialog>
+    </div>
     <div class="buttom">
       <el-button type="primary" @click="quersubmit">确认</el-button>
     </div>
@@ -118,6 +127,80 @@
 </template>
 <script>
 import ajax from "../../../api/https.js";
+
+var preHandler = function(e) {
+  //e.preventDefault();
+};
+class Draw {
+  constructor(el) {
+    this.el = el;
+    this.canvas = document.getElementById(this.el);
+    // this.canvas.width = Math.max(350, window.screen.width - 20);
+    this.cxt = this.canvas.getContext("2d");
+    this.stage_info = canvas.getBoundingClientRect();
+    this.path = {
+      beginX: 0,
+      beginY: 0,
+      endX: 0,
+      endY: 0
+    };
+  }
+  init(btn) {
+    var that = this;
+    // console.log(this);
+
+    this.canvas.addEventListener("touchstart", function(event) {
+      document.addEventListener("touchstart", preHandler, false);
+      that.drawBegin(event);
+    });
+    this.canvas.addEventListener("touchend", function(event) {
+      document.addEventListener("touchend", preHandler, false);
+      that.drawEnd();
+    });
+    this.canvas.addEventListener("touchmove", function(event) {
+      document.addEventListener("touchmove", preHandler, false);
+      that.drawing(event);
+    });
+    this.clear(btn);
+  }
+  drawBegin(e) {
+    var that = this;
+    window.getSelection()
+      ? window.getSelection().removeAllRanges()
+      : document.selection.empty();
+    this.cxt.strokeStyle = "#000";
+    this.cxt.beginPath();
+    var beginX = e.changedTouches[0].clientX - this.canvas.offsetLeft;
+    var beginY = e.changedTouches[0].clientY - this.canvas.offsetTop;
+    this.cxt.moveTo(beginX, beginY);
+    this.path.beginX = beginX;
+    this.path.beginY = beginY;
+    // console.log(beginX,beginY);
+    // console.log(e,this)
+    // console.log(beginX,beginY)
+  }
+  drawing(e) {
+    var beginX = e.changedTouches[0].clientX - this.canvas.offsetLeft;
+    var beginY = e.changedTouches[0].clientY - this.canvas.offsetTop;
+    this.cxt.lineTo(beginX, beginY);
+    this.path.endX = beginX;
+    this.path.endY = beginY;
+    this.cxt.stroke();
+    // console.log(beginX,beginY,this.stage_info)
+  }
+  drawEnd() {
+    document.removeEventListener("touchstart", preHandler, false);
+    document.removeEventListener("touchend", preHandler, false);
+    document.removeEventListener("touchmove", preHandler, false);
+    //canvas.ontouchmove = canvas.ontouchend = null
+  }
+  clear(btn) {
+    this.cxt.clearRect(0, 0, 320, 330);
+  }
+  save() {
+    return canvas.toDataURL("image/png");
+  }
+}
 export default {
   data() {
     return {
@@ -139,10 +222,17 @@ export default {
       contractfileName: "",
       contractListfileName: "",
       contractData: "",
-      contractList: ""
+      contractList: "",
+      draw: undefined
     };
   },
   methods: {
+    clear() {
+      this.draw.clear();
+    },
+    mutate(word) {
+      this.$emit("input", word);
+    },
     // 返回按钮，把产品Id返回过去
     fanh() {
       let data = this.id;
@@ -210,8 +300,13 @@ export default {
     },
     //14个单选题点击确定
     submitRadio() {
-      // console.log(this.RadioList);
-      if (this.RadioList.length == this.statementData.length) {
+      var radio = []
+      for(var i=0;i<this.RadioList.length;i++){
+        if(this.RadioList[i]){
+          radio.push(this.RadioList[i])
+        }
+      }
+      if (radio.length == this.statementData.length) {
         this.centerDialogVisible = false;
       } else {
         this.$message("全部要选");
@@ -221,6 +316,14 @@ export default {
     cancel() {
       this.centerDialogVisible = false;
       this.checked = false;
+    },
+    //弹窗打开后，初始化签名版
+    opened() {
+      if (!this.draw) {
+        //画板
+        this.draw = new Draw("canvas");
+        this.draw.init();
+      }
     },
     //进入金额对话框
     quersubmit() {
@@ -232,11 +335,24 @@ export default {
     },
     //进入投资者购买信息确认
     centerConfirmation() {
-      let data = this.id;
-      this.$router.push({
-        path: "/Publicthree/Purchases/confirmation",
-        query: { data }
-      });
+      var list = {
+        base64: this.draw.save()
+      };
+      ajax.authPost.bind(this)(
+        "/api/Information/Present/Product/Apply/Sign/Upload",
+        list,
+        res => {
+          var signMaterialId = res.data.data.id
+          let data = {
+            id:this.id,
+            signMaterialId:signMaterialId
+          };
+          this.$router.push({
+            path: "/Publicthree/Purchases/confirmation",
+            query: { data }
+          });
+        }
+      );
     },
     //获取产品基本信息
     getProduct() {
@@ -281,6 +397,12 @@ export default {
       }
     }
   }
+  .dialog_canvas {
+    /deep/.el-dialog--center {
+      height: 100%;
+      margin: 0 !important;
+    }
+  }
   .checkbox_class {
     /deep/.el-dialog__body {
       height: 500px;
@@ -290,6 +412,13 @@ export default {
   /deep/.el-checkbox {
     white-space: normal;
     word-break: break-all;
+  }
+  .canvas {
+    #canvas {
+      border: 1px solid #9a6c6c;
+      background: rgb(253, 252, 252);
+      cursor: default;
+    }
   }
   .buttom {
     text-align: center;

@@ -17,10 +17,29 @@
         >
           <!-- 持仓数量 -->
           <div class="ruleForm_item">
-            <div class="HoldNum">
+            <div><div class="HoldNum"></div>
               持仓数量：
               <span>{{positionsNum}}</span>
             </div>
+            <!-- 冷静回访 -->
+          <div class="chill_item">
+            <div><div class="HoldNum"></div>冷静期回访</div>
+            <el-form-item label="冷静期设置" prop="coolDownPeriod">
+              <InputNumber
+                :max="10000"
+                :min="0"
+                v-model="ruleForm.coolDownPeriod"
+                :formatter="value => ` ${value} 小时`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+                :parser="value => value.replace(/\$\s?|(,*)/g, '')*1"
+              ></InputNumber>
+            </el-form-item>
+            <el-form-item label="冷静期后回访设置" prop="resource">
+              <el-radio-group v-model="ruleForm.resource">
+                <el-radio :label="1">是</el-radio>
+                <el-radio :label="0">否</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </div>
             <el-form-item label="操作类型" prop="region">
               <el-select
                 v-model="ruleForm.region"
@@ -59,7 +78,7 @@
           </div>
           <!-- 匹配订单 -->
           <div>
-            <div class="HoldNum">匹配订单</div>
+            <div><div class="HoldNum"></div>匹配订单</div>
             <el-form-item label="操作类型" prop="relateOrder">
               <el-select v-model="ruleForm.relateOrder" placeholder="关联订单">
                 <el-option
@@ -71,28 +90,9 @@
               </el-select>
             </el-form-item>
           </div>
-          <!-- 冷静回访 -->
-          <div class="chill_item">
-            <div class="HoldNum">冷静期回访</div>
-            <el-form-item label="冷静期设置" prop="coolDownPeriod">
-              <InputNumber
-                :max="10000"
-                :min="0"
-                v-model="ruleForm.coolDownPeriod"
-                :formatter="value => ` ${value} 小时`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-                :parser="value => value.replace(/\$\s?|(,*)/g, '')"
-              ></InputNumber>
-            </el-form-item>
-            <el-form-item label="冷静期后回访设置" prop="resource">
-              <el-radio-group v-model="ruleForm.resource">
-                <el-radio :label="1">是</el-radio>
-                <el-radio :label="0">否</el-radio>
-              </el-radio-group>
-            </el-form-item>
-          </div>
           <!-- 双录视频 -->
           <div>
-            <div class="HoldNum">双录视频</div>
+            <div><div class="HoldNum"></div>双录视频</div>
             <div class="holdVideo">
               <p>普通投资者申请成为专业投资者-请上传视频（选填）</p>
               <el-upload
@@ -156,7 +156,7 @@
           </div>
         </el-form>
         <div>
-          <div class="HoldNum">操作详情</div>
+          <div><div class="HoldNum"></div>操作详情</div>
           <!-- 表格数据操作 -->
           <el-table :data="tabelPotentialList" stripe id="out-table" style="width: 100%">
             <!-- 勾选框 -->
@@ -279,7 +279,7 @@ export default {
         name: "",
         desc: "",
         relateOrder: "",
-        coolDownPeriod: "0",
+        coolDownPeriod: 0,
         resource: 0,
         fileId: "",
         saleHigherRiskMaterialId: "",
@@ -310,14 +310,14 @@ export default {
           {
             required: true,
             required: true,
-            message: "请至少选择一个活动性质",
+            message: "请输入单位净值",
             trigger: "change"
           }
         ],
         name: [
-          { required: true, message: "请选择活动资源", trigger: "change" }
+          { required: true, message: "请输入金额", trigger: "change" }
         ],
-        desc: [{ required: true, message: "请填写活动形式", trigger: "blur" }]
+        desc: [{ required: true, message: "请输入份额", trigger: "blur" }]
       },
       tabelPotentialListPage: "", //页码数量
       page: 1,
@@ -448,12 +448,21 @@ export default {
               this.getDataName();
               this.getTabelPotentialList();
               this.$message({ message: res.data.message, type: "success" });
-              this.ruleForm.region = this.ruleForm.date1 = this.ruleForm.delivery = this.ruleForm.name = this.ruleForm.desc = this.ruleForm.relateOrder = this.ruleForm.coolDownPeriod = this.ruleForm.resource = this.ruleForm.fileId = this.ruleForm.saleHigherRiskMaterialId = this.ruleForm.adjustMaterialId = this.ruleForm.riskWarningMaterialId =
-                "";
+              let data = {
+                ads: 1,
+                id: this.$route.query.data.productId
+              };
+              this.$router.push({
+                path: "/NavBar/DataDitionary/BankDataList",
+                query: { data }
+              });
             }
           );
         } else {
-          this.$message("打了星号的都要输入");
+          this.$message({
+            message: "打了星号的都要输入",
+            type: "error"
+          });
           return false;
         }
       });
@@ -467,10 +476,16 @@ export default {
         }
       );
     },
+    //返回
     prev() {
-      this.$router.go(-1);
-      // let fourth = {fourth:this.activeName.fourth,productId:this.$route.query.data.productId}
-      // this.$router.push({path:"/NavBar/DataDitionary/BankDataList",query:{fourth}})
+      let data = {
+        ads: 1,
+        id: this.$route.query.data.productId
+      };
+      this.$router.push({
+        path: "/NavBar/DataDitionary/BankDataList",
+        query: { data }
+      });
     },
     // 重置输入框
     resetForm(formName) {
@@ -558,8 +573,9 @@ export default {
   overflow: scroll;
   background: #fff;
   padding: 10px;
-
   .HoldNum {
+    display: inline;
+    padding-right:10px; 
     border-left: 4px solid #2d8cf0;
   }
   .HoldForm {
@@ -568,8 +584,7 @@ export default {
       /deep/.el-input__inner {
         margin-bottom: 0;
       }
-    }
-    .chill_item {
+      .chill_item {
       width: 50%;
       /deep/.el-form-item__label {
         width: 150px !important;
@@ -578,6 +593,8 @@ export default {
         margin-left: 153px !important;
       }
     }
+    }
+    
     .ruleForm_submit {
       width: 100%;
       text-align: center;
@@ -594,5 +611,15 @@ export default {
 .spanColor {
   color: #409eff;
   cursor: pointer;
+}
+@media screen and (max-width: 1620px) {
+  .Hold {
+    height: 560px;
+  }
+}
+@media screen and (min-width: 1620px) {
+  .Hold {
+    height: 700px;
+  }
 }
 </style>

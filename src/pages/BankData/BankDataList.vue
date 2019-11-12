@@ -188,8 +188,6 @@
                       class="upload-demo"
                       ref="upload1"
                       :action="action"
-                      :on-preview="handlePreview"
-                      :on-remove="handleRemove"
                       :on-change="handleChange"
                       :on-success="chengeing"
                       :on-error="upError1"
@@ -332,7 +330,7 @@
               </el-col>
             </el-row>
             <div class="submitButton">
-              <el-button type="primary" @click.native="Submit('ruleForm')">提 交</el-button>
+              <el-button type="primary" :loading="loading" @click.native="Submit('ruleForm')">提 交</el-button>
               <el-button @click="resetForm('ruleForm')">重 置</el-button>
             </div>
           </el-form>
@@ -383,7 +381,7 @@
               <el-button type="primary" @click="addNetWorth">确 定</el-button>
             </span>
           </el-dialog>
-          <!-- 上传 -->
+          <!-- 上传净值 -->
           <el-dialog title="提示" :visible.sync="centerupload" width="30%" center>
             <el-form label-width="100px" :model="formLabelAlign">
               <el-checkbox-group v-model="formLabelAlign.smsNotify" @change="listget">
@@ -400,8 +398,6 @@
                 ref="upload2"
                 :data="uploadCenter"
                 :action="actionUpload"
-                :on-preview="handlePreview"
-                :on-remove="handleRemove"
                 :on-success="SuccessWorth"
                 :on-change="handleChange"
                 :on-error="upError2"
@@ -495,8 +491,6 @@
               class="upload-demo"
               ref="upload3"
               :action="actionReport"
-              :on-preview="handlePreview"
-              :on-remove="handleRemove"
               :on-success="chengecheng"
               :on-error="upError3"
               :on-change="handleChange"
@@ -612,8 +606,6 @@
               class="upload-demo"
               ref="upload4"
               :action="actionNotice"
-              :on-preview="handlePreview"
-              :on-remove="handleRemove"
               :on-success="chengeNotice"
               :on-error="upError4"
               :on-change="handleChange"
@@ -1012,7 +1004,7 @@
             ></el-pagination>
           </div>
         </div>
-        <!-- 设置页面 -->
+        <!-- 功能设置页面 -->
         <div v-if="settingsPage" class="height_overflow">
           <el-button @click="settingsReturn">上一页</el-button>
           <div class="hodVideo_title">
@@ -1030,19 +1022,16 @@
                 :headers="access_token"
               >
                 <el-button size="small" type="primary">点击上传文件</el-button>
-                <ul class="el-upload-list el-upload-list--text" v-if="aaa!=''">
-                  <li tabindex="0" class="el-upload-list__item is-success">
-                    <a class="el-upload-list__item-name" :href="urlOne">
-                      <i class="el-icon-document"></i>
-                      {{aaa}}
-                    </a>
-                    <label class="el-upload-list__item-status-label">
-                      <i class="el-icon-upload-success el-icon-circle-check"></i>
-                    </label>
-                    <i class="el-icon-close"></i>
-                    <i class="el-icon-close-tip">按 delete 键可删除</i>
-                  </li>
-                </ul>
+                <div v-if="ulLi1">
+                  <ul class="el-upload-list el-upload-list--text" v-if="aaa!=null">
+                    <li tabindex="0" class="el-upload-list__item is-success">
+                      <a class="el-upload-list__item-name" :href="urlOne">
+                        <i class="el-icon-document"></i>
+                        {{aaa}}
+                      </a>
+                    </li>
+                  </ul>
+                </div>
               </el-upload>
             </div>
             <div class="holdVideo">
@@ -1058,19 +1047,16 @@
                 :headers="access_token"
               >
                 <el-button size="small" type="primary">点击上传文件</el-button>
-                <ul class="el-upload-list el-upload-list--text" v-if="bbb!=''">
-                  <li tabindex="0" class="el-upload-list__item is-success">
-                    <a class="el-upload-list__item-name" :href="urlTow">
-                      <i class="el-icon-document"></i>
-                      {{bbb}}
-                    </a>
-                    <label class="el-upload-list__item-status-label">
-                      <i class="el-icon-upload-success el-icon-circle-check"></i>
-                    </label>
-                    <i class="el-icon-close"></i>
-                    <i class="el-icon-close-tip">按 delete 键可删除</i>
-                  </li>
-                </ul>
+                <div v-if="ulLi2">
+                  <ul class="el-upload-list el-upload-list--text" v-if="bbb!=null">
+                    <li tabindex="0" class="el-upload-list__item is-success">
+                      <a class="el-upload-list__item-name" :href="urlTow">
+                        <i class="el-icon-document"></i>
+                        {{bbb}}
+                      </a>
+                    </li>
+                  </ul>
+                </div>
               </el-upload>
             </div>
             <div class="holdVideo">
@@ -1086,19 +1072,16 @@
                 :headers="access_token"
               >
                 <el-button size="small" type="primary">点击上传文件</el-button>
-                <ul class="el-upload-list el-upload-list--text" v-if="ccc!=''">
-                  <li tabindex="0" class="el-upload-list__item is-success">
-                    <a class="el-upload-list__item-name" :href="urlThree">
-                      <i class="el-icon-document"></i>
-                      {{ccc}}
-                    </a>
-                    <label class="el-upload-list__item-status-label">
-                      <i class="el-icon-upload-success el-icon-circle-check"></i>
-                    </label>
-                    <i class="el-icon-close"></i>
-                    <i class="el-icon-close-tip">按 delete 键可删除</i>
-                  </li>
-                </ul>
+                <div v-if="ulLi3">
+                  <ul class="el-upload-list el-upload-list--text" v-if="ccc!=null">
+                    <li tabindex="0" class="el-upload-list__item is-success">
+                      <a class="el-upload-list__item-name" :href="urlThree">
+                        <i class="el-icon-document"></i>
+                        {{ccc}}
+                      </a>
+                    </li>
+                  </ul>
+                </div>
               </el-upload>
             </div>
             <div class="holdVideo">
@@ -1114,19 +1097,16 @@
                 :headers="access_token"
               >
                 <el-button size="small" type="primary">点击上传文件</el-button>
-                <ul class="el-upload-list el-upload-list--text" v-if="ddd!=''">
-                  <li tabindex="0" class="el-upload-list__item is-success">
-                    <a class="el-upload-list__item-name" :href="urlFour">
-                      <i class="el-icon-document"></i>
-                      {{ddd}}
-                    </a>
-                    <label class="el-upload-list__item-status-label">
-                      <i class="el-icon-upload-success el-icon-circle-check"></i>
-                    </label>
-                    <i class="el-icon-close"></i>
-                    <i class="el-icon-close-tip">按 delete 键可删除</i>
-                  </li>
-                </ul>
+                <div v-if="ulLi4">
+                  <ul class="el-upload-list el-upload-list--text" v-if="ddd!=null">
+                    <li tabindex="0" class="el-upload-list__item is-success">
+                      <a class="el-upload-list__item-name" :href="urlFour">
+                        <i class="el-icon-document"></i>
+                        {{ddd}}
+                      </a>
+                    </li>
+                  </ul>
+                </div>
               </el-upload>
             </div>
             <div class="holdVideo">
@@ -1142,19 +1122,16 @@
                 :headers="access_token"
               >
                 <el-button size="small" type="primary">点击上传文件</el-button>
-                <ul class="el-upload-list el-upload-list--text" v-if="eee!=''">
-                  <li tabindex="0" class="el-upload-list__item is-success">
-                    <a class="el-upload-list__item-name" :href="urlFive">
-                      <i class="el-icon-document"></i>
-                      {{eee}}
-                    </a>
-                    <label class="el-upload-list__item-status-label">
-                      <i class="el-icon-upload-success el-icon-circle-check"></i>
-                    </label>
-                    <i class="el-icon-close"></i>
-                    <i class="el-icon-close-tip">按 delete 键可删除</i>
-                  </li>
-                </ul>
+                <div v-if="ulLi5">
+                  <ul class="el-upload-list el-upload-list--text" v-if="eee!=null">
+                    <li tabindex="0" class="el-upload-list__item is-success">
+                      <a class="el-upload-list__item-name" :href="urlFive">
+                        <i class="el-icon-document"></i>
+                        {{eee}}
+                      </a>
+                    </li>
+                  </ul>
+                </div>
               </el-upload>
             </div>
           </div>
@@ -1181,7 +1158,13 @@ import ajax from "../../api/https.js";
 export default {
   data() {
     return {
+      ulLi1: true,
+      ulLi2: true,
+      ulLi3: true,
+      ulLi4: true,
+      ulLi5: true,
       worthId: "",
+      loading: false,
       activeInvestor: "investor",
       activeName: "edits",
       statementData: [],
@@ -1444,12 +1427,6 @@ export default {
     go() {
       this.$router.push({ path: "/NavBar/DataDitionary/BankData" });
     },
-    //移除文件钩子
-    handleRemove(file, fileList) {
-      this.ruleForm.RiskLD = "";
-    },
-    //点击文件列表中已上传的文件时的钩子
-    handlePreview(file) {},
     // 提交
     Submit(formName) {
       this.$refs[formName].validate(valid => {
@@ -1523,10 +1500,10 @@ export default {
               supervisory: this.ruleForm.supervisory
             }
           };
-          ajax.authPost.bind(this)(
-            "/api/Management/Product/Save",
-            data,
-            res => {
+          this.loading = true;
+          ajax.authPost
+            .bind(this)("/api/Management/Product/Save", data, res => {
+              this.loading = false;
               this.$message({
                 message: "提交成功",
                 type: "success"
@@ -1534,8 +1511,10 @@ export default {
               this.$router.push({
                 path: "/NavBar/DataDitionary/BankData"
               });
-            }
-          );
+            })
+            .catch(res => {
+              this.loading = false;
+            });
         } else {
           return false;
         }
@@ -1587,26 +1566,22 @@ export default {
     getFundtype() {
       //基金类型
       this.get("/api/Common/12", res => {
-        console.log(res);
         if (res.data.code == 200) {
           this.Fundtype = res.data.data;
         }
       });
       //管理类型
       this.get("/api/Common/13", res => {
-        console.log(res);
         if (res.data.code == 200) {
           this.Managementtype = res.data.data;
         }
       });
       this.get("/api/Common/14", res => {
-        console.log(res);
         if (res.data.code == 200) {
           this.Fundstatus = res.data.data;
         }
       });
       this.get("/api/Common/15", res => {
-        console.log(res);
         if (res.data.code == 200) {
           this.Risklevel = res.data.data;
         }
@@ -1614,7 +1589,7 @@ export default {
     },
     //上个页面传过来的id
     adds() {
-      this.queryId = this.$route.query.data || 0;
+      this.queryId = (this.$route.query.data && this.$route.query.data.id) || 0;
       if (this.queryId == 0) {
         this.edit = false;
       } else {
@@ -1632,7 +1607,6 @@ export default {
     //六个分类下的数据
     getSeeOne() {
       var func = res => {
-        console.log(res);
         if (res.data.code == 200) {
           for (var i in res.data.data) {
             let value = res.data.data[i];
@@ -1642,7 +1616,10 @@ export default {
         }
       };
       this.getll("/api/Management/Product/Product/", func); //基本信息
-      this.getll("/api/Management/Product/Risk/", func); //风险信息
+      this.getll("/api/Management/Product/Risk/", res => {
+        func(res);
+        this.ProductMapId = (res.data.data && res.data.data.materialId) || 0;
+      }); //风险信息
       this.getll("/api/Management/Product/Rate/", func); //费率信息
       this.getll("/api/Management/Product/Investment/", func); //投资情况
       this.getll("/api/Management/Product/Manager/", func); //基金经理
@@ -1658,7 +1635,6 @@ export default {
         "/api/Management/Product/Worth/" + this.queryId,
         pages,
         res => {
-          console.log(res);
           if (res.data.code == 200) {
             this.tabelList = res.data.data.list;
             this.tabelPage = res.data.data.page;
@@ -1783,7 +1759,6 @@ export default {
         "/api/Management/Product/Worth/Save",
         data,
         res => {
-          console.log(res);
           if (res.data.code == 200) {
             this.getNetWorth();
             this.formLabelAlign.unitWorth = this.formLabelAlign.cumulativeWorth = this.formLabelAlign.dateOfWorth =
@@ -1801,7 +1776,6 @@ export default {
         "/api/Management/Product/Worth/Remove",
         this.netWorthId,
         res => {
-          console.log(res);
           if (res.data.code == 200) {
             this.getNetWorth();
           }
@@ -1922,10 +1896,10 @@ export default {
     // 上传净值
     uploadContent() {
       this.uploadCenter.productId = this.queryId;
-      this.uploadCenter.smsNotify = this.formLabelAlign.smsNotify;
-      this.uploadCenter.emailNotify = this.formLabelAlign.emailNotify;
-      this.uploadCenter.weChatNotify = this.formLabelAlign.weChatNotify;
-      this.$refs.upload.submit();
+      this.uploadCenter.smsNotify = this.formLabelAlign.smsNotify * 1;
+      this.uploadCenter.emailNotify = this.formLabelAlign.emailNotify * 1;
+      this.uploadCenter.weChatNotify = this.formLabelAlign.weChatNotify * 1;
+      this.$refs.upload2.submit();
     },
     // 净值管理页面的编辑按钮
     clickEdit(i, row) {
@@ -1934,12 +1908,9 @@ export default {
       ajax.authGet.bind(this)(
         "/api/Management/Product/Worth?worthId=" + row.id,
         res => {
-          console.log(res);
-          if (res.data.code == 200) {
-            this.formLabelAlign.unitWorth = res.data.data.unitWorth;
-            this.formLabelAlign.cumulativeWorth = res.data.data.cumulativeWorth;
-            this.formLabelAlign.dateOfWorth = res.data.data.dateOfWorth;
-          }
+          this.formLabelAlign.unitWorth = res.data.data.unitWorth;
+          this.formLabelAlign.cumulativeWorth = res.data.data.cumulativeWorth;
+          this.formLabelAlign.dateOfWorth = res.data.data.dateOfWorth;
         }
       );
     },
@@ -1950,11 +1921,8 @@ export default {
         "/api/Management/Product/Report/" + this.queryId,
         pages,
         res => {
-          console.log(res);
-          if (res.data.code == 200) {
-            this.tabelPresentationList = res.data.data.list;
-            this.tabelPresentationPage = res.data.data.page;
-          }
+          this.tabelPresentationList = res.data.data.list;
+          this.tabelPresentationPage = res.data.data.page;
         }
       );
     },
@@ -1973,12 +1941,9 @@ export default {
         "/api/Management/Product/Notice/" + this.queryId,
         pages,
         res => {
-          console.log(res);
-          if (res.data.code == 200) {
-            this.tabelNoticeData = res.data.data;
-            this.tabelNoticeList = this.tabelNoticeData.list;
-            this.tabelNoticePage = this.tabelNoticeData.page;
-          }
+          this.tabelNoticeData = res.data.data;
+          this.tabelNoticeList = this.tabelNoticeData.list;
+          this.tabelNoticePage = this.tabelNoticeData.page;
         }
       );
     },
@@ -2172,7 +2137,7 @@ export default {
           this.formLabelAlign.reportType = this.formLabelAlign.title = this.formLabelAlign.reportDate =
             "";
           this.getPresentation();
-          this.clearUploadedImage();
+          this.clearFiles3();
         }
       );
     },
@@ -2193,10 +2158,6 @@ export default {
       this.formLabelAlign.reportDate = row.reportDate;
       //   console.log(row);
     },
-    // 清空文件列表
-    clearUploadedImage() {
-      this.$refs.upload.clearFiles();
-    },
     //报表文件上传成功回调
     chengecheng(response, file, fileList) {
       this.ReportId = ajax.getMaterialId.bind(this)(response, () => {
@@ -2208,10 +2169,9 @@ export default {
     SuccessWorth(response, file, fileList) {
       ajax.getMaterialId.bind(this)(response, () => {
         //还原
-        this.clearFiles3();
+        this.clearFiles2();
       });
       this.centerupload = false;
-      this.clearUploadedImage();
       this.getNetWorth();
       this.formLabelAlign.smsNotify = this.formLabelAlign.emailNotify = this.formLabelAlign.weChatNotify =
         "";
@@ -2237,7 +2197,7 @@ export default {
           this.centerDialogNotice = false;
           this.formLabelAlign.Noticetitle = this.formLabelAlign.noticeTypeName = this.formLabelAlign.content = this.formLabelAlign.noticeDate =
             "";
-          this.clearUploadedImage(); //清空文件
+          this.clearFiles4(); //清空文件
         }
       );
     },
@@ -2436,12 +2396,12 @@ export default {
       this.settingsPage = true;
       this.MarketingSetup = false;
       this.getStatement(); //产品设置声明
-      // this.getContract();//合同
     },
     //功能设置返回上一级按钮
     settingsReturn() {
-      this.settingsPage = false;
-      this.MarketingSetup = true;
+      this.settingsPage = !this.settingsPage;
+      this.MarketingSetup = !this.MarketingSetup;
+      this.ulLi1 = this.ulLi2 = this.ulLi3 = this.ulLi4 = this.ulLi5 = true;
     },
     //用于购买设置里面文件上传后拿到返回的文件id
     getactionSettings() {
@@ -2451,6 +2411,7 @@ export default {
     },
     //购买设置里面基金合同成功回调
     chengeScontractMaterialId(response, file, fileList) {
+      this.ulLi1 = false;
       this.contractMaterialId = ajax.getMaterialId.bind(this)(response, () => {
         //还原
         this.clearFiles5();
@@ -2458,6 +2419,7 @@ export default {
     },
     //购买设置里面风险揭示书成功回调
     chengeSriskDisclosureMaterialId(response, file, fileList) {
+      this.ulLi2 = false;
       this.riskDisclosureMaterialId = ajax.getMaterialId.bind(this)(
         response,
         () => {
@@ -2468,6 +2430,7 @@ export default {
     },
     //购买设置里面其他材料1成功回调
     chengeSothersMaterialId1(response, file, fileList) {
+      this.ulLi3 = false;
       this.othersMaterialId1 = ajax.getMaterialId.bind(this)(response, () => {
         //还原
         this.clearFiles7();
@@ -2475,6 +2438,7 @@ export default {
     },
     //购买设置里面其他材料2成功回调
     chengeSothersMaterialId2(response, file, fileList) {
+      this.ulLi4 = false;
       this.othersMaterialId2 = ajax.getMaterialId.bind(this)(response, () => {
         //还原
         this.clearFiles8();
@@ -2482,6 +2446,7 @@ export default {
     },
     //购买设置里面其他材料3成功回调
     chengeSothersMaterialId3(response, file, fileList) {
+      this.ulLi5 = false;
       this.othersMaterialId3 = ajax.getMaterialId.bind(this)(response, () => {
         //还原
         this.clearFiles9();
@@ -2502,6 +2467,7 @@ export default {
         "/api/Management/Product/Market/Save",
         data,
         res => {
+          this.getContract();
           this.$message({
             message: res.data.message,
             type: "success"
@@ -2552,11 +2518,15 @@ export default {
 
   mounted() {
     this.adds();
-    this.getNavId();
+    if (this.$route.query.data && this.$route.query.data.ads == 1) {
+      this.activeName = "fourth";
+      this.getInvestment(); //潜在投资者管理数据
+      this.getpotential(); //投资者管理数据
+      return;
+    }
+    //this.getNavId();
     this.getSeeOne(); //数据编辑页面
     this.getFundtype(); //4个数据编辑页面下拉
-    // this.activeName=this.$route.query.fourth && this.$route.query.fourth.fourth
-    // this.queryId = this.$route.query.fourth && this.$route.query.fourth.productId
   }
 };
 </script>
@@ -2658,9 +2628,13 @@ export default {
       }
     }
     .HoldNum_top {
+      padding-top: 50px;
       .HoldNum {
         font-weight: 600;
         border-left: 4px solid #2d8cf0;
+      }
+      .HoldNum_content {
+        padding-top: 20px;
       }
     }
     .HoldNum_button {
@@ -2675,7 +2649,17 @@ export default {
   }
   @media screen and (max-width: 1620px) {
     .AddList {
-      height: 530px;
+      height: 580px;
+    }
+  }
+  @media screen and (min-width: 1620px) {
+    .height_overflow {
+      height: 660px;
+    }
+  }
+  @media screen and (max-width: 1620px) {
+    .height_overflow {
+      height: 580px;
     }
   }
 }

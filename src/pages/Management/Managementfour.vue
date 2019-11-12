@@ -67,9 +67,8 @@
       </div>
     </div>
     <!-- 设置分值 -->
-    <el-dialog title="设置分值" :visible.sync="centerDialogVisible" width="35%" center>
-      <div class="ScoreCenter">
-        <div>设置分值类型</div>
+    <div class="ScoreCenter">
+      <el-dialog title="设置分值类型" :visible.sync="centerDialogVisible" width="45%" center>
         <div v-for="(item,index) in scoreData" :key="index">
           <el-form :model="form">
             <el-form-item :label="item.levelName">
@@ -89,12 +88,12 @@
             </el-form-item>
           </el-form>
         </div>
-      </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="centerDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="Preservation">确 定</el-button>
       </span>
     </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -257,6 +256,14 @@ export default {
     padding-top: 10px;
     /deep/.el-input__icon {
       height: 75%;
+    }
+  }
+  .ScoreCenter{
+    /deep/.el-dialog__body{
+      text-align: center !important;
+      /deep/.el-form-item__label{
+        float: none;
+      }
     }
   }
 }

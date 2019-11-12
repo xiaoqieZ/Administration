@@ -35,7 +35,6 @@
         <!-- 遇到的坑：1.不配置路由的话，不会有高亮。2.配置类名时，类名必须与路由名一致，图标才能有高亮。3.不需要展开的导航菜单需要再methods里面重新配置。 -->
           <!-- 首页 -->         
            <el-menu-item
-           v-show="Kill"
               index="/NavBar/Homepage/Homepage"
               class="issingleMenu"
               style="user-select:none"

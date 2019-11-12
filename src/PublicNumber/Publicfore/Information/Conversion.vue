@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="conversion_head">
     <mt-header fixed title="转化告知">
       <router-link to="/Publicfore" slot="left">
         <mt-button icon="back">返回</mt-button>
@@ -82,26 +82,112 @@
         <el-button>取消转化</el-button>
       </div>
     </div>
-    <el-dialog
-      title="提示"
-      :visible.sync="centerDialogVisible"
-      :close-on-press-escape="false"
-      :show-close="false"
-      :close-on-click-modal="false"
-      width="80%"
-      center
-    >
-      <span>提交成功</span>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="center">确 定</el-button>
-      </span>
-    </el-dialog>
+    <div class="dialog_canvas">
+      <el-dialog
+        title="提示"
+        :visible.sync="centerDialogVisible"
+        :close-on-press-escape="false"
+        :show-close="false"
+        :close-on-click-modal="false"
+        width="100%"
+        center
+        @opened="opened"
+      >
+        <div class="canvas">
+          <p>请在下方签字</p>
+          <canvas id="canvas" width="320" height="330">Canvas画板</canvas>
+          <div>
+            <button @click="clear">清除</button>
+          </div>
+        </div>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="centerDialogVisible=false">返回</el-button>
+          <el-button type="primary" @click="center">确定</el-button>
+        </span>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
 <script>
 import ajax from "../../../api/https.js";
 import storage from "../../../api/storage.js";
+
+var preHandler = function(e) {
+  //e.preventDefault();
+};
+class Draw {
+  constructor(el) {
+    this.el = el;
+    this.canvas = document.getElementById(this.el);
+    // this.canvas.width = Math.max(350, window.screen.width - 20);
+    this.cxt = this.canvas.getContext("2d");
+    this.stage_info = canvas.getBoundingClientRect();
+    this.path = {
+      beginX: 0,
+      beginY: 0,
+      endX: 0,
+      endY: 0
+    };
+  }
+  init(btn) {
+    var that = this;
+    // console.log(this);
+
+    this.canvas.addEventListener("touchstart", function(event) {
+      document.addEventListener("touchstart", preHandler, false);
+      that.drawBegin(event);
+    });
+    this.canvas.addEventListener("touchend", function(event) {
+      document.addEventListener("touchend", preHandler, false);
+      that.drawEnd();
+    });
+    this.canvas.addEventListener("touchmove", function(event) {
+      document.addEventListener("touchmove", preHandler, false);
+      that.drawing(event);
+    });
+    this.clear(btn);
+  }
+  drawBegin(e) {
+    var that = this;
+    window.getSelection()
+      ? window.getSelection().removeAllRanges()
+      : document.selection.empty();
+    this.cxt.strokeStyle = "#000";
+    this.cxt.beginPath();
+    var beginX = e.changedTouches[0].clientX - this.canvas.offsetLeft;
+    var beginY = e.changedTouches[0].clientY - this.canvas.offsetTop;
+    this.cxt.moveTo(beginX, beginY);
+    this.path.beginX = beginX;
+    this.path.beginY = beginY;
+    // console.log(beginX,beginY);
+    // console.log(e,this)
+    // console.log(beginX,beginY)
+  }
+  drawing(e) {
+    var beginX = e.changedTouches[0].clientX - this.canvas.offsetLeft;
+    var beginY = e.changedTouches[0].clientY - this.canvas.offsetTop;
+    this.cxt.lineTo(beginX, beginY);
+    this.path.endX = beginX;
+    this.path.endY = beginY;
+    this.cxt.stroke();
+    // console.log(beginX,beginY,this.stage_info)
+  }
+  drawEnd() {
+    document.removeEventListener("touchstart", preHandler, false);
+    document.removeEventListener("touchend", preHandler, false);
+    document.removeEventListener("touchmove", preHandler, false);
+    //canvas.ontouchmove = canvas.ontouchend = null
+  }
+  //清除
+  clear(btn) {
+    this.cxt.clearRect(0, 0, 320, 330);
+  }
+  //提交获取签字图
+  save() {
+    return canvas.toDataURL("image/png");
+  }
+}
 export default {
   data() {
     return {
@@ -121,10 +207,16 @@ export default {
         checkbox: []
       },
       a: [],
-      centerDialogVisible: false
+      centerDialogVisible: false,
+      draw: undefined,
+      signMaterialId: ""
     };
   },
   methods: {
+    //清除签字版
+    clear() {
+      this.draw.clear();
+    },
     //资料
     getScience() {
       ajax.authGet.bind(this)("/api/Information/Account/Conversion", res => {
@@ -194,39 +286,24 @@ export default {
     },
     //确认转化按钮
     conversion() {
-      var array = [];
-      for (var i = 0; i < this.scienceData.length; i++) {
-        var category = this.scienceData[i];
-        for (var j = 0; j < category.materials.length; j++) {
-          var m = category.materials[j];
-          if (m.img) {
-            array.push({
-              categoryId: category.id,
-              materialTypeId: m.id,
-              materialId: m.img.id
-            });
-          }
+      var b = [];
+      for (var i = 0; i < this.listId.length; i++) {
+        if (this.listId[i]) {
+          b.push(this.listId[i]);
         }
       }
-      let data = {
-        materials: array,
-        answers: this.listId
-      };
-      if (this.listId.length == this.questionnaireData.length) {
-        ajax.authPost.bind(this)(
-          "/api/Information/Account/Conversion",
-          data,
-          res => {
-            this.centerDialogVisible = true;
-            this.getInvestorType();
-            // this.$message({
-            //   message:res.data.message,
-            //   type:"success"
-            // });
-          }
-        );
+      if (b.length == this.questionnaireData.length) {
+        this.centerDialogVisible = true;
       } else {
         this.$message("选择题都要选上");
+      }
+    },
+    //弹窗打开后，初始化签名版
+    opened() {
+      if (!this.draw) {
+        //画板
+        this.draw = new Draw("canvas");
+        this.draw.init();
       }
     },
     getInvestorType() {
@@ -241,8 +318,48 @@ export default {
     },
     //弹窗确认
     center() {
-      this.centerDialogVisible = false;
-      this.$router.push({ path: "/Publicfore" });
+      var array = [];
+      for (var i = 0; i < this.scienceData.length; i++) {
+        var category = this.scienceData[i];
+        for (var j = 0; j < category.materials.length; j++) {
+          var m = category.materials[j];
+          if (m.img) {
+            array.push({
+              categoryId: category.id,
+              materialTypeId: m.id,
+              materialId: m.img.id
+            });
+          }
+        }
+      }
+      let list = {
+        base64: this.draw.save()
+      };
+      ajax.authPost.bind(this)(
+        "/api/Information/Account/Conversion/Sign/Upload",
+        list,
+        res => {
+          this.signMaterialId = res.data.data.id;
+          let data = {
+            materials: array,
+            answers: this.listId,
+            materialId: this.signMaterialId
+          };
+          ajax.authPost.bind(this)(
+            "/api/Information/Account/Conversion",
+            data,
+            res => {
+              this.centerDialogVisible = false;
+              this.getInvestorType();
+              this.$message({
+                message: "转化成功",
+                type: "success"
+              });
+              this.$router.push({ path: "/Publicfore" });
+            }
+          );
+        }
+      );
     }
   },
   mounted() {
@@ -253,79 +370,94 @@ export default {
 </script>
 
 <style lang="less">
-.conversion {
-  padding: 10px;
-  .conversion_count {
-    padding-top: 50px;
-    .conversion_list {
-      text-indent: 2em;
+.conversion_head {
+  .conversion {
+    padding: 10px;
+    .conversion_count {
+      padding-top: 50px;
+      .conversion_list {
+        text-indent: 2em;
+      }
     }
-  }
-  .knowledge_title {
-    .doubles {
-      padding-top: 30px;
-      .knowledge_list {
-        font-weight: 600;
-        padding-left: 5px;
-        border-left: 3px solid rgb(71, 142, 248);
-      }
-      /deep/.el-radio {
-        white-space: normal;
-        word-break: break-all;
-      }
-      .imgs_List {
-        .images_flex {
-          display: flex;
-          flex-wrap: wrap;
-          justify-content: space-between;
+    .knowledge_title {
+      .doubles {
+        padding-top: 30px;
+        .knowledge_list {
+          font-weight: 600;
+          padding-left: 5px;
+          border-left: 3px solid rgb(71, 142, 248);
         }
-        .imgs_wc {
-          width: 48%;
-          .imgs_ch {
-            width: 100%;
-            .avatar-uploader .el-upload {
+        /deep/.el-radio {
+          white-space: normal;
+          word-break: break-all;
+        }
+        .imgs_List {
+          .images_flex {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+          }
+          .imgs_wc {
+            width: 48%;
+            .imgs_ch {
               width: 100%;
-              height: 105px;
-              border: 1px dashed #3e3d3d;
-              border-radius: 6px;
-              cursor: pointer;
-              position: relative;
-              overflow: hidden;
-            }
-            .avatar-uploader .el-upload:hover {
-              border-color: #409eff;
-            }
-            .avatar-uploader-icon {
-              font-size: 28px;
-              color: #8c939d;
-              width: 100%;
-              height: 100%;
-              line-height: 105px;
-              text-align: center;
-            }
-            .avatar {
-              width: 100%;
-              height: 100%;
-              display: block;
-            }
-            p {
-              color: royalblue;
-              text-align: center;
+              .avatar-uploader .el-upload {
+                width: 100%;
+                height: 105px;
+                border: 1px dashed #3e3d3d;
+                border-radius: 6px;
+                cursor: pointer;
+                position: relative;
+                overflow: hidden;
+              }
+              .avatar-uploader .el-upload:hover {
+                border-color: #409eff;
+              }
+              .avatar-uploader-icon {
+                font-size: 28px;
+                color: #8c939d;
+                width: 100%;
+                height: 100%;
+                line-height: 105px;
+                text-align: center;
+              }
+              .avatar {
+                width: 100%;
+                height: 100%;
+                display: block;
+              }
+              p {
+                color: royalblue;
+                text-align: center;
+              }
             }
           }
         }
-      }
-      /deep/.el-radio-group {
-        display: inline-grid !important;
-        /deep/.el-radio {
-          padding-top: 10px;
+        /deep/.el-radio-group {
+          display: inline-grid !important;
+          /deep/.el-radio {
+            padding-top: 10px;
+          }
         }
       }
     }
+    .conversion_button {
+      padding: 50px 0;
+      text-align: center;
+    }
   }
-  .conversion_button {
-    padding: 50px 0;
-    text-align: center;
+  .dialog_canvas {
+    .canvas {
+      #canvas {
+        border: 1px solid #9a6c6c;
+        background: rgb(253, 252, 252);
+        cursor: default;
+      }
+    }
+    /deep/.el-dialog--center {
+      height: 100%;
+      margin: 0 !important;
+    }
   }
 }
 </style>
