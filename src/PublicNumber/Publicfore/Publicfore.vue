@@ -9,6 +9,7 @@
       <span>免费声明如下：</span>
       <p>本平台所有数据为方便您查看产品的信息披露，仅供参考，不作为最终申购、赎回的法律依据。如有因为信息滞后问题与实际不符，以实际投资信息为准。</p>
       <span slot="footer" class="dialog-footer">
+        <el-checkbox v-model="checked" @change="change">不再提示</el-checkbox>
         <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
       </span>
     </el-dialog>
@@ -182,7 +183,8 @@ export default {
       openId: "",
       isQualified: "",
       countData:'',
-      loading:true
+      loading:true,
+      checked:false
     };
   },
   methods: {
@@ -197,7 +199,12 @@ export default {
           openId: this.openId
         })
         .then(res => {
-          //   console.log(res);
+          this.checked = storage.get("val");
+          if(this.checked==true){
+            this.dialogVisible=false;
+          }else{
+          this.dialogVisible=true;
+          }
           this.getStorage();
           this.getTotalAssets();
           this.getInvestorType();
@@ -220,7 +227,10 @@ export default {
         this.countData = res.data.data
       })
     },
-
+    //记住我的选择
+    change(val) {
+      storage.set("val", val);
+    },
     getStorage() {
       //用户信息
       ajax.authGet.bind(this)("/api/Information/Account/GetByOpenId", res => {
@@ -250,7 +260,7 @@ export default {
     // openId = "oHnB5wBgy_FXh1ICjO0sV44DFO9k";
     // openId = "oHnB5wBgy_FXh1ICjO0sV44DFO9k1";
     // openId = "oHnB5wBgy_FXh1ICjO0sV44DFO9k2";
-    openId = "oHnB5wBgy_FXh1ICjO0sV44DFO9k3";
+    // openId = "oHnB5wBgy_FXh1ICjO0sV44DFO9k3";
     if (!openId) {
       var cHost = location.origin + "/#/Publicfore";
       ajax.get.bind(this)(
@@ -283,6 +293,9 @@ export default {
 .myhome {
   background: #dde1e6;
   padding-top: 40px;
+  /deep/.el-dialog__footer{
+    line-height: 40px;
+  }
   .myhomettop {
     width: 100%;
     padding: 20px;

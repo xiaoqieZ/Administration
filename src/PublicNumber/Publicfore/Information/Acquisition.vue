@@ -119,7 +119,7 @@
       </div>
     </div>
     <!-- 返回上一页 -->
-    <div class="isShow" v-if="isShow">点击上面的返回走好不送</div>
+    <div class="isShow" v-if="isShow">先要完成风险评测</div>
     <!-- 没有实名认证，弹出提示框 -->
     <el-dialog
       title="提示"
@@ -350,6 +350,7 @@ export default {
     }
   }
   .isShow {
+    text-align: center;
     margin-top: 50px;
   }
   .el-select-dropdown {

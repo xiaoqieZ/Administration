@@ -48,7 +48,7 @@
     <div class="kong" v-show="muj==1">
       <div class="kgtitle">需要先完成投资者认定相关信息才可以选购基金产品喔！</div>
       <div class="img">
-        <img src="../../../static/img/sgd.png" alt="表情包" />
+        <img src="../../../static/img/yemian.jpg" alt="表情包" />
       </div>
     </div>
     <el-dialog

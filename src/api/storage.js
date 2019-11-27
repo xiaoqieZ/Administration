@@ -1,12 +1,12 @@
 var storage = {
     set (key,value){//存数据valu给key
-        sessionStorage.setItem(key,JSON.stringify(value))
+        localStorage.setItem(key,JSON.stringify(value))
     },
     get (key){//取出key
-        return JSON.parse(sessionStorage.getItem(key))
+        return JSON.parse(localStorage.getItem(key))
     },
     remove(){//删除
-        sessionStorage.removeItem(key)
+        localStorage.removeItem(key)
     }
 }
 
